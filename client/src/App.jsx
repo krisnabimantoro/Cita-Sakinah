@@ -7,9 +7,11 @@ import DefaultLayout from "./layouts/default";
 
 import HomePage from "./pages/main/home/home";
 import InformasiPage from "./pages/main/informasi/informasi";
-import KegiatanPage from "./pages/main/kegiatan/kegiatan";
 import KontakPage from "./pages/main/kontak/kontak";
 import StrukturPage from "./pages/main/struktur/struktur";
+
+import KegiatanPage from "./pages/main/kegiatan/kegiatan";
+import DetailKegPage from "./pages/main/kegiatan/detail/detailkeg";
 
 import SekolahPage from "./pages/main/profil/sekolah/sekolah";
 import FasilitasPage from "./pages/main/profil/fasilitas/fasilitas";
@@ -72,14 +74,24 @@ function App() {
             </DefaultLayout>
           }
         />
-        <Route
-          path="/kegiatan"
-          element={
-            <DefaultLayout>
-              <KegiatanPage />
-            </DefaultLayout>
-          }
-        />
+        <Route path="/kegiatan">
+          <Route
+            path=""
+            element={
+              <DefaultLayout>
+                <KegiatanPage />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path=":id"
+            element={
+              <DefaultLayout>
+                <DetailKegPage />
+              </DefaultLayout>
+            }
+          />
+        </Route>
         <Route
           path="/informasi"
           element={

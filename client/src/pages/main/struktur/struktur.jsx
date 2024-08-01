@@ -4,7 +4,7 @@ import HeaderImg from "../../../assets/svg/profil.svg";
 import StrukturImg from "../../../assets/svg/struktur.svg";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { Download, Thumbnails, Zoom } from "yet-another-react-lightbox/plugins";
+import { Download, Zoom } from "yet-another-react-lightbox/plugins";
 
 const StrukturPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,7 @@ const StrukturPage = () => {
                 downloadFilename: "Struktur Organisasi",
               },
             ]}
-            plugins={[Download, Zoom, Thumbnails]}
+            plugins={[Download, Zoom]}
           />
         )}
       </section>
