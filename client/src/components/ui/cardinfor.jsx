@@ -3,11 +3,11 @@ import { FaRegBuilding } from "react-icons/fa";
 import { LuClipboardCheck } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 
-const CardKeg = ({ id, img, title, detail, date, tagUtama, tagSekolah }) => {
+const CardInfor = ({ id, img, title, detail, date, tagSekolah }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/kegiatan/${id}`);
+    navigate(`/informasi/${id}`);
   };
 
   return (
@@ -27,13 +27,14 @@ const CardKeg = ({ id, img, title, detail, date, tagUtama, tagSekolah }) => {
       </div>
       <div className="p-5 flex flex-col gap-3">
         <div className="flex mb-2 text-white font-semibold text-[13px] gap-2">
-          <span className="bg-button px-2 py-1 rounded-md flex gap-2 items-center capitalize">
-            <LuClipboardCheck />
-            {tagUtama}
-          </span>
-          <span className="bg-button px-2 py-1 rounded-md flex items-center gap-2 capitalize">
-            <FaRegBuilding /> {tagSekolah}
-          </span>
+          {tagSekolah.map((tag, index) => (
+            <span
+              key={index}
+              className="bg-button px-2 py-1 rounded-md flex items-center gap-2 capitalize"
+            >
+              <FaRegBuilding /> {tag}
+            </span>
+          ))}
         </div>
         <div className="flex flex-col justify-between h-full gap-5">
           <div className="flex flex-col text-main">
@@ -55,4 +56,4 @@ const CardKeg = ({ id, img, title, detail, date, tagUtama, tagSekolah }) => {
   );
 };
 
-export default CardKeg;
+export default CardInfor;

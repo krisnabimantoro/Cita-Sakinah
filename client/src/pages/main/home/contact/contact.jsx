@@ -2,8 +2,14 @@ import React from "react";
 import ContactImg from "../../../../assets/svg/about.svg";
 import Button from "../../../../components/ui/button";
 import { FiMessageSquare } from "react-icons/fi";
-
+import { useNavigate } from "react-router-dom";
 const ContactSection = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/kontak");
+  };
+
   return (
     <section className="mx-[50px] md:mx-[120px] mb-[150px]" id="contact">
       <div className="grid md:grid-cols-2 gap-10">
@@ -24,6 +30,7 @@ const ContactSection = () => {
             icon={<FiMessageSquare size={24} />}
             width="w-[170px]"
             color="bg-button"
+            onClick={handleClick}
           />
         </div>
 

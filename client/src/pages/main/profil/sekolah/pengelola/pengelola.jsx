@@ -25,7 +25,12 @@ const PengelolaSection = ({ data }) => {
             </div>
           </div>
         </div>
-        <div className="text-main">MAPS SEKOLAH</div>
+        <div className="text-main">
+          <iframe
+            src={`https://www.google.com/maps?q=${data.pengelola[0].lat},${data.pengelola[0].lng}&z=15&output=embed`}
+            className="w-full h-[300px] rounded-2xl"
+          />
+        </div>
       </div>
     </section>
   );

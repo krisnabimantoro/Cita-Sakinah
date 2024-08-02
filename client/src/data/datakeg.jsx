@@ -3,6 +3,7 @@ import KegImg2 from "../assets/svg/about.svg";
 
 const datakeg = [
   {
+    id: 1,
     img: [KegImg, KegImg],
     tagUtama: "Kegiatan Siswa",
     tagSekolah: "TK ABA",
@@ -12,6 +13,7 @@ const datakeg = [
     tanggal: "3 Juli 2024",
   },
   {
+    id: 2,
     img: [KegImg, KegImg, KegImg],
     tagUtama: "Kegiatan Guru",
     tagSekolah: "KB Aisyiyah",
@@ -21,6 +23,7 @@ const datakeg = [
     tanggal: "2 Juli 2024",
   },
   {
+    id: 3,
     img: [KegImg, KegImg2, KegImg, KegImg2],
     tagUtama: "Prestasi",
     tagSekolah: "TPA Cita Sakinah",
@@ -30,6 +33,7 @@ const datakeg = [
     tanggal: "5 Juli 2024",
   },
   {
+    id: 4,
     img: [KegImg],
     tagUtama: "Kegiatan Siswa",
     tagSekolah: "TK ABA",
@@ -39,6 +43,7 @@ const datakeg = [
     tanggal: "15 Juli 2024",
   },
   {
+    id: 5,
     img: [KegImg, KegImg, KegImg],
     tagUtama: "Prestasi",
     tagSekolah: "KB Aisyiyah",
@@ -48,6 +53,7 @@ const datakeg = [
     tanggal: "25 Juli 2024",
   },
   {
+    id: 6,
     img: [KegImg, KegImg],
     tagUtama: "Kegiatan Siswa",
     tagSekolah: "TPA Cita Sakinah",
@@ -57,6 +63,7 @@ const datakeg = [
     tanggal: "10 Juli 2024",
   },
   {
+    id: 7,
     img: [KegImg, KegImg, KegImg],
     tagUtama: "Kegiatan Guru",
     tagSekolah: "TK ABA",
@@ -66,6 +73,7 @@ const datakeg = [
     tanggal: "20 Juli 2024",
   },
   {
+    id: 8,
     img: [KegImg, KegImg],
     tagUtama: "Prestasi",
     tagSekolah: "TPA Cita Sakinah",
@@ -75,6 +83,7 @@ const datakeg = [
     tanggal: "30 Juli 2024",
   },
   {
+    id: 9,
     img: [KegImg],
     tagUtama: "Kegiatan Siswa",
     tagSekolah: "KB Aisyiyah",

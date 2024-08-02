@@ -15,7 +15,18 @@ const WaSection = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("aw");
+
+    const schoolNumbers = {
+      "TPA Cita Sakinah": "",
+      "KB 'Aisyiyah 24": "",
+      "TK ABA 33": "",
+    };
+
+    const phoneNumber = schoolNumbers[formData.sekolah];
+    const message = `Nama Lengkap: ${formData.namalengkap}%0APesan: ${formData.pesan}`;
+    const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+    window.open(waUrl, "_blank");
   };
 
   return (

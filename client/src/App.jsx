@@ -6,9 +6,11 @@ import NotFoundPage from "./pages/notfound";
 import DefaultLayout from "./layouts/default";
 
 import HomePage from "./pages/main/home/home";
-import InformasiPage from "./pages/main/informasi/informasi";
 import KontakPage from "./pages/main/kontak/kontak";
 import StrukturPage from "./pages/main/struktur/struktur";
+
+import InformasiPage from "./pages/main/informasi/informasi";
+import DetailInforPage from "./pages/main/informasi/detail/detailinfor";
 
 import KegiatanPage from "./pages/main/kegiatan/kegiatan";
 import DetailKegPage from "./pages/main/kegiatan/detail/detailkeg";
@@ -74,6 +76,7 @@ function App() {
             </DefaultLayout>
           }
         />
+
         <Route path="/kegiatan">
           <Route
             path=""
@@ -92,14 +95,26 @@ function App() {
             }
           />
         </Route>
-        <Route
-          path="/informasi"
-          element={
-            <DefaultLayout>
-              <InformasiPage />
-            </DefaultLayout>
-          }
-        />
+
+        <Route path="/informasi">
+          <Route
+            path=""
+            element={
+              <DefaultLayout>
+                <InformasiPage />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path=":id"
+            element={
+              <DefaultLayout>
+                <DetailInforPage />
+              </DefaultLayout>
+            }
+          />
+        </Route>
+
         <Route
           path="/kontak"
           element={
