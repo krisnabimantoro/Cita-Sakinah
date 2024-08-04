@@ -1,6 +1,6 @@
 import FasilitasImg from "../assets/svg/fasilitas.svg";
 
-const dataFasilitas = [
+export const dataFasilitas = [
   // Taman Kanak-Kanak (bg-main)
   {
     img: FasilitasImg,
@@ -82,5 +82,3 @@ const dataFasilitas = [
     school: "Tempat Penitipan Anak",
   },
 ];
-
-export default dataFasilitas;

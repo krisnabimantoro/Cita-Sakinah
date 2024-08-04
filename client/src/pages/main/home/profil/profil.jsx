@@ -1,6 +1,6 @@
 import React from "react";
 import CardProfil from "../../../../components/ui/cardprofil";
-import profilData from "../../../../data/dataprofil";
+import { profilData } from "../../../../data/dataprofil";
 
 const ProfilSection = () => {
   return (

@@ -1,7 +1,7 @@
 import KegImg from "../assets/svg/profil.svg";
 import KegImg2 from "../assets/svg/about.svg";
 
-const datakeg = [
+export const dataKeg = [
   {
     id: 1,
     img: [KegImg, KegImg],
@@ -93,5 +93,3 @@ const datakeg = [
     tanggal: "5 Agustus 2024",
   },
 ];
-
-export default datakeg;

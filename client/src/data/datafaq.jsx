@@ -1,4 +1,4 @@
-const faqData = [
+export const faqData = [
   {
     id: 1,
     question: "Apa saja program yang ditawarkan oleh TPA Cita Sakinah?",
@@ -24,5 +24,3 @@ const faqData = [
       "Ya, kami menawarkan berbagai program ekstrakurikuler yang dapat diikuti oleh anak-anak, termasuk seni dan kerajinan, musik, tari, dan olahraga. Program-program ini dirancang untuk mengembangkan bakat dan minat anak-anak di luar jam pelajaran formal.",
   },
 ];
-
-export default faqData;

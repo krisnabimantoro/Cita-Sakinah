@@ -1,5 +1,5 @@
 import React from "react";
-import locations from "../../../../data/datamaps";
+import { locations } from "../../../../data/datamaps";
 
 const MapSection = () => {
   return (

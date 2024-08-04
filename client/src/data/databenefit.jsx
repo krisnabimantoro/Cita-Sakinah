@@ -2,7 +2,7 @@ import { LuUserCheck, LuLayoutTemplate, LuVenetianMask } from "react-icons/lu";
 import { FiUsers, FiBookOpen } from "react-icons/fi";
 import { BsPersonArmsUp } from "react-icons/bs";
 
-const benefitData = [
+export const benefitData = [
   {
     title: "Guru & Staff Kompeten",
     desc: "Menyediakan guru dan staff yang kompeten dan berpengalaman.",
@@ -34,5 +34,3 @@ const benefitData = [
     icon: <FiUsers size={50} />,
   },
 ];
-
-export default benefitData;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FaqItem from "../../../../components/ui/faqitem";
-import faqData from "../../../../data/datafaq";
+import { faqData } from "../../../../data/datafaq";
 
 const FaqSection = () => {
   const [openFaq, setOpenFaq] = useState(null);

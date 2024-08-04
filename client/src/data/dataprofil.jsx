@@ -1,6 +1,6 @@
 import ProfilImg from "../assets/svg/profil.svg";
 
-const profilData = [
+export const profilData = [
   {
     img: ProfilImg,
     sekolah: "TPA",
@@ -23,5 +23,3 @@ const profilData = [
     age: "4-6",
   },
 ];
-
-export default profilData;

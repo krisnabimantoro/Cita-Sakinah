@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import dataInfor from "../../../../data/datainfor";
+import { dataInfor } from "../../../../data/datainfor";
 import NotFoundPage from "../../../notfound";
 import { FaRegBuilding } from "react-icons/fa";
 import Lightbox from "yet-another-react-lightbox";

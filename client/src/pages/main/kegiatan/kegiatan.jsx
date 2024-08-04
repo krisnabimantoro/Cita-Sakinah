@@ -3,7 +3,7 @@ import HeaderMenu from "../../../components/ui/header";
 import HeaderImg from "../../../assets/svg/profil.svg";
 import CardKeg from "../../../components/ui/cardkeg";
 import FilterButtons from "../../../components/ui/filterbutton";
-import kegData from "../../../data/datakeg";
+import { dataKeg } from "../../../data/datakeg";
 import { LuFilter } from "react-icons/lu";
 import Button from "../../../components/ui/button";
 import DropdownFilter from "../../../components/ui/dropdownfilter";
@@ -25,7 +25,7 @@ const KegiatanPage = () => {
     );
   };
 
-  const filteredData = kegData.filter(
+  const filteredData = dataKeg.filter(
     (item) =>
       (filter === "Semua Aktivitas" || item.tagUtama === filter) &&
       (schoolFilter.length === 0 ||

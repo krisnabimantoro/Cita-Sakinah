@@ -1,4 +1,4 @@
-const locations = [
+export const locations = [
   {
     id: 1,
     label: "TPA Cita Sakinah",
@@ -18,5 +18,3 @@ const locations = [
     lng: 112.60901133934773,
   },
 ];
-
-export default locations;

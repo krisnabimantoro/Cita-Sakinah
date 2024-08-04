@@ -1,6 +1,6 @@
 import React from "react";
 import CardBenefit from "../../../../components/ui/cardbenefit";
-import benefitData from "../../../../data/databenefit";
+import { benefitData } from "../../../../data/databenefit";
 
 const BenefitSection = () => {
   return (

@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 
 import NotFoundPage from "./pages/notfound";
 import DefaultLayout from "./layouts/default";
+import AdminLayout from "./layouts/admin";
 
 import HomePage from "./pages/main/home/home";
 import KontakPage from "./pages/main/kontak/kontak";
@@ -21,6 +22,11 @@ import FasilitasPage from "./pages/main/profil/fasilitas/fasilitas";
 import LoginPage from "./pages/auth/login";
 
 import axios from "axios";
+import DashboardAdminPage from "./pages/admin/dashboard/dashboard";
+import FasilitasAdminPage from "./pages/admin/fasilitas/fasilitas";
+import InformasiAdminPage from "./pages/admin/informasi/informasi";
+import KegiatanAdminPage from "./pages/admin/kegiatan/kegiatan";
+import StrukturAdminPage from "./pages/admin/struktur/struktur";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
@@ -129,11 +135,46 @@ function App() {
         </Route>
 
         <Route path="/admin">
-          <Route path="dashboard" element={<NotFoundPage />} />
-          <Route path="kegiatan" element={<NotFoundPage />} />
-          <Route path="informasi" element={<NotFoundPage />} />
-          <Route path="struktur" element={<NotFoundPage />} />
-          <Route path="fasilitas" element={<NotFoundPage />} />
+          <Route
+            path="dashboard"
+            element={
+              <AdminLayout>
+                <DashboardAdminPage />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="kegiatan"
+            element={
+              <AdminLayout>
+                <KegiatanAdminPage />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="informasi"
+            element={
+              <AdminLayout>
+                <InformasiAdminPage />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="struktur"
+            element={
+              <AdminLayout>
+                <StrukturAdminPage />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="fasilitas"
+            element={
+              <AdminLayout>
+                <FasilitasAdminPage />
+              </AdminLayout>
+            }
+          />
         </Route>
       </Routes>
     </>

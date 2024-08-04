@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import HeaderMenu from "../../../components/ui/header";
 import HeaderImg from "../../../assets/svg/profil.svg";
 import CardInfor from "../../../components/ui/cardinfor";
-import dataInfor from "../../../data/datainfor";
+import { dataInfor } from "../../../data/datainfor";
 import Button from "../../../components/ui/button";
 import { LuFilter } from "react-icons/lu";
 import DropdownFilter from "../../../components/ui/dropdownfilter";
@@ -29,7 +29,7 @@ const InformasiPage = () => {
       : dataInfor.filter((item) =>
           item.tagSekolah.some((school) =>
             selectedOptions.some((selected) =>
-              school.startsWith(selected.split(' ')[0])
+              school.startsWith(selected.split(" ")[0])
             )
           )
         );

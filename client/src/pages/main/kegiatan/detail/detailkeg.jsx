@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import kegData from "../../../../data/datakeg";
+import { dataKeg } from "../../../../data/datakeg";
 import NotFoundPage from "../../../notfound";
 import { LuClipboardCheck } from "react-icons/lu";
 import { FaRegBuilding } from "react-icons/fa";
@@ -10,7 +10,7 @@ import { Download, Zoom } from "yet-another-react-lightbox/plugins";
 
 const DetailKegPage = () => {
   const { id } = useParams();
-  const kegiatan = kegData.find((keg) => keg.id === parseInt(id));
+  const kegiatan = dataKeg.find((keg) => keg.id === parseInt(id));
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 

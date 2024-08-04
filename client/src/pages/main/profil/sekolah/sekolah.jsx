@@ -3,7 +3,7 @@ import IntroSection from "./intro/intro";
 import StatisticSection from "./statistic/statistic";
 import LatarSection from "./latar/latar";
 import PengelolaSection from "./pengelola/pengelola";
-import dataSekolah from "../../../../data/datasekolah";
+import { dataSekolah } from "../../../../data/datasekolah";
 import NotFoundPage from "../../../notfound";
 import { useParams } from "react-router-dom";
 

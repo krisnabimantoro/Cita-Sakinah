@@ -1,4 +1,4 @@
-const dataSekolah = [
+export const dataSekolah = [
   //TPA
   {
     singkatan: "TPA",
@@ -96,5 +96,3 @@ const dataSekolah = [
     ],
   },
 ];
-
-export default dataSekolah;

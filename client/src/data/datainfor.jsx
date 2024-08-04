@@ -1,7 +1,7 @@
 import InfoImg1 from "../assets/svg/profil.svg";
 import InfoImg2 from "../assets/svg/about.svg";
 
-const datainfor = [
+export const dataInfor = [
   {
     id: 1,
     img: [InfoImg1, InfoImg2],
@@ -48,5 +48,3 @@ const datainfor = [
     date: "1 September 2024",
   },
 ];
-
-export default datainfor;

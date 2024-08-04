@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import dataFasilitas from "../../../../data/datafasilitas";
+import { dataFasilitas } from "../../../../data/datafasilitas";
 
 const FasilitasPage = () => {
   useEffect(() => {
@@ -70,7 +70,9 @@ const FasilitasPage = () => {
             key={index}
             className={`${section.bg} px-7 sm:px-[60px] py-[30px] rounded-[18px] flex flex-col gap-[30px] mt-[50px]`}
           >
-            <h1 className={`text-center font-bold text-2xl sm:text-4xl text-white`}>
+            <h1
+              className={`text-center font-bold text-2xl sm:text-4xl text-white`}
+            >
               {section.school}
             </h1>
             <div>

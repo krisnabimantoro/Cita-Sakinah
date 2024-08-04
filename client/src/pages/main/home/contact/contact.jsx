@@ -3,6 +3,7 @@ import ContactImg from "../../../../assets/svg/about.svg";
 import Button from "../../../../components/ui/button";
 import { FiMessageSquare } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+
 const ContactSection = () => {
   const navigate = useNavigate();
 
