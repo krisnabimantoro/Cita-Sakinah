@@ -27,7 +27,11 @@ const InformasiPage = () => {
     selectedOptions.length === 0
       ? dataInfor
       : dataInfor.filter((item) =>
-          item.tagSekolah.some((school) => selectedOptions.includes(school))
+          item.tagSekolah.some((school) =>
+            selectedOptions.some((selected) =>
+              school.startsWith(selected.split(' ')[0])
+            )
+          )
         );
 
   return (
@@ -52,7 +56,7 @@ const InformasiPage = () => {
             />
             <DropdownFilter
               isOpen={isOpen}
-              options={["TK", "KB", "TPA"]}
+              options={["TPA Cita Sakinah", "KB 'Aisyiyah 24", "TK ABA 33"]}
               selectedOptions={selectedOptions}
               onSelect={handleSelect}
             />

@@ -39,7 +39,7 @@ const WaSection = () => {
         </span>
       </div>
       <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid sm:grid-cols-2 gap-8">
           <InputField
             label="Nama lengkap"
             type="text"

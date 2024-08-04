@@ -6,7 +6,7 @@ const datakeg = [
     id: 1,
     img: [KegImg, KegImg],
     tagUtama: "Kegiatan Siswa",
-    tagSekolah: "TK ABA",
+    tagSekolah: "TK ABA 33",
     titleCard: "Kegiatan Belajar Mengajar",
     detail:
       "Anak-anak TK ABA belajar sambil bermain untuk meningkatkan kreativitas dan keterampilan motorik. Mereka juga berpartisipasi dalam berbagai kegiatan interaktif yang dirancang untuk merangsang perkembangan kognitif dan emosional.",
@@ -16,7 +16,7 @@ const datakeg = [
     id: 2,
     img: [KegImg, KegImg, KegImg],
     tagUtama: "Kegiatan Guru",
-    tagSekolah: "KB Aisyiyah",
+    tagSekolah: "KB 'Aisyiyah 24",
     titleCard: "Pelatihan Guru KB Aisyiyah",
     detail:
       "Guru-guru KB Aisyiyah mengikuti pelatihan untuk meningkatkan metode pengajaran yang inovatif. Program ini mencakup workshop tentang penggunaan teknologi dalam kelas dan strategi pengajaran yang efektif.",
@@ -36,7 +36,7 @@ const datakeg = [
     id: 4,
     img: [KegImg],
     tagUtama: "Kegiatan Siswa",
-    tagSekolah: "TK ABA",
+    tagSekolah: "TK ABA 33",
     titleCard: "Kegiatan Outbound TK ABA",
     detail:
       "Siswa-siswa TK ABA menikmati kegiatan outbound di alam terbuka untuk melatih kemandirian dan kerja sama. Mereka berpartisipasi dalam berbagai permainan dan tantangan yang dirancang untuk meningkatkan kemampuan sosial.",
@@ -46,7 +46,7 @@ const datakeg = [
     id: 5,
     img: [KegImg, KegImg, KegImg],
     tagUtama: "Prestasi",
-    tagSekolah: "KB Aisyiyah",
+    tagSekolah: "KB 'Aisyiyah 24",
     titleCard: "Prestasi Guru KB Aisyiyah",
     detail:
       "Guru-guru KB Aisyiyah mendapatkan penghargaan atas dedikasi mereka dalam mengajar anak-anak. Penghargaan ini diberikan sebagai pengakuan atas upaya mereka dalam menciptakan lingkungan belajar yang positif.",
@@ -66,7 +66,7 @@ const datakeg = [
     id: 7,
     img: [KegImg, KegImg, KegImg],
     tagUtama: "Kegiatan Guru",
-    tagSekolah: "TK ABA",
+    tagSekolah: "TK ABA 33",
     titleCard: "Pelatihan Teknologi untuk Guru",
     detail:
       "Guru-guru di TK ABA mengikuti pelatihan teknologi untuk meningkatkan kemampuan mereka dalam menggunakan alat digital di kelas. Pelatihan ini membantu mereka mengintegrasikan teknologi ke dalam kurikulum.",
@@ -86,7 +86,7 @@ const datakeg = [
     id: 9,
     img: [KegImg],
     tagUtama: "Kegiatan Siswa",
-    tagSekolah: "KB Aisyiyah",
+    tagSekolah: "KB 'Aisyiyah 24",
     titleCard: "Kegiatan Olahraga KB Aisyiyah",
     detail:
       "Anak-anak di KB Aisyiyah berpartisipasi dalam kegiatan olahraga untuk meningkatkan kebugaran fisik mereka. Kegiatan ini termasuk permainan bola, lari, dan senam.",

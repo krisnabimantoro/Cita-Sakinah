@@ -28,7 +28,10 @@ const KegiatanPage = () => {
   const filteredData = kegData.filter(
     (item) =>
       (filter === "Semua Aktivitas" || item.tagUtama === filter) &&
-      (schoolFilter.length === 0 || schoolFilter.includes(item.tagSekolah))
+      (schoolFilter.length === 0 ||
+        schoolFilter.some((selected) =>
+          item.tagSekolah.startsWith(selected.split(" ")[0])
+        ))
   );
 
   return (
@@ -39,7 +42,7 @@ const KegiatanPage = () => {
         desc="Jelajahi beragam kegiatan ekstrakurikuler dan program menarik yang dirancang untuk mengembangkan minat dan bakat siswa."
       />
       <section className="mx-[50px] md:mx-[120px] mb-[150px] flex flex-col gap-8">
-        <div className="flex justify-between relative">
+        <div className="flex flex-wrap justify-between relative gap-4">
           <FilterButtons currentFilter={filter} onFilterChange={setFilter} />
           <div className="relative">
             <Button
@@ -55,7 +58,7 @@ const KegiatanPage = () => {
             <DropdownFilter
               isOpen={isDropdownOpen}
               onClose={() => setIsDropdownOpen(false)}
-              options={["TK ABA", "KB Aisyiyah", "TPA Cita Sakinah"]}
+              options={["TPA Cita Sakinah", "KB 'Aisyiyah 24", "TK ABA 33"]}
               selectedOptions={schoolFilter}
               onSelect={handleSchoolFilterChange}
             />

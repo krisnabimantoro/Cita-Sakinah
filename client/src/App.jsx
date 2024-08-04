@@ -127,6 +127,14 @@ function App() {
         <Route path="/auth">
           <Route path="login" element={<LoginPage />} />
         </Route>
+
+        <Route path="/admin">
+          <Route path="dashboard" element={<NotFoundPage />} />
+          <Route path="kegiatan" element={<NotFoundPage />} />
+          <Route path="informasi" element={<NotFoundPage />} />
+          <Route path="struktur" element={<NotFoundPage />} />
+          <Route path="fasilitas" element={<NotFoundPage />} />
+        </Route>
       </Routes>
     </>
   );

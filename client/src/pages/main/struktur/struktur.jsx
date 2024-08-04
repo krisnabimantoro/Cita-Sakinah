@@ -43,17 +43,6 @@ const StrukturPage = () => {
           />
         )}
       </section>
-
-      {/* <section className="mx-[50px] md:mx-[120px] my-[90px] flex justify-center">
-        <a href={StrukturImg} target="_blank" rel="noopener noreferrer">
-          <img
-            src={StrukturImg}
-            alt="struktur-citasakinah"
-            draggable="false"
-            className="object-cover"
-          />
-        </a>
-      </section> */}
     </>
   );
 };

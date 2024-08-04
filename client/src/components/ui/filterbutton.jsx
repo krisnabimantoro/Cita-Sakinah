@@ -9,7 +9,7 @@ const FilterButtons = ({ currentFilter, onFilterChange }) => {
   ];
 
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-wrap gap-4">
       {filters.map((filter) => (
         <button
           key={filter}

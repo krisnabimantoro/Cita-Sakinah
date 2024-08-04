@@ -1,5 +1,5 @@
-import React from "react";
-import { FiChevronDown } from "react-icons/fi";
+import React, { useState } from "react";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 const InputField = ({
   icon,
@@ -15,58 +15,83 @@ const InputField = ({
   passwordInput = false,
   textarea = false,
   dropdown = false,
-}) => (
-  <div className="flex flex-col gap-2">
-    {label && (
-      <label htmlFor={id} className="text-main font-semibold text-sm">
-        {label}
-      </label>
-    )}
-    <div
-      className={`flex items-center border border-main rounded-lg p-3 text-main`}
-    >
-      {icon && <span className="px-2 text-xl opacity-70">{icon}</span>}
-      {textarea ? (
-        <textarea
-          id={id}
-          name={name}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className="flex-1 outline-none resize-none w-full"
-          rows={rows}
-        />
-      ) : dropdown ? (
-        <div className="flex items-center w-full">
-          <select
+}) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleOptionSelect = (optionValue) => {
+    onChange({ target: { name, value: optionValue } });
+    setIsDropdownOpen(false);
+  };
+
+  return (
+    <div className="flex flex-col gap-2 relative">
+      {label && (
+        <label htmlFor={id} className="text-main font-semibold text-sm">
+          {label}
+        </label>
+      )}
+      <div
+        className={`flex items-center border border-main rounded-lg p-3 text-main`}
+      >
+        {icon && <span className="px-2 text-xl opacity-70">{icon}</span>}
+        {textarea ? (
+          <textarea
             id={id}
             name={name}
             value={value}
             onChange={onChange}
-            className="flex-1 outline-none bg-transparent appearance-none"
-          >
-            {options.map((option, index) => (
-              <option key={index} value={option.value} className="text-main">
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FiChevronDown className="text-abugelap" size={20} />
-        </div>
-      ) : (
-        <input
-          type={type}
-          placeholder={placeholder}
-          id={id}
-          name={name}
-          value={value}
-          onChange={onChange}
-          autoComplete={passwordInput ? "current-password" : "off"}
-          className="flex-1 outline-none w-full"
-        />
-      )}
+            placeholder={placeholder}
+            className="flex-1 outline-none resize-none w-full"
+            rows={rows}
+          />
+        ) : dropdown ? (
+          <>
+            <div className="flex items-center w-full relative">
+              <div
+                onClick={handleDropdownToggle}
+                className="flex-1 cursor-pointer outline-none bg-transparent"
+              >
+                {value || placeholder}
+              </div>
+              {isDropdownOpen ? (
+                <FiChevronUp className="text-abugelap" size={20} />
+              ) : (
+                <FiChevronDown className="text-abugelap" size={20} />
+              )}
+            </div>
+            {isDropdownOpen && (
+              <div className="absolute top-full mt-2 left-0 w-full border border-main rounded-lg bg-white z-10">
+                {options.map((option, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleOptionSelect(option.value)}
+                    className="p-2 cursor-pointer hover:bg-gray-100 text-main rounded-lg"
+                  >
+                    {option.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <input
+            type={type}
+            placeholder={placeholder}
+            id={id}
+            name={name}
+            value={value}
+            onChange={onChange}
+            autoComplete={passwordInput ? "current-password" : "off"}
+            className="flex-1 outline-none w-full"
+          />
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default InputField;

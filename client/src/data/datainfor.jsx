@@ -14,7 +14,7 @@ const datainfor = [
   {
     id: 2,
     img: [InfoImg1, InfoImg1, InfoImg2],
-    tagSekolah: ["TK", "KB", "TPA"],
+    tagSekolah: ["TPA", "KB", "TK"],
     title: "Pendaftaran Ekstrakurikuler",
     detail:
       "KB Aisyiyah menawarkan berbagai kegiatan ekstrakurikuler untuk meningkatkan kreativitas dan keterampilan anak. Kegiatan termasuk seni, musik, olahraga, dan keterampilan tangan.",
@@ -41,7 +41,7 @@ const datainfor = [
   {
     id: 5,
     img: [InfoImg1],
-    tagSekolah: ["TK", "KB", "TPA"],
+    tagSekolah: ["TPA", "KB", "TK"],
     title: "Pendaftaran Ulang",
     detail:
       "Pendaftaran ulang untuk siswa PAUD tahun ajaran 2024 dimulai pada tanggal 1 September 2024. Orang tua diharapkan untuk menyelesaikan administrasi sebelum tanggal 15 September 2024.",
