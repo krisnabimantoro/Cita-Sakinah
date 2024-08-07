@@ -4,8 +4,11 @@ import InputField from "../../components/form/inputfield";
 import { FiUser } from "react-icons/fi";
 import { CgLock } from "react-icons/cg";
 import Button from "../../components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -21,7 +24,8 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("ea");
+    toast.success("Login Berhasil");
+    navigate("/admin/dashboard");
   };
 
   return (
