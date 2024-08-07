@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Button from "../../../components/ui/button";
 import { FaRegEdit } from "react-icons/fa";
 import ImgStruktur from "../../../assets/svg/struktur.svg";
-import Modal from "../../../components/form/modal";
+import Modal from "../../../components/modal/modal";
 import { IoMdImages } from "react-icons/io";
+import ImageUploadForm from "../../../components/form/imageupload";
 
 const StrukturPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,50 +51,18 @@ const StrukturPage = () => {
           <img src={ImgStruktur} alt="img-struktur" draggable="false" />
         </div>
 
-        <Modal isOpen={isModalOpen}>
-          <div className="flex flex-col gap-6">
-            <h2 className="text-2xl font-semibold text-main">Foto Struktur</h2>
-            <div
-              className="border border-main rounded-lg flex flex-col items-center justify-center text-abu py-[31px] cursor-pointer"
-              onClick={() => fileInputRef.current.click()}
-            >
-              {!previewImage ? (
-                <>
-                  <IoMdImages size={100} className="mb-4" />
-                  <p className="text-lg">Tambahkan Gambar</p>
-                </>
-              ) : (
-                <img
-                  src={previewImage}
-                  alt="Uploaded Preview"
-                  className="w-40 mb-4 rounded-lg border border-gray-300"
-                />
-              )}
-            </div>
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              ref={fileInputRef}
-              hidden
-            />
-
-            <div className="flex gap-4 justify-center items-center">
-              <button
-                className="rounded-2xl border border-main text-main font-medium text-base py-2 px-10"
-                onClick={closeModal}
-              >
-                Batal
-              </button>
-              <button
-                className="rounded-2xl bg-main text-white font-medium text-base py-2 px-10"
-                onClick={closeModal}
-              >
-                Simpan
-              </button>
-            </div>
-          </div>
+        <Modal
+          isOpen={isModalOpen}
+          onConfirm={closeModal}
+          onCancel={closeModal}
+          confirm="Simpan"
+        >
+          <ImageUploadForm
+            title="Gambar Struktur"
+            fileInputRef={fileInputRef}
+            handleImageUpload={handleImageUpload}
+            previewImage={previewImage}
+          />
         </Modal>
       </div>
     </>

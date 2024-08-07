@@ -1,18 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TableDashboard from "../../../components/ui/tabledashboard";
 import Button from "../../../components/ui/button";
-import ModalConfirm from "../../../components/modal/modalconfirm";
+import InputField from "../../../components/form/inputfield";
+import ImageUploadForm from "../../../components/form/imageupload";
+import Modal from "../../../components/modal/modal";
 import { dataFasilitas } from "../../../data/dataadmin";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 import { LuPen } from "react-icons/lu";
-import { FaPlus } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 
 const FasilitasPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(dataFasilitas);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedFasilitas, setSelectedFasilitas] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
+  const fileInputRef = useRef(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    sekolah: "",
+    gambar: "",
+  });
+  const [previewImage, setPreviewImage] = useState("");
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Fasilitas ";
@@ -26,20 +36,76 @@ const FasilitasPage = () => {
     );
   }, [searchQuery]);
 
-  const handleDeleteClick = (fasilitas) => {
-    setSelectedFasilitas(fasilitas);
+  const handleAddClick = () => {
+    setFormData({ title: "", sekolah: "", gambar: "" });
+    setPreviewImage("");
+    setIsEdit(false);
     setIsModalOpen(true);
   };
 
+  const handleEditClick = (fasilitas) => {
+    setFormData(fasilitas);
+    setPreviewImage(fasilitas.gambar);
+    setSelectedFasilitas(fasilitas);
+    setIsEdit(true);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = (fasilitas) => {
+    setSelectedFasilitas(fasilitas);
+    setIsDeleteModalOpen(true);
+  };
+
   const handleConfirmDelete = () => {
-    setIsModalOpen(false);
     setFilteredData(filteredData.filter((item) => item !== selectedFasilitas));
+    setSelectedFasilitas(null);
+    setIsDeleteModalOpen(false);
   };
 
   const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedFasilitas(null);
+  };
+
+  const handleSaveFasilitas = () => {
+    if (isEdit) {
+      setFilteredData(
+        filteredData.map((item) =>
+          item === selectedFasilitas ? { ...formData, id: item.id } : item
+        )
+      );
+    } else {
+      setFilteredData([
+        ...filteredData,
+        { ...formData, id: Date.now().toString() },
+      ]);
+    }
     setIsModalOpen(false);
     setSelectedFasilitas(null);
   };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+        setFormData({ ...formData, gambar: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const schoolOptions = [
+    { label: "TPA Cita Sakinah", value: "TPA Cita Sakinah" },
+    { label: "KB 'Aisyiyah 24", value: "KB 'Aisyiyah 24" },
+    { label: "TK ABA 33", value: "TK ABA 33" },
+  ];
 
   const columnsFasilitas = [
     { header: "Judul", field: "title", truncate: 20 },
@@ -53,7 +119,11 @@ const FasilitasPage = () => {
     ...fasilitas,
     action: (
       <div className="flex gap-3 items-center">
-        <LuPen className="text-second" onClick={() => {}} size={20} />
+        <LuPen
+          className="text-second"
+          onClick={() => handleEditClick(fasilitas)}
+          size={20}
+        />
         <FaRegTrashAlt
           className="text-button"
           onClick={() => handleDeleteClick(fasilitas)}
@@ -90,18 +160,61 @@ const FasilitasPage = () => {
               icon={<FaPlus size={24} />}
               rounded="rounded-full"
               width="w-[150px]"
+              onClick={handleAddClick}
             />
           </div>
         </div>
         <TableDashboard columns={columnsFasilitas} data={dataReal} />
       </div>
-      <ModalConfirm
-        isOpen={isModalOpen}
-        desc="Apakah Anda Yakin Ingin Menghapus?"
-        onConfirm={handleConfirmDelete}
+
+      <Modal
+        isOpen={isDeleteModalOpen}
         onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
         confirm="Hapus"
-      />
+        width="w-[377px]"
+        justify="justify-center"
+      >
+        <h2 className="text-2xl font-semibold text-main text-center">
+          Apakah Anda Yakin Ingin Menghapus?
+        </h2>
+      </Modal>
+
+      <Modal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={handleSaveFasilitas}
+        confirm="Simpan"
+        width="w-[500px]"
+        justify="justify-center"
+      >
+        <div className="flex flex-col gap-4">
+          <InputField
+            label="Judul"
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            placeholder="Masukkan Judul"
+          />
+          <InputField
+            label="Nama Sekolah"
+            id="sekolah"
+            name="sekolah"
+            value={formData.sekolah}
+            onChange={handleInputChange}
+            placeholder="Pilih Sekolah"
+            dropdown
+            options={schoolOptions}
+          />
+          <ImageUploadForm
+            title="Gambar Fasilitas"
+            fileInputRef={fileInputRef}
+            handleImageUpload={handleImageUpload}
+            previewImage={previewImage}
+          />
+        </div>
+      </Modal>
     </>
   );
 };

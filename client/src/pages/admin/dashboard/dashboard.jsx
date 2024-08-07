@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import StatDashboard from "../../../components/ui/statdashboard";
 import { dataStatistic } from "../../../data/datastatistic";
-import Modal from "../../../components/form/modal";
+import Modal from "../../../components/modal/modal";
 import InputField from "../../../components/form/inputfield";
 
 const DashboardPage = () => {
@@ -72,10 +72,16 @@ const DashboardPage = () => {
           />
         ))}
       </div>
-      <Modal isOpen={isModalOpen}>
+      <Modal
+        isOpen={isModalOpen}
+        onConfirm={submitModal}
+        onCancel={closeModal}
+        confirm="Simpan"
+      >
         <div className="flex flex-col gap-6">
           <InputField
             label={formData.nameTpa}
+            type="number"
             name="poinTpa"
             value={formData.poinTpa}
             onChange={handleInputChange}
@@ -83,6 +89,7 @@ const DashboardPage = () => {
           />
           <InputField
             label={formData.nameKb}
+            type="number"
             name="poinKb"
             value={formData.poinKb}
             onChange={handleInputChange}
@@ -90,25 +97,12 @@ const DashboardPage = () => {
           />
           <InputField
             label={formData.nameTk}
+            type="number"
             name="poinTk"
             value={formData.poinTk}
             onChange={handleInputChange}
             placeholder={formData.nameTk}
           />
-          <div className="flex gap-4 justify-center items-center">
-            <button
-              className="rounded-2xl border border-main text-main font-medium text-base py-2 px-10"
-              onClick={closeModal}
-            >
-              Batal
-            </button>
-            <button
-              className="rounded-2xl bg-main text-white font-medium text-base py-2 px-10"
-              onClick={submitModal}
-            >
-              Simpan
-            </button>
-          </div>
         </div>
       </Modal>
     </div>

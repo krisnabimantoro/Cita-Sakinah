@@ -3,8 +3,7 @@ import LogoAdmin from "../../assets/svg/logo.svg";
 import { LuLogOut } from "react-icons/lu";
 import { dataSidebar } from "../../data/datasidebar";
 import { NavLink, useNavigate } from "react-router-dom";
-import ModalConfirm from "../../components/modal/modalconfirm";
-import { IoMdMenu } from "react-icons/io";
+import Modal from "../../components/modal/modal";
 
 const Sidebar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -91,13 +90,18 @@ const Sidebar = () => {
           </button>
         </div>
       </div>
-      <ModalConfirm
-        desc="Apakah Anda Ingin Log Out?"
+      <Modal
         isOpen={isModalOpen}
         onConfirm={handleLogout}
         onCancel={handleCancel}
         confirm="Log Out"
-      />
+        width="w-[377px]"
+        justify="justify-center"
+      >
+        <h2 className="text-2xl font-semibold text-main text-center">
+          Apakah Anda Ingin Log Out?
+        </h2>
+      </Modal>
     </div>
   );
 };

@@ -1,12 +1,23 @@
 import React from "react";
-import Modal from "../form/modal";
 
-const ModalConfirm = ({ desc, isOpen, onConfirm, onCancel, confirm }) => {
+const Modal = ({
+  isOpen,
+  onCancel,
+  onConfirm,
+  confirm,
+  children,
+  width,
+  justify,
+}) => {
+  if (!isOpen) return null;
+
   return (
-    <Modal isOpen={isOpen}>
-      <div className="flex flex-col gap-6">
-        <h2 className="text-2xl font-semibold text-main">{desc}</h2>
-        <div className="flex gap-4 justify-center items-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div
+        className={`bg-white rounded-3xl px-12 py-8 flex flex-col ${width} ${justify}`}
+      >
+        {children}
+        <div className="flex gap-4 justify-center items-center mt-6">
           <button
             className="rounded-2xl border border-main text-main font-medium text-base py-2 px-10"
             onClick={onCancel}
@@ -21,8 +32,8 @@ const ModalConfirm = ({ desc, isOpen, onConfirm, onCancel, confirm }) => {
           </button>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 };
 
-export default ModalConfirm;
+export default Modal;
