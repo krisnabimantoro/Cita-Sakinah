@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HeaderMenu from "../../../components/ui/header";
 import HeaderImg from "../../../assets/svg/profil.svg";
 import CardInfor from "../../../components/ui/cardinfor";
+import LoadingCard from "../../../components/loading/loadingcard";
 import { dataInfor } from "../../../data/datainfor";
 import Button from "../../../components/ui/button";
 import { LuFilter } from "react-icons/lu";
@@ -10,9 +11,13 @@ import DropdownFilter from "../../../components/ui/dropdownfilter";
 const InformasiPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Informasi";
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   }, []);
 
   const handleSelect = (option) => {
@@ -63,17 +68,21 @@ const InformasiPage = () => {
           </div>
         </div>
         <div className="flex flex-wrap gap-10">
-          {filteredData.map((item, index) => (
-            <CardInfor
-              key={index}
-              id={item.id}
-              img={item.img}
-              title={item.title}
-              detail={item.detail}
-              date={item.date}
-              tagSekolah={item.tagSekolah}
-            />
-          ))}
+          {filteredData.map((item, index) =>
+            isLoading ? (
+              <LoadingCard key={index} />
+            ) : (
+              <CardInfor
+                key={index}
+                id={item.id}
+                img={item.img}
+                title={item.title}
+                detail={item.detail}
+                date={item.date}
+                tagSekolah={item.tagSekolah}
+              />
+            )
+          )}
         </div>
       </section>
     </>

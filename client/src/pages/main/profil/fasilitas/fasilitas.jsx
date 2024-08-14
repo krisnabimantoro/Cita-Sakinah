@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import HeaderMenu from "../../../../components/ui/header";
 import HeaderImg from "../../../../assets/svg/profil.svg";
 import CardFasilitas from "../../../../components/ui/cardfasilitas";
@@ -8,10 +8,16 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import { dataFasilitas } from "../../../../data/datafasilitas";
+import LoadingCardFasilitas from "../../../../components/loading/loadingcardfasilitas";
 
 const FasilitasPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     document.title = "Cita Sakinah | Profil - Fasilitas";
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   }, []);
 
   const sections = [
@@ -47,12 +53,16 @@ const FasilitasPage = () => {
   const renderSwiperSlides = (facilities, textColor, borderColor) => {
     return facilities.map((facility, index) => (
       <SwiperSlide key={index}>
-        <CardFasilitas
-          img={facility.img}
-          title={facility.title}
-          textColor={textColor}
-          borderColor={borderColor}
-        />
+        {isLoading ? (
+          <LoadingCardFasilitas />
+        ) : (
+          <CardFasilitas
+            img={facility.img}
+            title={facility.title}
+            textColor={textColor}
+            borderColor={borderColor}
+          />
+        )}
       </SwiperSlide>
     ));
   };

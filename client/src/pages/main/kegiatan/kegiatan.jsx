@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import HeaderMenu from "../../../components/ui/header";
 import HeaderImg from "../../../assets/svg/profil.svg";
 import CardKeg from "../../../components/ui/cardkeg";
+import LoadingCard from "../../../components/loading/loadingcard";
 import FilterButtons from "../../../components/ui/filterbutton";
 import { dataKeg } from "../../../data/datakeg";
 import { LuFilter } from "react-icons/lu";
@@ -12,9 +13,13 @@ const KegiatanPage = () => {
   const [filter, setFilter] = useState("Semua Aktivitas");
   const [schoolFilter, setSchoolFilter] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Kegiatan";
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   }, []);
 
   const handleSchoolFilterChange = (school) => {
@@ -65,18 +70,22 @@ const KegiatanPage = () => {
           </div>
         </div>
         <div className="flex flex-wrap gap-10">
-          {filteredData.map((item, index) => (
-            <CardKeg
-              key={index}
-              id={item.id}
-              img={item.img}
-              title={item.titleCard}
-              detail={item.detail}
-              date={item.tanggal}
-              tagUtama={item.tagUtama}
-              tagSekolah={item.tagSekolah}
-            />
-          ))}
+          {filteredData.map((item, index) =>
+            isLoading ? (
+              <LoadingCard key={index} />
+            ) : (
+              <CardKeg
+                key={index}
+                id={item.id}
+                img={item.img}
+                title={item.titleCard}
+                detail={item.detail}
+                date={item.tanggal}
+                tagUtama={item.tagUtama}
+                tagSekolah={item.tagSekolah}
+              />
+            )
+          )}
         </div>
       </section>
     </>
