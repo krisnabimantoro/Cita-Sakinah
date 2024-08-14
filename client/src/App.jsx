@@ -40,7 +40,7 @@ function App() {
         position="top-right"
         toastOptions={{
           duration: 3000,
-          style: { background: "#043F2D", color: "#ffff" },
+          style: { background: "#F2673F", color: "#ffff" },
         }}
       />
       <Routes location={location} key={location.pathname}>

@@ -4,6 +4,7 @@ import { LuLogOut } from "react-icons/lu";
 import { dataSidebar } from "../../data/datasidebar";
 import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "../../components/modal/modal";
+import { toast } from "react-hot-toast";
 
 const Sidebar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +16,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
+    toast.success("Logout Berhasil");
     navigate("/auth/login");
   };
 

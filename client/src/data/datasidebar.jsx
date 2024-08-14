@@ -1,6 +1,5 @@
-import { LuLayoutDashboard, LuBookMinus } from "react-icons/lu";
+import { LuLayoutDashboard, LuBookMinus, LuBoxes } from "react-icons/lu";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import { PiTreeStructure } from "react-icons/pi";
 import { FaRegBuilding } from "react-icons/fa";
 
 export const dataSidebar = [
@@ -22,7 +21,7 @@ export const dataSidebar = [
   {
     name: "Struktur",
     link: "/admin/struktur",
-    icon: <PiTreeStructure size={24} />,
+    icon: <LuBoxes size={24} />,
   },
   {
     name: "Fasilitas",

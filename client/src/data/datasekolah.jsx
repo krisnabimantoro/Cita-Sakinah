@@ -19,13 +19,6 @@ export const dataSekolah = [
     tujuan: `Anak yg berbakti kepada orang tua dan memiliki kemampuan baik diniyah (agama) maupun duniawi adalah harapan orang tua muslimin. Oleh sebab itu anak-anak harus dibekali dengan tameng yang kuat yaitu aqidah shahihah (keyakinan yg benar) dan akhlaqul karimah (perilaku yang mulia). \n\n Maka sistem Pendidikan yang menggabungkan antara kemampuan intelegensi dan kekuatan keyakinan yg diamalkan dalam praktek keseharian adalah suatu tuntutan yg wajar untuk diwujudkan. Dan perlu disadari Bersama bahwa pendirian TPA “Cita Sakinah” Karangploso tidak dapat terlaksana tanpa dukungan segenap masyarakat yg peduli dengan Pendidikan generasi penerus Islam.`,
     pengelola: [
       {
-        nama: "Ahmad Syafii",
-        tempatLahir: "Malang",
-        pendidikan: "S1 Pendidikan Anak Usia Dini",
-        agama: "Islam",
-        alamat:
-          "Perum Griya Permata Alam Blok O nomer 5-6 RT.4 RW.11 Ngijo Karangploso Malang",
-        kontak: "08123456789",
         lat: -7.900614290855265,
         lng: 112.60901133934773,
       },
@@ -52,12 +45,6 @@ export const dataSekolah = [
       "Membentuk anak-anak yang berprestasi dan berkarakter baik dengan landasan iman dan taqwa. Melalui kegiatan bermain yang edukatif, anak-anak di KB 'Aisyiyah 24 diharapkan dapat berkembang secara optimal dalam aspek kognitif, sosial, emosional, dan spiritual.",
     pengelola: [
       {
-        nama: "Budi Santoso",
-        tempatLahir: "Surabaya",
-        pendidikan: "S1 Psikologi",
-        agama: "Islam",
-        alamat: "Jalan Merdeka No. 12 RT.2 RW.3 Tlogomas Malang",
-        kontak: "08129876543",
         lat: -7.900614290855265,
         lng: 112.60901133934773,
       },
@@ -84,12 +71,6 @@ export const dataSekolah = [
       "Membantu anak-anak dalam mengembangkan potensi mereka secara optimal baik dalam aspek akademik maupun non-akademik. Selain itu, TK ABA 33 berupaya untuk menanamkan nilai-nilai moral dan agama sejak dini agar anak-anak tumbuh menjadi pribadi yang baik dan berkarakter.",
     pengelola: [
       {
-        nama: "Citra Dewi",
-        tempatLahir: "Malang",
-        pendidikan: "S2 Pendidikan Anak Usia Dini",
-        agama: "Islam",
-        alamat: "Jalan Pahlawan No. 9 RT.1 RW.2 Klojen Malang",
-        kontak: "08122334455",
         lat: -7.900614290855265,
         lng: 112.60901133934773,
       },

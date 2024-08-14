@@ -16,10 +16,10 @@ const ContactSection = () => {
       <div className="grid md:grid-cols-2 gap-10">
         <div className="flex flex-col justify-between h-full gap-5">
           <div className="flex flex-col gap-4">
-            <h1 className="text-main font-bold text-3xl sm:text-5xl">
+            <h1 className="text-main font-bold text-4xl sm:text-5xl">
               Terima kasih, Kedatangan Anda Sangat Kami Apresiasi
             </h1>
-            <span className="text-abugelap sm:text-lg font-medium">
+            <span className="text-abugelap text-base font-medium">
               Kami berharap Anda dapat merasakan dedikasi dan semangat kami
               dalam memberikan yang terbaik bagi perkembangan dan kesejahteraan
               anak-anak. Jika Anda memiliki pertanyaan atau membutuhkan

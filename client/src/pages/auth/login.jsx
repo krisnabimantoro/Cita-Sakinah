@@ -4,7 +4,7 @@ import InputField from "../../components/form/inputfield";
 import { FiUser } from "react-icons/fi";
 import { CgLock } from "react-icons/cg";
 import Button from "../../components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 const LoginPage = () => {
@@ -30,18 +30,20 @@ const LoginPage = () => {
 
   return (
     <div className="bg-main h-screen flex items-center justify-center">
-      <div className="bg-white w-[350px] sm:w-[466px] h-[552px] rounded-3xl">
+      <div className="bg-white w-[350px] sm:w-[466px] h-[540px] rounded-3xl">
         <form
           className="flex flex-col items-center justify-between h-full py-11 px-10 sm:px-[61px]"
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col items-center">
-            <img
-              src={LogoLogin}
-              alt="logo-login"
-              draggable="false"
-              width="172px"
-            />
+            <NavLink to="/">
+              <img
+                src={LogoLogin}
+                alt="logo-login"
+                draggable="false"
+                width="172px"
+              />
+            </NavLink>
             <h1 className="text-main text-2xl font-semibold mt-8 mb-5">
               Login Administrator
             </h1>

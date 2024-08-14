@@ -18,7 +18,7 @@ const AboutSection = () => {
           <h1 className="text-main text-4xl sm:text-5xl font-bold">
             Tentang Kami
           </h1>
-          <span className="sm:text-lg font-medium text-abugelap text-justify">
+          <span className="text-base font-medium text-abugelap text-justify">
             Selamat datang di PAUD Kami, tempat di mana pendidikan awal anak
             menjadi fondasi yang kokoh untuk masa depan mereka. Kami memiliki
             tiga sekolah unggulan yang dirancang untuk memenuhi kebutuhan

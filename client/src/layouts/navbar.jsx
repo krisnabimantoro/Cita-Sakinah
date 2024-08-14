@@ -3,6 +3,7 @@ import LogoNavbar from "../assets/svg/logo.svg";
 import NavbarMenu from "../components/ui/navbarmenu";
 import { navbarMenuData } from "../data/datanavbar";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [menu, setMenu] = useState(false);
@@ -31,12 +32,14 @@ const NavBar = () => {
       <div className="mx-[50px] md:mx-[120px] py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img
-              src={LogoNavbar}
-              alt="logo-navbar"
-              draggable="false"
-              width="50px"
-            />
+            <Link to="/">
+              <img
+                src={LogoNavbar}
+                alt="logo-navbar"
+                draggable="false"
+                width="50px"
+              />
+            </Link>
             <h2 className="hidden sm:block text-main font-semibold text-xl">
               Cita Sakinah
             </h2>

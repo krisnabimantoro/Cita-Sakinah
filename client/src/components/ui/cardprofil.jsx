@@ -18,7 +18,7 @@ const CardProfil = ({ img, sekolah, titlesekolah, child, age }) => (
           {titlesekolah}
         </h3>
       </div>
-      <div className="flex flex-col items-start text-abugelap text-lg font-medium">
+      <div className="flex flex-col items-start text-abugelap text-base font-medium">
         <span>Untuk {child}</span>
         <span>Usia {age} Tahun</span>
       </div>
