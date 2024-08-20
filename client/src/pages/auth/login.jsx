@@ -6,9 +6,11 @@ import { CgLock } from "react-icons/cg";
 import Button from "../../components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import LoadingSpinner from "../../components/loading/loadingspinner";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,8 +26,18 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success("Login Berhasil");
-    navigate("/admin/dashboard");
+    setLoading(true);
+
+    setTimeout(async () => {
+      try {
+        toast.success("Login Berhasil");
+        navigate("/admin/dashboard");
+      } catch (error) {
+        toast.error("Error");
+      } finally {
+        setLoading(false);
+      }
+    }, 2000);
   };
 
   return (
@@ -69,7 +81,13 @@ const LoginPage = () => {
               />
             </div>
           </div>
-          <Button name="Login" width="w-full" color="bg-button" />
+          <Button
+            name={loading ? "Logging in..." : "Login"}
+            width="w-full"
+            color="bg-button"
+            icon={loading ? <LoadingSpinner /> : null}
+            disabled={loading}
+          />
         </form>
       </div>
     </div>

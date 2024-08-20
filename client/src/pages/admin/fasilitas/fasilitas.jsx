@@ -21,6 +21,7 @@ const FasilitasPage = () => {
     title: "",
     sekolah: "",
     gambar: "",
+    tanggal: "",
   });
   const [previewImage, setPreviewImage] = useState("");
 
@@ -37,7 +38,7 @@ const FasilitasPage = () => {
   }, [searchQuery]);
 
   const handleAddClick = () => {
-    setFormData({ title: "", sekolah: "", gambar: "" });
+    setFormData({ title: "", sekolah: "", gambar: "", tanggal: "" });
     setPreviewImage("");
     setIsEdit(false);
     setIsModalOpen(true);
@@ -68,16 +69,19 @@ const FasilitasPage = () => {
   };
 
   const handleSaveFasilitas = () => {
+    const currentDate = new Date().toISOString().split("T")[0];
     if (isEdit) {
       setFilteredData(
         filteredData.map((item) =>
-          item === selectedFasilitas ? { ...formData, id: item.id } : item
+          item === selectedFasilitas
+            ? { ...formData, tanggal: currentDate, id: item.id }
+            : item
         )
       );
     } else {
       setFilteredData([
         ...filteredData,
-        { ...formData, id: Date.now().toString() },
+        { ...formData, id: Date.now().toString(), tanggal: currentDate },
       ]);
     }
     setIsModalOpen(false);

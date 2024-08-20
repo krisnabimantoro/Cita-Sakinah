@@ -54,10 +54,7 @@ const KegiatanPage = () => {
   };
 
   const handleEditClick = (kegiatan) => {
-    setFormData({
-      ...kegiatan,
-      tanggal: kegiatan.tanggal,
-    });
+    setFormData(kegiatan);
     setPreviewImage(kegiatan.gambar);
     setSelectedKegiatan(kegiatan);
     setIsEdit(true);
@@ -71,9 +68,7 @@ const KegiatanPage = () => {
 
   const handleConfirmDelete = () => {
     setIsDeleteModalOpen(false);
-    setFilteredData(
-      filteredData.filter((item) => item.id !== selectedKegiatan.id)
-    );
+    setFilteredData(filteredData.filter((item) => item !== selectedKegiatan));
     setSelectedKegiatan(null);
   };
 
@@ -83,20 +78,16 @@ const KegiatanPage = () => {
   };
 
   const handleSaveKegiatan = () => {
-    const updatedFormData = {
-      ...formData,
-      tanggal: formData.tanggal,
-    };
     if (isEdit) {
       setFilteredData(
         filteredData.map((item) =>
-          item.id === selectedKegiatan.id ? updatedFormData : item
+          item === selectedKegiatan ? { ...formData, id: item.id } : item
         )
       );
     } else {
       setFilteredData([
         ...filteredData,
-        { ...updatedFormData, id: Date.now().toString() },
+        { ...formData, id: Date.now().toString() },
       ]);
     }
     setIsEditModalOpen(false);
@@ -147,7 +138,7 @@ const KegiatanPage = () => {
     { header: "Gambar", field: "gambar", truncate: 0 },
     { header: "Deskripsi", field: "desc", truncate: 20 },
     { header: "Tipe Kegiatan", field: "tipe", truncate: 20 },
-    { header: "Tanggal Diubah", field: "tanggal", truncate: 15 },
+    { header: "Tanggal Kegiatan", field: "tanggal", truncate: 15 },
     { header: "Sekolah", field: "sekolah", truncate: 20 },
     { header: "Aksi", field: "action", truncate: 0 },
   ];

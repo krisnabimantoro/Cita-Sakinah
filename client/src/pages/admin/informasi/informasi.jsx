@@ -122,7 +122,7 @@ const InformasiPage = () => {
     { header: "Judul", field: "title", truncate: 20 },
     { header: "Gambar", field: "gambar", truncate: 0 },
     { header: "Deskripsi", field: "desc", truncate: 20 },
-    { header: "Tanggal Diubah", field: "tanggal", truncate: 15 },
+    { header: "Tanggal Informasi", field: "tanggal", truncate: 15 },
     { header: "Sekolah", field: "sekolah", truncate: 20 },
     { header: "Aksi", field: "action", truncate: 0 },
   ];
@@ -222,6 +222,17 @@ const InformasiPage = () => {
             value={formData.desc}
             onChange={handleInputChange}
             placeholder="Masukkan Deskripsi"
+          />
+          <InputField
+            label="Tanggal Informasi"
+            id="tanggal"
+            name="tanggal"
+            type="date"
+            value={formData.tanggal}
+            onChange={(e) =>
+              setFormData({ ...formData, tanggal: e.target.value })
+            }
+            placeholder="Masukkan Tanggal Informasi"
           />
           <div className="flex flex-col">
             <label className="text-main font-semibold text-sm mb-2">

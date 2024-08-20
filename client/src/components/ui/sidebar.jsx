@@ -41,7 +41,7 @@ const Sidebar = () => {
             alt="logo-admin"
             onClick={toggleSidebar}
             draggable="false"
-            className="w-20 h-20 cursor-pointer"
+            className="w-20 cursor-pointer"
           />
           {!isCollapsed && (
             <h1 className="text-2xl text-main font-bold text-center">
