@@ -8,7 +8,7 @@ export default {
   async displayData(req: Request, res: Response) {
     const conn = await connect();
     const result = await conn.query(
-      `SELECT k.*, kk.namaKegiatan AS "Nama Kegiatan", s.namaSekolah AS "Nama Sekolah" FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id`
+      `SELECT k.*, kk.namaKegiatan, s.namaSekolah FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id`
     );
     return res.json(result[0]);
   },
@@ -47,19 +47,19 @@ export default {
 
     if (jenisKegiatan && sekolahId) {
       const result = await conn.query(
-        `SELECT k.*, kk.namaKegiatan AS "Nama Kegiatan", s.namaSekolah AS "Nama Sekolah" FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id where sekolahId=? && jenisKegiatan=?`,
+        `SELECT k.*, kk.namaKegiatan, s.namaSekolah  FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id where sekolahId=? && jenisKegiatan=?`,
         [sekolahId, jenisKegiatan]
       );
       return res.json(result[0]);
     } else if (!sekolahId) {
       const result = await conn.query(
-        `SELECT k.*, kk.namaKegiatan AS "Nama Kegiatan", s.namaSekolah AS "Nama Sekolah" FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id where jenisKegiatan=?`,
+        `SELECT k.*, kk.namaKegiatan , s.namaSekolah  FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id where jenisKegiatan=?`,
         [jenisKegiatan]
       );
       return res.json(result[0]);
     } else {
       const result = await conn.query(
-        `SELECT k.*, kk.namaKegiatan AS "Nama Kegiatan", s.namaSekolah AS "Nama Sekolah" FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id where sekolahId=? `,
+        `SELECT k.*, kk.namaKegiatan, s.namaSekolah FROM kegiatan k JOIN kategoriKegiatan kk ON k.jenisKegiatan = kk.id JOIN sekolah s ON k.sekolahId = s.id where sekolahId=? `,
         [sekolahId]
       );
       return res.json(result[0]);
