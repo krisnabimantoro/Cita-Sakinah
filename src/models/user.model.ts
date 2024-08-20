@@ -3,6 +3,6 @@ export default interface users {
   username: String;
   password: String;
   role: "Admin";
-  noHandphone: Number;
+  noHandphone: BigInt;
   sekolahId: Number;
 }
