@@ -21,9 +21,9 @@ const InformasiPage = () => {
     title: "",
     desc: "",
     sekolah: [],
-    gambar: "",
+    gambar: [],
   });
-  const [previewImage, setPreviewImage] = useState("");
+  const [previewImage, setPreviewImage] = useState([]);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Informasi ";
@@ -38,8 +38,8 @@ const InformasiPage = () => {
   }, [searchQuery]);
 
   const handleAddClick = () => {
-    setFormData({ title: "", desc: "", sekolah: [], gambar: "" });
-    setPreviewImage("");
+    setFormData({ title: "", desc: "", sekolah: [], gambar: [] });
+    setPreviewImage([]);
     setIsEdit(false);
     setIsEditModalOpen(true);
   };
@@ -58,8 +58,10 @@ const InformasiPage = () => {
   };
 
   const handleConfirmDelete = () => {
+    setFilteredData((prevData) =>
+      prevData.filter((item) => item !== selectedInformasi)
+    );
     setIsDeleteModalOpen(false);
-    setFilteredData(filteredData.filter((item) => item !== selectedInformasi));
     setSelectedInformasi(null);
   };
 
@@ -70,14 +72,14 @@ const InformasiPage = () => {
 
   const handleSaveInformasi = () => {
     if (isEdit) {
-      setFilteredData(
-        filteredData.map((item) =>
+      setFilteredData((prevData) =>
+        prevData.map((item) =>
           item === selectedInformasi ? { ...formData, id: item.id } : item
         )
       );
     } else {
-      setFilteredData([
-        ...filteredData,
+      setFilteredData((prevData) => [
+        ...prevData,
         { ...formData, id: Date.now().toString() },
       ]);
     }
@@ -91,15 +93,27 @@ const InformasiPage = () => {
   };
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    files.map((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewImage(reader.result);
-        setFormData({ ...formData, gambar: reader.result });
+        setPreviewImage((prev) => [...prev, reader.result]);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          gambar: [...prevFormData.gambar, reader.result],
+        }));
       };
       reader.readAsDataURL(file);
-    }
+      return reader.result;
+    });
+  };
+
+  const handleDeleteImage = (index) => {
+    setPreviewImage((prevImages) => prevImages.filter((_, i) => i !== index));
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      gambar: prevFormData.gambar.filter((_, i) => i !== index),
+    }));
   };
 
   const handleSchoolChange = (e) => {
@@ -137,6 +151,7 @@ const InformasiPage = () => {
   const dataReal = filteredData.map((informasi) => ({
     ...informasi,
     sekolah: formatSchools(informasi.sekolah),
+    gambar: informasi.gambar[0] || "",
     action: (
       <div className="flex gap-3 items-center">
         <LuPen
@@ -203,7 +218,7 @@ const InformasiPage = () => {
         onCancel={() => setIsEditModalOpen(false)}
         onConfirm={handleSaveInformasi}
         confirm="Simpan"
-        width="w-[500px]"
+        width="w-[528px]"
         justify="justify-center"
       >
         <div className="flex flex-col gap-4">
@@ -257,10 +272,13 @@ const InformasiPage = () => {
             </div>
           </div>
           <ImageUploadForm
-            title="Gambar Informasi"
-            fileInputRef={fileInputRef}
-            handleImageUpload={handleImageUpload}
-            previewImage={previewImage}
+            label="Upload Gambar Informasi"
+            id="gambar"
+            name="gambar"
+            onChange={handleImageUpload}
+            previewImages={previewImage}
+            onDeleteImage={handleDeleteImage}
+            isMultiple={true}
           />
         </div>
       </Modal>

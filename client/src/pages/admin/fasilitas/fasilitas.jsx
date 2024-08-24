@@ -212,10 +212,11 @@ const FasilitasPage = () => {
             options={schoolOptions}
           />
           <ImageUploadForm
-            title="Gambar Fasilitas"
+            title="Upload Gambar Fasilitas"
             fileInputRef={fileInputRef}
             handleImageUpload={handleImageUpload}
-            previewImage={previewImage}
+            previewImages={previewImage}
+            isMultiple={false}
           />
         </div>
       </Modal>

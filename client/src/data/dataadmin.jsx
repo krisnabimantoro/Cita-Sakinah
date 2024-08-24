@@ -1,5 +1,5 @@
 import Img from "../assets/svg/profil.svg";
-
+import About from "../assets/svg/about.svg";
 export const dataKegiatan = [
   {
     title: "Hari Kreatif Sedunia",
@@ -7,7 +7,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-01",
     sekolah: ["TK ABA 33"],
-    gambar: Img,
+    gambar: [Img, About],
   },
   {
     title: "Science Sederhana",
@@ -15,7 +15,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-02",
     sekolah: ["KB 'Aisyiyah 24"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Rapat Rutin",
@@ -23,7 +23,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Guru",
     tanggal: "2024-08-02",
     sekolah: ["TPA Cita Sakinah"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Pentas Seni",
@@ -31,7 +31,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-03",
     sekolah: ["TK ABA 33"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Lomba Mewarnai",
@@ -39,7 +39,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-04",
     sekolah: ["KB 'Aisyiyah 24"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Kunjungan Edukasi",
@@ -47,7 +47,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-05",
     sekolah: ["TPA Cita Sakinah"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Outing Class",
@@ -55,7 +55,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-06",
     sekolah: ["TK ABA 33"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Latihan Paduan Suara",
@@ -63,7 +63,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-07",
     sekolah: ["KB 'Aisyiyah 24"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Pengajian Rutin",
@@ -71,7 +71,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Guru",
     tanggal: "2024-08-08",
     sekolah: ["TPA Cita Sakinah"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Lomba Cerdas Cermat",
@@ -79,7 +79,7 @@ export const dataKegiatan = [
     tipe: "Kegiatan Siswa",
     tanggal: "2024-08-09",
     sekolah: ["TK ABA 33"],
-    gambar: Img,
+    gambar: [Img],
   },
 ];
 
@@ -89,70 +89,70 @@ export const dataInformasi = [
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     tanggal: "2024-08-01",
     sekolah: ["TPA Cita Sakinah"],
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Masuknya Sekolah",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["KB 'Aisyiyah 24"],
     tanggal: "2024-08-02",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Peresmian Gedung Baru",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["TK ABA 33"],
     tanggal: "2024-08-03",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Libur Nasional",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["TPA Cita Sakinah"],
     tanggal: "2024-08-04",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Pengambilan Raport",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["KB 'Aisyiyah 24"],
     tanggal: "2024-08-05",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Sosialisasi Program Baru",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["TK ABA 33"],
     tanggal: "2024-08-06",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Pendaftaran Online",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["TPA Cita Sakinah"],
     tanggal: "2024-08-07",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Pengumuman Lomba",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["KB 'Aisyiyah 24"],
     tanggal: "2024-08-08",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Kegiatan Ekstrakurikuler",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["TK ABA 33"],
     tanggal: "2024-08-09",
-    gambar: Img,
+    gambar: [Img],
   },
   {
     title: "Pembagian Seragam",
     desc: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat repellendus officia soluta at. Corporis totam temporibus consequatur error maxime alias dolore esse dolor, illo laboriosam aliquid nobis harum neque amet?",
     sekolah: ["TPA Cita Sakinah"],
     tanggal: "2024-08-10",
-    gambar: Img,
+    gambar: [Img],
   },
 ];
 

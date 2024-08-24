@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LogoAdmin from "../../assets/svg/logo.svg";
 import { LuLogOut } from "react-icons/lu";
 import { dataSidebar } from "../../data/datasidebar";
@@ -8,14 +8,28 @@ import { toast } from "react-hot-toast";
 
 const Sidebar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleLogoutClick = () => {
     setIsModalOpen(true);
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("adminRoute");
     toast.success("Logout Berhasil");
     navigate("/auth/login");
   };
@@ -24,14 +38,10 @@ const Sidebar = () => {
     setIsModalOpen(false);
   };
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   return (
     <div
       className={`flex flex-col justify-between border-r border-main min-h-screen transition-all duration-300 ${
-        isCollapsed ? "w-20" : "w-80"
+        isMobile ? "w-20" : "w-80"
       }`}
     >
       <div className="flex flex-col">
@@ -39,11 +49,10 @@ const Sidebar = () => {
           <img
             src={LogoAdmin}
             alt="logo-admin"
-            onClick={toggleSidebar}
             draggable="false"
             className="w-20 cursor-pointer"
           />
-          {!isCollapsed && (
+          {!isMobile && (
             <h1 className="text-2xl text-main font-bold text-center">
               Cita Sakinah Administrator
             </h1>
@@ -58,13 +67,13 @@ const Sidebar = () => {
                 <NavLink key={index} to={menu.link}>
                   <li
                     className={`flex items-center ${
-                      isCollapsed ? "justify-center" : "gap-2"
+                      isMobile ? "justify-center" : "gap-2"
                     } rounded-[6px] px-6 py-2 mx-4 hover:bg-main hover:text-white ${
                       isActive ? "bg-main text-white" : "text-main"
                     }`}
                   >
                     <span>{menu.icon}</span>
-                    {!isCollapsed && <h4>{menu.name}</h4>}
+                    {!isMobile && <h4>{menu.name}</h4>}
                   </li>
                 </NavLink>
               );
@@ -78,10 +87,10 @@ const Sidebar = () => {
       >
         <div
           className={`flex items-center py-5 ${
-            isCollapsed ? "justify-center" : "justify-between px-10"
+            isMobile ? "justify-center" : "justify-between px-10"
           }`}
         >
-          {!isCollapsed && (
+          {!isMobile && (
             <div className="flex flex-col">
               <h2 className="text-2xl font-medium">Admin TPA</h2>
               <h4 className="text-xs">TPA Cita Sakinah</h4>
