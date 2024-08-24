@@ -1,6 +1,13 @@
-import React from "react";
-import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 import NotFoundPage from "./pages/notfound";
 import DefaultLayout from "./layouts/default";
@@ -9,30 +16,43 @@ import AdminLayout from "./layouts/admin";
 import HomePage from "./pages/main/home/home";
 import KontakPage from "./pages/main/kontak/kontak";
 import StrukturPage from "./pages/main/struktur/struktur";
-
 import InformasiPage from "./pages/main/informasi/informasi";
 import DetailInforPage from "./pages/main/informasi/detail/detailinfor";
-
 import KegiatanPage from "./pages/main/kegiatan/kegiatan";
 import DetailKegPage from "./pages/main/kegiatan/detail/detailkeg";
-
 import SekolahPage from "./pages/main/profil/sekolah/sekolah";
 import FasilitasPage from "./pages/main/profil/fasilitas/fasilitas";
-
 import LoginPage from "./pages/auth/login";
-
-import axios from "axios";
 import DashboardAdminPage from "./pages/admin/dashboard/dashboard";
 import FasilitasAdminPage from "./pages/admin/fasilitas/fasilitas";
 import InformasiAdminPage from "./pages/admin/informasi/informasi";
 import KegiatanAdminPage from "./pages/admin/kegiatan/kegiatan";
 import StrukturAdminPage from "./pages/admin/struktur/struktur";
 
+import { useLocalStorage } from "./hooks/useLocalStorage";
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [currentAdminRoute, setCurrentAdminRoute] = useLocalStorage(
+    "adminRoute",
+    null
+  );
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/admin")) {
+      setCurrentAdminRoute(location.pathname);
+    }
+  }, [location.pathname, setCurrentAdminRoute]);
+
+  useEffect(() => {
+    if (location.pathname === "/admin" || location.pathname === "/admin/") {
+      navigate(currentAdminRoute, { replace: true });
+    }
+  }, [currentAdminRoute, location.pathname, navigate]);
 
   return (
     <>
