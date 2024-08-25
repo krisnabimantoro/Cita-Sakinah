@@ -23,8 +23,8 @@ const AboutSection = () => {
             menjadi fondasi yang kokoh untuk masa depan mereka. Kami memiliki
             tiga sekolah unggulan yang dirancang untuk memenuhi kebutuhan
             pendidikan anak-anak pada setiap tahap perkembangan mereka: Taman
-            Kanak-Kanak (TK), Kelompok Bermain (KB), dan Taman Penitipan Anak
-            (TPA).
+            Penitipan Anak (TPA), Kelompok Bermain (KB), dan Taman Kanak-Kanak
+            (TK)
           </span>
         </div>
       </div>

@@ -3,7 +3,9 @@ import FaqItem from "../../../../components/ui/faqitem";
 import { faqData } from "../../../../data/datafaq";
 
 const FaqSection = () => {
-  const [openFaq, setOpenFaq] = useState(null);
+  const [openFaq, setOpenFaq] = useState(
+    faqData.length > 0 ? faqData[0].id : null
+  );
 
   return (
     <div className="shadow-md p-7 rounded-xl flex flex-col gap-5 bg-white">
@@ -12,9 +14,11 @@ const FaqSection = () => {
       </h1>
       <div className="sm:border sm:border-main rounded-lg overflow-hidden">
         {faqData.map((faq) => (
-          <div className="sm:border-b last:border-b-0 border-main py-[17px] sm:px-[27px]">
+          <div
+            key={faq.id}
+            className="sm:border-b last:border-b-0 border-main py-[17px] sm:px-[27px]"
+          >
             <FaqItem
-              key={faq.id}
               id={faq.id}
               question={faq.question}
               answer={faq.answer}
