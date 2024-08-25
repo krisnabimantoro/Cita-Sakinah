@@ -8,15 +8,17 @@ import { dataInformasi } from "../../../data/dataadmin";
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 import { LuPen } from "react-icons/lu";
 import { IoIosSearch } from "react-icons/io";
+import Pagination from "../../../components/ui/pagination";
 
 const InformasiPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(dataInformasi);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedInformasi, setSelectedInformasi] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
-  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     title: "",
     desc: "",
@@ -27,14 +29,13 @@ const InformasiPage = () => {
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Informasi ";
-  }, []);
 
-  useEffect(() => {
     setFilteredData(
       dataInformasi.filter((informasi) =>
         informasi.title.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
+    setCurrentPage(1);
   }, [searchQuery]);
 
   const handleAddClick = () => {
@@ -168,6 +169,16 @@ const InformasiPage = () => {
     ),
   }));
 
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = dataReal.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
       <div className="flex flex-col w-full">
@@ -199,7 +210,12 @@ const InformasiPage = () => {
             />
           </div>
         </div>
-        <TableDashboard columns={columnsInformasi} data={dataReal} />
+        <TableDashboard columns={columnsInformasi} data={paginatedData} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
       <Modal
         isOpen={isDeleteModalOpen}

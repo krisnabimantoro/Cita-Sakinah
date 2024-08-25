@@ -8,10 +8,13 @@ import { dataKegiatan } from "../../../data/dataadmin";
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 import { LuPen } from "react-icons/lu";
 import { IoIosSearch } from "react-icons/io";
+import Pagination from "../../../components/ui/pagination";
 
 const KegiatanPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(dataKegiatan);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedKegiatan, setSelectedKegiatan] = useState(null);
@@ -28,14 +31,13 @@ const KegiatanPage = () => {
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Kegiatan ";
-  }, []);
 
-  useEffect(() => {
     setFilteredData(
       dataKegiatan.filter((kegiatan) =>
         kegiatan.title.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
+    setCurrentPage(1);
   }, [searchQuery]);
 
   const handleAddClick = () => {
@@ -183,6 +185,16 @@ const KegiatanPage = () => {
     ),
   }));
 
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = dataReal.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
       <div className="flex flex-col w-full">
@@ -214,7 +226,12 @@ const KegiatanPage = () => {
             />
           </div>
         </div>
-        <TableDashboard columns={columnsKegiatan} data={dataReal} />
+        <TableDashboard columns={columnsKegiatan} data={paginatedData} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
       <Modal
         isOpen={isDeleteModalOpen}
