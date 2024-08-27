@@ -13,13 +13,13 @@ const NavbarMenu = ({
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const isActiveSubLink = sublinks
-    ? sublinks.some(({ sublink }) =>
-        sublink.some(({ link }) => link === currentPath)
-      )
-    : false;
-
-  const isActive = currentPath === linkMenu || isActiveSubLink;
+  const isActive =
+    (linkMenu !== "/" && currentPath.startsWith(linkMenu)) ||
+    (linkMenu === "/" && currentPath === "/") ||
+    (sublinks &&
+      sublinks.some(({ sublink }) =>
+        sublink.some(({ link }) => currentPath.startsWith(link))
+      ));
 
   return (
     <div
@@ -67,7 +67,9 @@ const NavbarMenu = ({
                     <div
                       key={name}
                       className={`my-2.5 font-medium ${
-                        currentPath === link ? "text-button" : "text-abu"
+                        currentPath.startsWith(link)
+                          ? "text-button"
+                          : "text-abu"
                       }`}
                     >
                       <Link to={link} className="hover:text-button">

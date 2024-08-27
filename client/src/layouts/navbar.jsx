@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import LogoNavbar from "../assets/svg/logo.svg";
 import NavbarMenu from "../components/ui/navbarmenu";
 import { navbarMenuData } from "../data/datanavbar";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { Link } from "react-router-dom";
 
 const NavBar = () => {
   const [menu, setMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,6 +19,10 @@ const NavBar = () => {
       document.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   const handleMenu = () => {
     setMenu(!menu);

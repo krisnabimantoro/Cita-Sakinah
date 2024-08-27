@@ -11,7 +11,10 @@ const CardKeg = ({ id, img, title, detail, date, tagUtama, tagSekolah }) => {
   };
 
   return (
-    <div className="bg-white w-full md:w-[375px] h-full rounded-xl mb-6 border border-abugelap border-opacity-30 shadow-md">
+    <div
+      className="bg-white w-full md:w-[375px] rounded-xl mb-6 border border-abugelap border-opacity-30 shadow-md cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="relative">
         {img.map((src, index) => (
           <img
@@ -48,7 +51,7 @@ const CardKeg = ({ id, img, title, detail, date, tagUtama, tagSekolah }) => {
               onClick={handleClick}
               className="text-button text-sm font-semibold"
             >
-              See More
+              Lihat Selengkapnya
             </button>
           </div>
         </div>

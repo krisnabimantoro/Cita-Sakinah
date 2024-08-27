@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ImgFooter from "../assets/svg/logo.svg";
 import FooterMenu from "../components/ui/footermenu";
 import { footerMenuData, socialMediaLinks } from "../data/datafooter";
+import { useLocation } from "react-router-dom";
 
 const Footer = () => {
+  const location = useLocation();
   const year = React.useMemo(() => new Date().getFullYear(), []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <footer

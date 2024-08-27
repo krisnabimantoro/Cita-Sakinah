@@ -114,11 +114,16 @@ const FasilitasPage = () => {
   ];
 
   const columnsFasilitas = [
-    { header: "Judul", field: "title", truncate: 20 },
-    { header: "Gambar", field: "gambar", truncate: 0 },
-    { header: "Tanggal Diubah", field: "tanggal", truncate: 15 },
-    { header: "Sekolah", field: "sekolah", truncate: 20 },
-    { header: "Aksi", field: "action", truncate: 0 },
+    { header: "Judul", field: "title", truncate: 20, width: "w-[20%]" },
+    { header: "Gambar", field: "gambar", truncate: 0, width: "w-[20%]" },
+    {
+      header: "Tanggal Diubah",
+      field: "tanggal",
+      truncate: 15,
+      width: "w-[20%]",
+    },
+    { header: "Sekolah", field: "sekolah", truncate: 20, width: "w-[20%]" },
+    { header: "Aksi", field: "action", truncate: 0, width: "w-[10%]" },
   ];
 
   const dataReal = filteredData.map((fasilitas) => ({

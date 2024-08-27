@@ -134,12 +134,17 @@ const InformasiPage = () => {
   ];
 
   const columnsInformasi = [
-    { header: "Judul", field: "title", truncate: 20 },
-    { header: "Gambar", field: "gambar", truncate: 0 },
-    { header: "Deskripsi", field: "desc", truncate: 20 },
-    { header: "Tanggal Informasi", field: "tanggal", truncate: 15 },
-    { header: "Sekolah", field: "sekolah", truncate: 20 },
-    { header: "Aksi", field: "action", truncate: 0 },
+    { header: "Judul", field: "title", truncate: 20, width: "w-[20%]" },
+    { header: "Gambar", field: "gambar", truncate: 10, width: "w-[10%]" },
+    { header: "Deskripsi", field: "desc", truncate: 35, width: "w-[30%]" },
+    {
+      header: "Tanggal Informasi",
+      field: "tanggal",
+      truncate: 15,
+      width: "w-[15%]",
+    },
+    { header: "Sekolah", field: "sekolah", truncate: 20, width: "w-[15%]" },
+    { header: "Aksi", field: "action", truncate: 0, width: "w-[10%]" },
   ];
 
   const formatSchools = (schools) => {

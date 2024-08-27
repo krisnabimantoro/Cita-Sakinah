@@ -17,7 +17,9 @@ const TableDashboard = ({ columns, data }) => {
               {columns.map((col, index) => (
                 <th
                   key={index}
-                  className="py-2 px-4 text-left text-main border-b border-main border-opacity-35"
+                  className={`py-2 px-4 text-left text-main border-b border-main border-opacity-35 ${
+                    col.width || "w-auto"
+                  }`}
                 >
                   {col.header}
                 </th>
@@ -33,7 +35,9 @@ const TableDashboard = ({ columns, data }) => {
                 {columns.map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className="py-4 px-4 text-main whitespace-nowrap border-b border-main border-opacity-35"
+                    className={`py-4 px-4 text-main whitespace-nowrap border-b border-main border-opacity-35 ${
+                      col.width || "w-auto"
+                    }`}
                   >
                     {col.field === "action" ? (
                       <div className="cursor-pointer">{item[col.field]}</div>
