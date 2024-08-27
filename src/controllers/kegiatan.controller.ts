@@ -3,6 +3,8 @@ import connect from "../utils/database";
 import kegiatan from "../models/kegiatan.model";
 import jenisKegiatan from "../models/kategoriKegiatan.model";
 import Sekolah from "../models/sekolah.model";
+import userModei from "../models/user.model";
+import { ResultSetHeader } from "mysql2";
 
 export default {
   async displayData(req: Request, res: Response) {
@@ -14,11 +16,26 @@ export default {
   },
   async createData(req: Request, res: Response) {
     const data: kegiatan = req.body;
+    // const userData: userModei = ;
     const conn = await connect();
-    const result = await conn.query(`INSERT INTO kegiatan set ?`, [data]);
+    const files = req.files as Express.Multer.File[] | undefined;
+
+    // Safely use the files
+    const imagePaths = files ? files.map((file) => file.path) : [];
+
+    // console.log(data);
+    const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO kegiatan set ?`, [data]);
+
+    const kegiatanId = insertData.insertId;
+    // console.log(kegiatanId);
+
+    for (const imagePath of imagePaths) {
+      await conn.query("INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)", [kegiatanId, imagePath]);
+    }
     return res.json({
       message: "Kegiatan berhasil dibuat!",
-      result,
+      insertData,
+      imagePaths,
     });
   },
   async updateData(req: Request, res: Response) {

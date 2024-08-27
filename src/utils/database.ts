@@ -12,6 +12,7 @@ const connect = async () => {
     });
 
     console.log("Connected to the MySQL database.");
+
     return connection;
   } catch (error) {
     console.error("Error connecting to the MySQL database:", error);
