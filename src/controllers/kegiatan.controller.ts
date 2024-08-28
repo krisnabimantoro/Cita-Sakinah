@@ -12,7 +12,7 @@ export default {
   async displayData(req: Request, res: Response) {
     const conn = await connect();
     const [rows] = await conn.query(
-      `SELECT k.id AS kegiatanId, k.judul, k.tanggal, k.deskripsi, kk.namaKegiatan, GROUP_CONCAT(ik.fileName) AS fileNames FROM kegiatan k LEFT JOIN kategorikegiatan kk ON k.jenisKegiatan = kk.id LEFT JOIN imageKegiatan ik ON k.id = ik.kegiatanId GROUP BY k.id ;`
+      `SELECT k.id AS kegiatanId, k.judul, k.tanggal, k.deskripsi, kk.namaKegiatan, GROUP_CONCAT(ik.fileName) AS fileName, s.namaSekolah FROM kegiatan k LEFT JOIN kategorikegiatan kk ON k.jenisKegiatan = kk.id LEFT JOIN imageKegiatan ik ON k.id = ik.kegiatanId left JOIN sekolah s ON k.sekolahId = s.id GROUP BY k.id `
     );
 
     const result = (rows as any[]).map((row) => ({
@@ -41,7 +41,7 @@ export default {
     for (const imagePath of imagePaths) {
       await conn.query("INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)", [kegiatanId, imagePath]);
     }
-    return res.json({
+    return res.status(201).json({
       message: "Kegiatan berhasil dibuat!",
       insertData,
       imagePaths,
@@ -54,12 +54,19 @@ export default {
     // const imgKegiatan:
     const conn = await connect();
 
+    if (idImage) {
+      const [oldImage] = await conn.query<any>(`select fileName from imageKegiatan where idImage = ? and kegiatanId = ?`, [
+        idImage,
+        kegiatanId,
+      ]);
+      removeFile(oldImage[0].fileName);
+    }
     const imagePaths = req.file as Express.Multer.File | undefined;
     const imageUrl = imagePaths?.path.replace(/\\/g, "/");
 
     let updateImageKegiatan;
     if (imagePaths?.filename) {
-      console.log("cek")
+      // console.log("cek");
       updateImageKegiatan = await conn.query(`UPDATE  imageKegiatan set  fileName =? WHERE kegiatanId  = ? and idImage=?`, [
         imageUrl,
         kegiatanId,
@@ -79,10 +86,12 @@ export default {
   async deleteData(req: Request, res: Response) {
     const id = req.params.id;
     const conn = await connect();
+    const deleteImage = await conn.query(`DELETE FROM imageKegiatan  WHERE kegiatanId = ?`, [id]);
     const result = await conn.query(`DELETE FROM kegiatan  WHERE id = ?`, [id]);
     return res.json({
       message: "Kegiatan berhasil dihapus!",
       result,
+      deleteImage,
     });
   },
   async filterSekolah(req: Request, res: Response) {
