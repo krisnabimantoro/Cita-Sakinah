@@ -1,12 +1,16 @@
 import multer from "multer";
 import path from "path";
+import { encryptImage } from "../utils/encryption";
 
 const storage = multer.diskStorage({
   destination(req, file, callback) {
     callback(null, "./storage/uploads");
   },
   filename(req, file, callback) {
-    callback(null, `${file.fieldname}-${file.originalname}`);
+    const KEY_UPLOAD: string = process.env.SECRET || "";
+    const hash = encryptImage(KEY_UPLOAD, file.originalname);
+    const ext = path.extname(file.originalname);
+    callback(null, `${file.fieldname}-${hash}${ext}`);
   },
 });
 

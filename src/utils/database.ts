@@ -11,7 +11,7 @@ const connect = async () => {
       password: process.env.PASSWORD_DB || "",
     });
 
-    console.log("Connected to the MySQL database.");
+    // console.log("Connected to the MySQL database.");
 
     return connection;
   } catch (error) {

@@ -8,6 +8,14 @@ export const encrypt = (key: string, plainText: string): string => {
   return `${iv.toString("hex")}:${encrypted.toString("hex")}`;
 };
 
+export const encryptImage = (key: string, plainText: string): string => {
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv("aes-256-ctr", Buffer.from(key), iv);
+  let encrypted = cipher.update(plainText);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  return `${encrypted.toString("hex")}`;
+};
+
 export const decrypt = (key: string, plainText: string) => {
   const textParts = plainText.split(":");
   const ivHex = textParts.shift();

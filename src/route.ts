@@ -20,7 +20,7 @@ router.patch("/sekolah/:id", sekolahController.updateData);
 router.post("/kegiatan", uploadMiddleware.multiple, kegiatanConctroller.createData);
 router.get("/kegiatan", kegiatanConctroller.displayData);
 router.get("/kegiatan", kegiatanConctroller.filterSekolah);
-router.patch("/kegiatan/:id", kegiatanConctroller.updateData);
+router.patch("/kegiatan/:id", uploadMiddleware.single, kegiatanConctroller.updateData);
 router.delete("/kegiatan/:id", kegiatanConctroller.deleteData);
 
 //auth
