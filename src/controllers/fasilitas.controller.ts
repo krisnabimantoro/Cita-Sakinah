@@ -13,11 +13,13 @@ export default {
       const imagePaths = req.file as Express.Multer.File | undefined;
       const imageUrl = imagePaths?.path.replace(/\\/g, "/");
 
+      console.log("cek");
       const [insertData] = await conn.query(`insert into fasilitas (namaFasilitas, imageName,sekolahId) values (?,?,?)`, [
         dataModel.namaFasilitas,
         imageUrl,
         sekolahId,
       ]);
+      console.log("cek2");
 
       res.status(201).json({
         message: "Fasilitas Berhasil dibuat",
@@ -37,7 +39,7 @@ export default {
 
     let updateWithImage;
     if (imageUrl) {
-      console.log(oldImage[0].imageName);
+      // console.log(oldImage[0].imageName);
       removeFile(oldImage[0].imageName);
       console.log("cek");
       updateWithImage = await conn.query(`update fasilitas set namaFasilitas = ?, imageName=? where id = ?`, [
@@ -60,6 +62,13 @@ export default {
     try {
       const conn = await connect();
       const id = req.params.id;
+
+      const [imagePath] = await conn.query<any>(`select imageName from fasilitas where id = ?`, [id]);
+
+      // console.log(imagePath[0].imageName);
+      removeFile(imagePath[0].imageName);
+      // for (const imageDelete of imagePath) {
+      // }
 
       const deleteFasiltas = await conn.query(`delete from fasilitas where id = ?`, [id]);
 
