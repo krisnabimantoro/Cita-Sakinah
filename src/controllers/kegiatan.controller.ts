@@ -1,11 +1,7 @@
 import { Request, Response } from "express";
 import connect from "../utils/database";
 import kegiatan from "../models/kegiatan.model";
-import jenisKegiatan from "../models/kategoriKegiatan.model";
-import Sekolah from "../models/sekolah.model";
-import userModei from "../models/user.model";
 import { ResultSetHeader } from "mysql2";
-import fs from "fs";
 import removeFile from "../utils/remove.file";
 
 export default {
@@ -26,15 +22,14 @@ export default {
     return res.json(result);
   },
   async createData(req: Request, res: Response) {
+    const conn = await connect();
     const data: kegiatan = req.body;
 
-    const conn = await connect();
     const files = req.files as Express.Multer.File[] | undefined;
     const imagePaths = files ? files.map((file) => file.path.replace(/\\/g, "/")) : [];
     // const imageUrl =
 
     const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO kegiatan set ?`, [data]);
-    // console.log(files);
 
     const kegiatanId = insertData.insertId;
 
@@ -86,6 +81,13 @@ export default {
   async deleteData(req: Request, res: Response) {
     const id = req.params.id;
     const conn = await connect();
+
+    const [imagePath] = await conn.query<any>(`select fileName from imageKegiatan where kegiatanId = ?`, [id]);
+
+    for (const imageDelete of imagePath) {
+      removeFile(imageDelete.fileName);
+    }
+
     const deleteImage = await conn.query(`DELETE FROM imageKegiatan  WHERE kegiatanId = ?`, [id]);
     const result = await conn.query(`DELETE FROM kegiatan  WHERE id = ?`, [id]);
     return res.json({
