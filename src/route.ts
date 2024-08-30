@@ -9,6 +9,8 @@ import authController from "./controllers/auth.controller";
 import uploadMiddleware from "./middlewares/upload.middleware";
 import strukturController from "./controllers/struktur.controller";
 import fasilitasController from "./controllers/fasilitas.controller";
+import informasiController from "./controllers/informasi.controller";
+import authMiddleware from "./middlewares/auth.middleware";
 
 router.post("/test", testController.createSchool);
 router.get("/test", testController.displayData);
@@ -18,11 +20,16 @@ router.get("/sekolah", sekolahController.displayData);
 router.patch("/sekolah/:id", sekolahController.updateData);
 
 //Kegiatan endpoint
-router.post("/kegiatan", uploadMiddleware.multiple, kegiatanConctroller.createData);
+router.post("/kegiatan",  uploadMiddleware.multiple, kegiatanConctroller.createData);
 router.get("/kegiatan", kegiatanConctroller.displayData);
 router.get("/kegiatan", kegiatanConctroller.filterSekolah);
 router.patch("/kegiatan/:id", uploadMiddleware.single, kegiatanConctroller.updateData);
 router.delete("/kegiatan/:id", kegiatanConctroller.deleteData);
+
+//informasi
+router.post("/informasi", uploadMiddleware.multiple, informasiController.createData);
+router.patch("/informasi/:id", uploadMiddleware.single, informasiController.updateData);
+router.delete("/informasi/:id", uploadMiddleware.single, informasiController.deleteData);
 
 //auth
 router.post("/user/auth/login", authController.login);
