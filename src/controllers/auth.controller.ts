@@ -44,7 +44,7 @@ export default {
         passwordValue,
       ]);
 
-      console.log(result);
+      // console.log(result);
       if (result.length > 0) {
         const token = jwt.sign({ id: userModel.id, sekolahId: userModel.sekolahId }, process.env.SECRET || "", { expiresIn: "2h" });
 
