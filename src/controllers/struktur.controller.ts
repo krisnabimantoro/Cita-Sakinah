@@ -1,35 +1,51 @@
 import { Request, Response } from "express";
 import connect from "../utils/database";
 import strukturModel from "../models/struktur.model";
-// import fs from "fs";
-import { error } from "console";
 import removeFile from "../utils/remove.file";
-import path from "path";
+
 
 export default {
   async changeStructure(req: Request, res: Response) {
-    const strukturModel: strukturModel = req.body;
-    const conn = await connect();
-    const [oldImage] = await conn.query<any>(`select imageName from struktur where id = 1`);
-    // console.log(oldImage[0].imageName);
-    removeFile(oldImage[0].imageName);
-    
-    const imagePaths = req.file as Express.Multer.File | undefined;
-    const imageUrl = imagePaths?.path.replace(/\\/g, "/");
-    console.log(imageUrl);
+    try {
+      const strukturModel: strukturModel = req.body;
+      const conn = await connect();
+      const [oldImage] = await conn.query<any>(`select imageName from struktur where id = 1`);
+      // console.log(oldImage[0].imageName);
 
-    const result = conn.query("update struktur set imageName = ? where id=1", [imageUrl]);
+      const imagePaths = req.file as Express.Multer.File | undefined;
+      const imageUrl = imagePaths?.path.replace(/\\/g, "/");
+      if (!imageUrl) return res.status(500).json({ message: "Input gambar kosong" });
+      console.log(imageUrl);
 
-    res.status(200).json({
-      result,
-    });
+      const result = conn.query("update struktur set imageName = ? where id=1", [imageUrl]);
+      removeFile(oldImage[0].imageName);
+
+      res.status(200).json({
+        message: "Berhasil Mengganti Struktur",
+        result,
+      });
+    } catch (error) {
+      const err = error as Error;
+      res.status(500).json({
+        information: err.message,
+        message: "Gagal update data struktur!",
+      });
+    }
   },
   async getStucture(req: Request, res: Response) {
-    const conn = await connect();
-    const [result] = await conn.query<any>("select imageName from struktur where id = 1");
+    try {
+      const conn = await connect();
+      const [result] = await conn.query<any>("select imageName from struktur where id = 1");
 
-    return res.status(200).json({
-      file: `${req.protocol}://${req.get("host")}/${result[0].imageName}`,
-    });
+      return res.status(200).json({
+        file: `${req.protocol}://${req.get("host")}/${result[0].imageName}`,
+      });
+    } catch (error) {
+      const err = error as Error;
+      res.status(500).json({
+        information: err.message,
+        message: "Gagal menampilkan struktur!",
+      });
+    }
   },
 };

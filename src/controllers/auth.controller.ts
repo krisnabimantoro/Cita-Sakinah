@@ -1,10 +1,15 @@
 import { Request, Response } from "express";
 import connect from "../utils/database";
 import userModel from "../models/user.model";
-import { Pool, RowDataPacket } from "mysql2/promise";
-
+import { RowDataPacket } from "mysql2/promise";
 import jwt from "jsonwebtoken";
 import { encrypt, decrypt } from "../utils/encryption";
+import * as Yup from "yup";
+
+const validateLoginSchema = Yup.object().shape({
+  username: Yup.string().required("Username harus diisi"),
+  password: Yup.string().required("Password harus diisi"),
+});
 
 export default {
   async register(req: Request, res: Response) {
@@ -26,18 +31,21 @@ export default {
   },
   async login(req: Request, res: Response) {
     // const { username, password } = req.body;
-    const userModel: userModel = req.body;
-
-    const conn = await connect();
-
-    const SECRET: string = process.env.SECRET || "";
 
     try {
+      await validateLoginSchema.validate(req.body);
+      const userModel: userModel = req.body;
+
+      const conn = await connect();
+
+      const SECRET: string = process.env.SECRET || "";
       const [PASSWORD] = await conn.query<any>(`SELECT PASSWORD FROM users WHERE username=? `, [userModel.username]);
+      if (PASSWORD.length < 1) return res.json({ message: "User tidak ditemukan" });
+
       const passwordValue = PASSWORD[0].PASSWORD;
       const decryptPassword = decrypt(SECRET, passwordValue);
 
-      if (decryptPassword !== userModel.password) return res.json({ message: "email atau password salah" });
+      if (decryptPassword !== userModel.password) return res.json({ message: "Password salah" });
 
       const [result] = await conn.query<RowDataPacket[]>(`SELECT * FROM users  WHERE username = ? AND password = ?`, [
         userModel.username,
@@ -54,6 +62,12 @@ export default {
           token,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      const err = error as Error;
+      res.status(500).json({
+        information: err.message,
+        message: "Gagal login",
+      });
+    }
   },
 };
