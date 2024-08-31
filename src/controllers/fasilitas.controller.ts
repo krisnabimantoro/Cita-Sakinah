@@ -60,22 +60,20 @@ export default {
 
       let updateWithImage;
       if (imageUrl) {
-        // console.log(oldImage[0].imageName);
         removeFile(oldImage[0].imageName);
+        // console.log(oldImage[0].imageName);
         console.log("cek");
-        updateWithImage = await conn.query(`update fasilitas set namaFasilitas = ?, imageName=? where id = ?`, [
-          dataModel.namaFasilitas,
-          imageUrl,
-          id,
-        ]);
-        return res.json({ message: "Fasilitas berhasil diubah", updateWithImage });
+        updateWithImage = await conn.query(`update fasilitas set  imageName=? where id = ?`, [imageUrl, id]);
       }
-
-      const [updateFasilitas] = await conn.query(`update fasilitas set namaFasilitas = ? where id = ?`, [dataModel.namaFasilitas, id]);
+      let updateFasilitas;
+      if (dataModel.namaFasilitas) {
+        [updateFasilitas] = await conn.query(`update fasilitas set namaFasilitas = ? where id = ?`, [dataModel.namaFasilitas, id]);
+      }
 
       return res.status(200).json({
         message: "Fasilitas berhasil diubah",
         updateFasilitas,
+        updateWithImage,
       });
     } catch (error) {
       const err = error as Error;
