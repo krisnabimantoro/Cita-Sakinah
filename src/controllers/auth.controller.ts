@@ -40,6 +40,7 @@ export default {
 
       const SECRET: string = process.env.SECRET || "";
       const [PASSWORD] = await conn.query<any>(`SELECT PASSWORD FROM users WHERE username=? `, [userModel.username]);
+
       if (PASSWORD.length < 1) return res.json({ message: "User tidak ditemukan" });
 
       const passwordValue = PASSWORD[0].PASSWORD;

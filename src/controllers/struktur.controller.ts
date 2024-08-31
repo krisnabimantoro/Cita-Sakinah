@@ -3,7 +3,6 @@ import connect from "../utils/database";
 import strukturModel from "../models/struktur.model";
 import removeFile from "../utils/remove.file";
 
-
 export default {
   async changeStructure(req: Request, res: Response) {
     try {
@@ -38,7 +37,7 @@ export default {
       const [result] = await conn.query<any>("select imageName from struktur where id = 1");
 
       return res.status(200).json({
-        file: `${req.protocol}://${req.get("host")}/${result[0].imageName}`,
+        result,
       });
     } catch (error) {
       const err = error as Error;

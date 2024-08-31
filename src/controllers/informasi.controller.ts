@@ -28,7 +28,9 @@ export default {
 
       const files = req.files as Express.Multer.File[] | undefined;
       const imagePaths = files ? files.map((file) => file.path.replace(/\\/g, "/")) : [];
-      //   console.log(imagePaths);
+      
+    //   const imagePaths = files ? files.map((file) => `/${file.path.replace(/\\/g, "/")}`) : [];
+    //   //   console.log(imagePaths);
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
       const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO informasi (judul,tanggal,deskripsi,sekolahId) values (?,?,?,?)`, [
@@ -177,6 +179,45 @@ export default {
       res.status(500).json({
         information: err.message,
         message: "Gagal menampilkan data informasi!",
+      });
+    }
+  },
+  async selected(req: Request, res: Response) {
+    try {
+      const conn = await connect();
+      const id = req.params.id;
+
+      const [rows] = await conn.query(
+        `select 
+            i.*, group_concat(ii.fileName) as fileName, s.namaSekolah 
+        from 
+            informasi i 
+        left join 
+            imageInformasi ii on i.id = ii.informasiId 
+        left join 
+            sekolah s on i.sekolahId = s.id 
+        where
+            i.id = ?
+        group by 
+            i.id`,
+        [id]
+      );
+
+      const result = (rows as any[]).map((row) => ({
+        id: row.id,
+        judul: row.judul,
+        tanggal: row.tanggal,
+        deskripsi: row.deskripsi,
+        fileName: row.fileName ? row.fileName.split(",") : [],
+        namaSekolah: row.namaSekolah,
+      }));
+      return res.json({ result });
+      
+    } catch (error) {
+      const err = error as Error;
+      res.status(500).json({
+        information: err.message,
+        message: "Gagal menampilkan data kegiatan!",
       });
     }
   },

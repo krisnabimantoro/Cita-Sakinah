@@ -4,6 +4,7 @@ import kegiatan from "../models/kegiatan.model";
 import { ResultSetHeader } from "mysql2";
 import removeFile from "../utils/remove.file";
 import * as Yup from "yup";
+import compressImage from "../utils/compress.image";
 
 const updateValidationSchema = Yup.object().shape({
   judul: Yup.string().typeError("Inputan untuk 'judul' harus berupa huruf"),
@@ -66,8 +67,21 @@ export default {
       const conn = await connect();
       const data: kegiatan = req.body;
 
-      const files = req.files as Express.Multer.File[] | undefined;
-      const imagePaths = files ? files.map((file) => file.path.replace(/\\/g, "/")) : [];
+      let files: any = req.files as Express.Multer.File[] | undefined;
+
+      let imagePaths = files ? files.map((file: { path: string }) => file.path.replace(/\\/g, "/")) : [];
+
+      // for (const imagePath of imagePaths) {
+      //   compressImage(`./${imagePath}`);
+
+      //   // console.log(cek);
+      // }
+      // console.log(files[0]);
+      // if (files[0].size > 5000) {
+      //   imagePaths = compressImage(`./${imagePaths}`);
+      // }
+      // console.log(imagePaths);
+
       // const imageUrl =
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
@@ -101,32 +115,30 @@ export default {
       const conn = await connect();
 
       if (idImage) {
-        const [oldImage] = await conn.query<any>(`select fileName from imageKegiatan where idImage = ? and kegiatanId = ?`, [
-          idImage,
+        const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
+        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imageKegiatan WHERE idImage IN (?) AND kegiatanId = ?`, [
+          idImageArray,
           kegiatanId,
         ]);
-        removeFile(oldImage[0].fileName);
+        for (const img of oldImages) {
+          removeFile(img.fileName);
+        }
+        await conn.query(`DELETE FROM imageKegiatan WHERE idImage IN (?) AND kegiatanId = ?`, [idImageArray, kegiatanId]);
       }
-      const imagePaths = req.file as Express.Multer.File | undefined;
-      const imageUrl = imagePaths?.path.replace(/\\/g, "/");
 
-      let updateImageKegiatan;
-      if (imagePaths?.filename) {
-        // console.log("cek");
-        updateImageKegiatan = await conn.query(`UPDATE  imageKegiatan set  fileName =? WHERE kegiatanId  = ? and idImage=?`, [
-          imageUrl,
-          kegiatanId,
-          idImage,
-        ]);
+      const files = req.files as Express.Multer.File[] | undefined;
+      const imagePaths = files ? files.map((file) => file.path.replace(/\\/g, "/")) : [];
+
+      for (const imagePath of imagePaths) {
+        await conn.query(`INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)`, [kegiatanId, imagePath]);
       }
 
       const updateKegiatan = await conn.query(`UPDATE  kegiatan set ? WHERE id = ?`, [data, kegiatanId]);
-      // await removeFile()
 
       return res.status(200).json({
         message: "Kegiatan berhasil diupdated!",
         updateKegiatan,
-        updateImageKegiatan,
+        imagePaths,
       });
     } catch (error) {
       const err = error as Error;
@@ -232,6 +244,48 @@ export default {
         [sekolahId]
       );
       return res.json(displayResult(result[0]));
+    }
+  },
+  async selected(req: Request, res: Response) {
+    try {
+      const conn = await connect();
+      const id = req.params.id;
+
+      const [rows] = await conn.query(
+        `
+        select 
+          k.*, group_concat(ik.fileName) as fileName, kk.namaKegiatan, s.namaSekolah FROM kegiatan k 
+        LEFT JOIN
+          kategorikegiatan kk ON k.jenisKegiatan = kk.id
+        LEFT JOIN 
+          imageKegiatan ik ON k.id = ik.kegiatanId 
+        left JOIN
+          sekolah s ON k.sekolahId = s.id 
+        where 
+          k.id = ?
+        GROUP BY 
+          k.id 
+        `,
+        [id]
+      );
+
+      const result = (rows as any[]).map((row) => ({
+        id: row.id,
+        judul: row.judul,
+        tanggal: row.tanggal,
+        deskripsi: row.deskripsi,
+        namaKegiatan: row.namaKegiatan,
+        namaSekolah: row.namaSekolah,
+        fileName: row.fileName ? row.fileName.split(",") : [],
+      }));
+
+      return res.json(result);
+    } catch (error) {
+      const err = error as Error;
+      res.status(500).json({
+        information: err.message,
+        message: "Gagal menampilkan data kegiatan!",
+      });
     }
   },
 };

@@ -23,12 +23,14 @@ router.patch("/sekolah/:id", sekolahController.updateData);
 router.post("/kegiatan", uploadMiddleware.multiple, kegiatanConctroller.createData);
 router.get("/kegiatan", kegiatanConctroller.displayData);
 router.get("/kegiatan/filter", kegiatanConctroller.filterDisplay);
-router.patch("/kegiatan/:id", uploadMiddleware.single, kegiatanConctroller.updateData);
+router.get("/kegiatan/:id", kegiatanConctroller.selected);
+router.patch("/kegiatan/:id", uploadMiddleware.multiple, kegiatanConctroller.updateData);
 router.delete("/kegiatan/:id", kegiatanConctroller.deleteData);
 
 //informasi
 router.post("/informasi", uploadMiddleware.multiple, informasiController.createData);
 router.get("/informasi", informasiController.displayData);
+router.get("/informasi/:id", authMiddleware, informasiController.selected);
 router.get("/informasi/filter", informasiController.filterData);
 router.patch("/informasi/:id", uploadMiddleware.single, informasiController.updateData);
 router.delete("/informasi/:id", uploadMiddleware.single, informasiController.deleteData);

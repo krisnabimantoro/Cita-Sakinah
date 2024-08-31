@@ -7,7 +7,7 @@ import * as Yup from "yup";
 const createValidationSchema = Yup.object().shape({
   namaFasilitas: Yup.string().required("Nama fasilitas harus diisi").typeError("Inputan untuk 'namaFasilitas' harus berupa huruf"),
   imageName: Yup.string().required("Nama gambar harus diisi").typeError("Inputan untuk 'imageName' harus berupa huruf"),
-  sekolahId: Yup.number().required("Sekolah ID harus diisi").typeError("Inputan untuk 'sekolahId' harus berupa angka"),
+  // sekolahId: Yup.number().required("Sekolah ID harus diisi").typeError("Inputan untuk 'sekolahId' harus berupa angka"),
 });
 const updateValidationSchema = Yup.object().shape({
   namaFasilitas: Yup.string().typeError("Inputan untuk 'namaFasilitas' harus berupa huruf"),
@@ -18,7 +18,7 @@ const updateValidationSchema = Yup.object().shape({
 export default {
   async createData(req: Request, res: Response) {
     try {
-      await createValidationSchema.validate(req.body);
+      // await createValidationSchema.validate(req.body);
       const conn = await connect();
       const dataModel: fasilitasModel = req.body;
       const sekolahId = req.query.sekolahId;
