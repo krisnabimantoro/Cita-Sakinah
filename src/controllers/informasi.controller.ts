@@ -28,9 +28,9 @@ export default {
 
       const files = req.files as Express.Multer.File[] | undefined;
       const imagePaths = files ? files.map((file) => file.path.replace(/\\/g, "/")) : [];
-      
-    //   const imagePaths = files ? files.map((file) => `/${file.path.replace(/\\/g, "/")}`) : [];
-    //   //   console.log(imagePaths);
+
+      //   const imagePaths = files ? files.map((file) => `/${file.path.replace(/\\/g, "/")}`) : [];
+      //   //   console.log(imagePaths);
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
       const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO informasi (judul,tanggal,deskripsi,sekolahId) values (?,?,?,?)`, [
@@ -88,13 +88,16 @@ export default {
         ]);
       }
 
-      const updateInformasi = await conn.query(`UPDATE  informasi set ? WHERE id = ?`, [data, informasiId]);
+      let updateInformasi;
+      if (data.judul || data.deskripsi || data.sekolahId || data.tanggal) {
+        updateInformasi = await conn.query(`UPDATE  informasi set ? WHERE id = ?`, [data, informasiId]);
+      }
       // await removeFile()
 
       return res.status(200).json({
         message: "Kegiatan berhasil diupdated!",
-        updateKegiatan: updateInformasi,
-        updateImageKegiatan: updateImageInformasi,
+        updateInformasi,
+        updateImageInformasi,
       });
     } catch (error) {
       const err = error as Error;
@@ -212,7 +215,6 @@ export default {
         namaSekolah: row.namaSekolah,
       }));
       return res.json({ result });
-      
     } catch (error) {
       const err = error as Error;
       res.status(500).json({

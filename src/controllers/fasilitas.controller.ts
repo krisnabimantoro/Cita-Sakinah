@@ -18,7 +18,7 @@ const updateValidationSchema = Yup.object().shape({
 export default {
   async createData(req: Request, res: Response) {
     try {
-      // await createValidationSchema.validate(req.body);
+      await createValidationSchema.validate(req.body);
       const conn = await connect();
       const dataModel: fasilitasModel = req.body;
       const sekolahId = req.query.sekolahId;
