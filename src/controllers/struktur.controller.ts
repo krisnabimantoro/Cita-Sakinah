@@ -18,11 +18,11 @@ export default {
       if (!imageUrl) return res.status(500).json({ message: "Input gambar kosong" });
       console.log(imageUrl);
 
-      const result = conn.query("update struktur set imageName = ? where id=1", [imageUrl]);
+      await conn.query("update struktur set imageName = ? where id=1", [imageUrl]);
 
       res.status(200).json({
         message: "Berhasil Mengganti Struktur",
-        result: imageUrl,
+        // result: imageUrl,
       });
     } catch (error) {
       const err = error as Error;
