@@ -6,12 +6,12 @@ import * as Yup from "yup";
 
 const createValidationSchema = Yup.object().shape({
   namaFasilitas: Yup.string().required("Nama fasilitas harus diisi").typeError("Inputan untuk 'namaFasilitas' harus berupa huruf"),
-  imageName: Yup.string().required("Nama gambar harus diisi").typeError("Inputan untuk 'imageName' harus berupa huruf"),
+  // imageName: Yup.string().required("Nama gambar harus diisi").typeError("Inputan untuk 'imageName' harus berupa huruf"),
   // sekolahId: Yup.number().required("Sekolah ID harus diisi").typeError("Inputan untuk 'sekolahId' harus berupa angka"),
 });
 const updateValidationSchema = Yup.object().shape({
   namaFasilitas: Yup.string().typeError("Inputan untuk 'namaFasilitas' harus berupa huruf"),
-  imageName: Yup.string().typeError("Inputan untuk 'imageName' harus berupa huruf"),
+  // imageName: Yup.string().typeError("Inputan untuk 'imageName' harus berupa huruf"),
   sekolahId: Yup.number().typeError("Inputan untuk 'sekolahId' harus berupa angka"),
 });
 

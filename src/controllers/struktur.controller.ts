@@ -13,7 +13,8 @@ export default {
 
       removeFile(oldImage[0].imageName);
       const imagePaths = req.file as Express.Multer.File | undefined;
-      const imageUrl = imagePaths?.path.replace(/\\/g, "/");
+      const imageUrl = imagePaths?.filename;
+
       if (!imageUrl) return res.status(500).json({ message: "Input gambar kosong" });
       console.log(imageUrl);
 
@@ -21,7 +22,7 @@ export default {
 
       res.status(200).json({
         message: "Berhasil Mengganti Struktur",
-        result:imageUrl,
+        result: imageUrl,
       });
     } catch (error) {
       const err = error as Error;
