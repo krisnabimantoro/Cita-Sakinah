@@ -32,12 +32,13 @@ router.post("/informasi", uploadMiddleware.multiple, informasiController.createD
 router.get("/informasi", informasiController.displayData);
 router.get("/informasi/:id", authMiddleware, informasiController.selected);
 router.get("/informasi/filter", informasiController.filterData);
-router.patch("/informasi/:id", uploadMiddleware.single, informasiController.updateData);
+router.patch("/informasi/:id", uploadMiddleware.multiple, informasiController.updateData);
 router.delete("/informasi/:id", uploadMiddleware.single, informasiController.deleteData);
 
 //auth
 router.post("/user/auth/login", authController.login);
 router.post("/user/auth/register", authController.register);
+router.post("/user/logout", authMiddleware, authController.logout);
 
 //struktur
 router.put("/struktur", uploadMiddleware.single, strukturController.changeStructure);
