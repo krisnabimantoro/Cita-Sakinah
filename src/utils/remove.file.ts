@@ -5,7 +5,7 @@ const unlinkAsync = promisify(unlink);
 
 async function removeFile(filePath: string): Promise<void> {
   try {
-    await unlinkAsync(filePath);
+    await unlinkAsync(`storage/uploads/${filePath}`);
     // console.log(`File at ${filePath} was deleted successfully.`);
   } catch (error) {
     console.error(`Error deleting file at ${filePath}:`, error);
