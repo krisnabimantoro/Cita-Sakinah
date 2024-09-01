@@ -68,8 +68,6 @@ export default {
 
       return res.status(200).json({
         message: "Fasilitas berhasil diubah",
-        updateFasilitas,
-        updateWithImage,
       });
     } catch (error) {
       const err = error as Error;
@@ -89,9 +87,9 @@ export default {
 
       removeFile(imagePath[0].imageName);
 
-      const deleteFasiltas = await conn.query(`delete from fasilitas where id = ?`, [id]);
+       await conn.query(`delete from fasilitas where id = ?`, [id]);
 
-      return res.status(200).json({ message: "Fasilitas dihapus", deleteFasiltas });
+      return res.status(200).json({ message: "Fasilitas dihapus" });
     } catch (error) {
       const err = error as Error;
       res.status(500).json({
