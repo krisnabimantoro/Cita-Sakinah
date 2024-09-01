@@ -55,11 +55,13 @@ export default {
 
       // console.log(result);
       if (result.length > 0) {
-        const token = jwt.sign({ id: userModel.id, sekolahId: userModel.sekolahId }, process.env.SECRET || "", { expiresIn: "2h" });
+        const token = jwt.sign({ id: userModel.id, sekolahId: userModel.sekolahId, role: userModel.role }, process.env.SECRET || "", {
+          expiresIn: "2h",
+        });
 
         res.status(200).json({
           message: "login berhasil",
-          result,
+
           token,
         });
       }
