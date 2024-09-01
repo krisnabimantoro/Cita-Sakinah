@@ -21,7 +21,7 @@ export default {
 
       res.status(200).json({
         message: "Berhasil Mengganti Struktur",
-        result,
+        result:imageUrl,
       });
     } catch (error) {
       const err = error as Error;
