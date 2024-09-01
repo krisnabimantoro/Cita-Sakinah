@@ -3,12 +3,12 @@ import { promisify } from "util";
 
 const unlinkAsync = promisify(unlink);
 
-async function removeFile(filePath: string): Promise<void> {
+async function removeFile(fileName: string): Promise<void> {
   try {
-    await unlinkAsync(`storage/uploads/${filePath}`);
+    await unlinkAsync(`storage/uploads/${fileName}`);
     // console.log(`File at ${filePath} was deleted successfully.`);
   } catch (error) {
-    console.error(`Error deleting file at ${filePath}:`, error);
+    console.error(`Error deleting file at ${fileName}:`, error);
   }
 }
 

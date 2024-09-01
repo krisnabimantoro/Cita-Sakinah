@@ -6,12 +6,9 @@ import * as Yup from "yup";
 
 const createValidationSchema = Yup.object().shape({
   namaFasilitas: Yup.string().required("Nama fasilitas harus diisi").typeError("Inputan untuk 'namaFasilitas' harus berupa huruf"),
-  // imageName: Yup.string().required("Nama gambar harus diisi").typeError("Inputan untuk 'imageName' harus berupa huruf"),
-  // sekolahId: Yup.number().required("Sekolah ID harus diisi").typeError("Inputan untuk 'sekolahId' harus berupa angka"),
 });
 const updateValidationSchema = Yup.object().shape({
   namaFasilitas: Yup.string().typeError("Inputan untuk 'namaFasilitas' harus berupa huruf"),
-  // imageName: Yup.string().typeError("Inputan untuk 'imageName' harus berupa huruf"),
   sekolahId: Yup.number().typeError("Inputan untuk 'sekolahId' harus berupa angka"),
 });
 
@@ -24,11 +21,11 @@ export default {
       const sekolahId = req.query.sekolahId;
 
       const imagePaths = req.file as Express.Multer.File | undefined;
-      const imageUrl = imagePaths?.path.replace(/\\/g, "/");
+      const imageUrl = imagePaths?.filename;
 
       if (!imageUrl) return res.status(500).json({ message: "Input gambar kosong" });
 
-      const [insertData] = await conn.query(`insert into fasilitas (namaFasilitas, imageName,sekolahId) values (?,?,?)`, [
+      await conn.query(`insert into fasilitas (namaFasilitas, imageName,sekolahId) values (?,?,?)`, [
         dataModel.namaFasilitas,
         imageUrl,
         sekolahId,
@@ -36,7 +33,6 @@ export default {
 
       res.status(201).json({
         message: "Fasilitas Berhasil dibuat",
-        insertData,
       });
     } catch (error) {
       const err = error as Error;
@@ -56,13 +52,13 @@ export default {
       const [oldImage] = await conn.query<any>("select imageName from fasilitas where id = ?", [id]);
 
       const imagePaths = req.file as Express.Multer.File | undefined;
-      const imageUrl = imagePaths?.path.replace(/\\/g, "/");
+      const imageUrl = imagePaths?.filename;
 
       let updateWithImage;
       if (imageUrl) {
         removeFile(oldImage[0].imageName);
         // console.log(oldImage[0].imageName);
-        console.log("cek");
+        // console.log("cek");
         updateWithImage = await conn.query(`update fasilitas set  imageName=? where id = ?`, [imageUrl, id]);
       }
       let updateFasilitas;
