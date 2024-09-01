@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const handleMulterError = (err: any, req: any, res: any, next: Function) => {
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_FILE_SIZE") {
-      // console.log(req.file);
+      console.log(req);
       return res.status(400).json({ error: err.message });
     }
     // Handle other Multer errors
@@ -35,7 +35,7 @@ const handleMulterError = (err: any, req: any, res: any, next: Function) => {
 const upload = multer({
   storage,
   limits: {
-    fileSize: 1024 * 1024 * 100,
+    fileSize: 1024 * 1024 * 5,
   },
 
   fileFilter(_, file, callback) {

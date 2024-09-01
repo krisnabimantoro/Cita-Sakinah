@@ -119,6 +119,7 @@ export default {
           kegiatanId,
         ]);
         for (const img of oldImages) {
+          // console.log(img.fileName)
           removeFile(img.fileName);
         }
         await conn.query(`DELETE FROM imageKegiatan WHERE idImage IN (?) AND kegiatanId = ?`, [idImageArray, kegiatanId]);
@@ -126,17 +127,16 @@ export default {
 
       const files = req.files as Express.Multer.File[] | undefined;
       const imagePaths = files ? files.map((file: { filename: string }) => file.filename) : [];
+      // console.log(imagePaths)
 
       for (const imagePath of imagePaths) {
         await conn.query(`INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)`, [kegiatanId, imagePath]);
       }
 
-      const updateKegiatan = await conn.query(`UPDATE  kegiatan set ? WHERE id = ?`, [data, kegiatanId]);
+      await conn.query(`UPDATE  kegiatan set ? WHERE id = ?`, [data, kegiatanId]);
 
       return res.status(200).json({
         message: "Kegiatan berhasil diupdated!",
-        updateKegiatan,
-        imagePaths,
       });
     } catch (error) {
       const err = error as Error;

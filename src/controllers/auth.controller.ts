@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { encrypt, decrypt } from "../utils/encryption";
 import * as Yup from "yup";
 
+export const blacklistedTokens = new Set<string>();
 const validateLoginSchema = Yup.object().shape({
   username: Yup.string().required("Username harus diisi"),
   password: Yup.string().required("Password harus diisi"),
@@ -41,12 +42,12 @@ export default {
       const SECRET: string = process.env.SECRET || "";
       const [PASSWORD] = await conn.query<any>(`SELECT PASSWORD FROM users WHERE username=? `, [userModel.username]);
 
-      if (PASSWORD.length < 1) return res.json({ message: "User tidak ditemukan" });
+      if (PASSWORD.length < 1) return res.status(404).json({ message: "User tidak ditemukan" });
 
       const passwordValue = PASSWORD[0].PASSWORD;
       const decryptPassword = decrypt(SECRET, passwordValue);
 
-      if (decryptPassword !== userModel.password) return res.json({ message: "Password salah" });
+      if (decryptPassword !== userModel.password) return res.status(401).json({ message: "Password salah" });
 
       const [result] = await conn.query<RowDataPacket[]>(`SELECT * FROM users  WHERE username = ? AND password = ?`, [
         userModel.username,
@@ -61,7 +62,6 @@ export default {
 
         res.status(200).json({
           message: "login berhasil",
-
           token,
         });
       }
@@ -73,4 +73,30 @@ export default {
       });
     }
   },
+  async logout(req: Request, res: Response) {
+    const authorizationHeader = req.headers.authorization;
+
+    if (!authorizationHeader) {
+      return res.status(400).json({
+        message: "Logout failed: No token provided",
+      });
+    }
+
+    const [prefix, accessToken] = authorizationHeader.split(" ");
+
+    if (prefix !== "Bearer" || !accessToken) {
+      return res.status(400).json({
+        message: "Logout failed: Invalid token format",
+      });
+    }
+
+    console.log(accessToken)
+    // Blacklist the token
+    blacklistedTokens.add(accessToken);
+
+    res.status(200).json({
+      message: "Logout successful",
+    });
+  },
 };
+

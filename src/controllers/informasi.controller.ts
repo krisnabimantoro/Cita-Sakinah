@@ -64,40 +64,32 @@ export default {
       const informasiId = req.params.id;
       const idImage = req.query.idImage;
       const data: informasiModel = req.body;
-      // const imgKegiatan:
       const conn = await connect();
 
+      console.log(idImage);
       if (idImage) {
-        const [oldImage] = await conn.query<any>(`select fileName from imageInformasi where idImage = ? and informasiId = ?`, [
-          idImage,
+        const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
+        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [
+          idImageArray,
           informasiId,
         ]);
-        removeFile(oldImage[0].fileName);
-      }
-      const imagePaths = req.file as Express.Multer.File | undefined;
-      const imageUrl = imagePaths?.path.replace(/\\/g, "/");
-      //   console.log(imageUrl);
-
-      let updateImageInformasi;
-      if (imagePaths?.filename) {
-        console.log("cek");
-        updateImageInformasi = await conn.query(`UPDATE  imageInformasi set  fileName =? WHERE informasiId  = ? and idImage=?`, [
-          imageUrl,
-          informasiId,
-          idImage,
-        ]);
+        // console.log
+        for (const img of oldImages) {
+          removeFile(img.fileName);
+        }
+        await conn.query(`DELETE FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [idImageArray, informasiId]);
       }
 
-      let updateInformasi;
-      if (data.judul || data.deskripsi || data.sekolahId || data.tanggal) {
-        updateInformasi = await conn.query(`UPDATE  informasi set ? WHERE id = ?`, [data, informasiId]);
+      const files = req.files as Express.Multer.File[] | undefined;
+      const imagePaths = files ? files.map((file: { filename: string }) => file.filename) : [];
+      for (const imagePath of imagePaths) {
+        await conn.query(`INSERT INTO imageInformasi (informasiId, fileName) VALUES (?, ?)`, [informasiId, imagePath]);
       }
-      // await removeFile()
+
+      await conn.query(`UPDATE informasi set ? WHERE id = ?`, [data, informasiId]);
 
       return res.status(200).json({
-        message: "Kegiatan berhasil diupdated!",
-        updateInformasi,
-        updateImageInformasi,
+        message: "Kegiatan berhasil diupdate",
       });
     } catch (error) {
       const err = error as Error;
