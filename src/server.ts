@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import routes from "./route";
 import connect from "./utils/database";
-
+import cors from "cors";
 // import { randomBytes } from "crypto";
 
 // const secret = randomBytes(16).toString("hex");
@@ -13,6 +13,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 connect();
 
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
