@@ -20,7 +20,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    const user = jwt.verify(accessToken, SECRET) as { id: number; sekolahId: number };
+    const user = jwt.verify(accessToken, SECRET) as { id: number; sekolahId: number, role:string};
     if (!user) {
       return res.status(401).json({
         message: "Unauthorized user",
