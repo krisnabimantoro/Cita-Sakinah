@@ -27,7 +27,7 @@ export default {
       const data: informasiModel = req.body;
 
       const files = req.files as Express.Multer.File[] | undefined;
-      const imagePaths = files ? files.map((file) => file.path.replace(/\\/g, "/")) : [];
+      const imagePaths = files ? files.map((file: { filename: string }) => file.filename) : [];
 
       //   const imagePaths = files ? files.map((file) => `/${file.path.replace(/\\/g, "/")}`) : [];
       //   //   console.log(imagePaths);

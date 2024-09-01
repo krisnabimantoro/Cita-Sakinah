@@ -69,7 +69,7 @@ export default {
 
       let files: any = req.files as Express.Multer.File[] | undefined;
 
-      let imagePaths = files ? files.map((file: { path: string }) => file.path.replace(/\\/g, "/")) : [];
+      const imagePaths = files ? files.map((file: { filename: string }) => file.filename) : [];
 
       // for (const imagePath of imagePaths) {
       //   compressImage(`./${imagePath}`);
@@ -94,8 +94,6 @@ export default {
       }
       return res.status(201).json({
         message: "Kegiatan berhasil dibuat!",
-        insertData,
-        imagePaths,
       });
     } catch (error) {
       const err = error as Error;
@@ -127,7 +125,7 @@ export default {
       }
 
       const files = req.files as Express.Multer.File[] | undefined;
-      const imagePaths = files ? files.map((file) => file.path.replace(/\\/g, "/")) : [];
+      const imagePaths = files ? files.map((file: { filename: string }) => file.filename) : [];
 
       for (const imagePath of imagePaths) {
         await conn.query(`INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)`, [kegiatanId, imagePath]);
