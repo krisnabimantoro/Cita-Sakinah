@@ -133,7 +133,9 @@ export default {
         await conn.query(`INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)`, [kegiatanId, imagePath]);
       }
 
-      await conn.query(`UPDATE  kegiatan set ? WHERE id = ?`, [data, kegiatanId]);
+      if (data.deskripsi || data.jenisKegiatan || data.judul || data.sekolahId || data.tanggal) {
+        await conn.query(`UPDATE  kegiatan set ? WHERE id = ?`, [data, kegiatanId]);
+      }
 
       return res.status(200).json({
         message: "Kegiatan berhasil diupdated!",

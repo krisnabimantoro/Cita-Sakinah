@@ -87,10 +87,12 @@ export default {
         await conn.query(`INSERT INTO imageInformasi (informasiId, fileName) VALUES (?, ?)`, [informasiId, imagePath]);
       }
 
-      await conn.query(`UPDATE informasi set ? WHERE id = ?`, [data, informasiId]);
+      if (data.deskripsi || data.judul || data.tagSekolah || data.tanggal) {
+        await conn.query(`UPDATE informasi set ? WHERE id = ?`, [data, informasiId]);
+      }
 
       return res.status(200).json({
-        message: "Kegiatan berhasil diupdate",
+        message: "Informasi berhasil diupdate",
       });
     } catch (error) {
       const err = error as Error;

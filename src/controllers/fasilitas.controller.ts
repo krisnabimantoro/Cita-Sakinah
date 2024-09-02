@@ -62,8 +62,9 @@ export default {
         updateWithImage = await conn.query(`update fasilitas set  imageName=? where id = ?`, [imageUrl, id]);
       }
       let updateFasilitas;
-      if (dataModel.namaFasilitas) {
-        [updateFasilitas] = await conn.query(`update fasilitas set namaFasilitas = ? where id = ?`, [dataModel.namaFasilitas, id]);
+
+      if (dataModel.namaFasilitas || dataModel.sekolahId) {
+        await conn.query(`update fasilitas set ? where id = ?`, [dataModel, id]);
       }
 
       return res.status(200).json({
@@ -87,7 +88,7 @@ export default {
 
       removeFile(imagePath[0].imageName);
 
-       await conn.query(`delete from fasilitas where id = ?`, [id]);
+      await conn.query(`delete from fasilitas where id = ?`, [id]);
 
       return res.status(200).json({ message: "Fasilitas dihapus" });
     } catch (error) {
