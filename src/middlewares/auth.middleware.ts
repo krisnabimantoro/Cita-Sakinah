@@ -27,13 +27,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
     });
   }
   try {
-    const user = jwt.verify(accessToken, SECRET) as { id: number; sekolahId: number; role: string };
+    const user = jwt.verify(accessToken, SECRET) as { id: number; sekolahId: number; role: string; namaSekolah: string };
     if (!user) {
       return res.status(401).json({
         message: "Unauthorized user",
       });
     }
 
+    // console.log(user)
     next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
