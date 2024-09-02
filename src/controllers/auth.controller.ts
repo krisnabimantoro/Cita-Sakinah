@@ -120,7 +120,7 @@ export default {
       const sekolahId = req.params.sekolahId;
 
       const [result] = await conn.query<any>(
-        `select u.*,s.namaSekolah from users u join sekolah s on u.sekolahId = s.id  where sekolahId = ?`,
+        `select u.id, u.username, u.role, u.noHandphone, u.sekolahId,s.namaSekolah from users u join sekolah s on u.sekolahId = s.id  where sekolahId = ?`,
         [sekolahId]
       );
 

@@ -154,7 +154,10 @@ export default {
       const conn = await connect();
 
       const [imagePath] = await conn.query<any>(`select fileName from imageKegiatan where kegiatanId = ?`, [id]);
-
+      // console.log(imagePath.length)
+      if (imagePath.length <= 0) {
+        return res.status(404).json({ message: "File not found" });
+      }
       for (const imageDelete of imagePath) {
         removeFile(imageDelete.fileName);
       }
@@ -163,8 +166,6 @@ export default {
       const result = await conn.query(`DELETE FROM kegiatan  WHERE id = ?`, [id]);
       return res.json({
         message: "Kegiatan berhasil dihapus!",
-        result,
-        deleteImage,
       });
     } catch (error) {
       const err = error as Error;

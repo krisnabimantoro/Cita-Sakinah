@@ -32,7 +32,7 @@ router.delete("/kegiatan/:id", kegiatanConctroller.deleteData);
 //informasi
 router.post("/informasi", uploadMiddleware.multiple, informasiController.createData);
 router.get("/informasi", informasiController.displayData);
-router.get("/informasi/:id", authMiddleware, informasiController.selected);
+router.get("/informasi/:id",  informasiController.selected);
 router.get("/informasi/filter", informasiController.filterData);
 router.patch("/informasi/:id", uploadMiddleware.multiple, informasiController.updateData);
 router.delete("/informasi/:id", uploadMiddleware.single, informasiController.deleteData);

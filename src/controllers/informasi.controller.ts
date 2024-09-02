@@ -42,9 +42,10 @@ export default {
       const tagsArray = data.tagSekolah.split(",");
 
       for (const tagSekolah of tagsArray) {
-        console.log(tagSekolah);
+        // console.log(tagSekolah);
         await conn.query(`insert into tagInformasi(informasiId,sekolahId) values (?,?) `, [informasiId, tagSekolah]);
       }
+      // console.log(imagePaths);
       for (const imagePath of imagePaths) {
         await conn.query("INSERT INTO imageInformasi (informasiId, fileName) VALUES (?, ?)", [informasiId, imagePath]);
       }
@@ -67,10 +68,9 @@ export default {
       const data: informasiModel = req.body;
       const conn = await connect();
 
-      console.log(idImage);
       if (idImage) {
         const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
-        const [oldImages] = await conn. query<any>(`SELECT fileName FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [
+        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [
           idImageArray,
           informasiId,
         ]);
@@ -108,17 +108,18 @@ export default {
       const id = req.params.id;
 
       const [imagePath] = await conn.query<any>(`select fileName from imageInformasi where informasiId = ?`, [id]);
-
+      if (imagePath.length <= 0) {
+        return res.status(404).json({ message: "File not found" });
+      }
       for (const imageDelete of imagePath) {
         removeFile(imageDelete.fileName);
       }
 
-      const deleteImage = await conn.query(`DELETE FROM imageInformasi  WHERE informasiId = ?`, [id]);
-      const result = await conn.query(`DELETE FROM informasi  WHERE id = ?`, [id]);
+      await conn.query(`delete from tagInformasi where informasiId = ?`,[id])
+      await conn.query(`DELETE FROM imageInformasi  WHERE informasiId = ?`, [id]);
+      await conn.query(`DELETE FROM informasi  WHERE id = ?`, [id]);
       return res.status(200).json({
         message: "Kegiatan berhasil dihapus!",
-        result,
-        deleteImage,
       });
     } catch (error) {
       const err = error as Error;

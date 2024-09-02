@@ -32,10 +32,9 @@ export default {
       const updateSekolah: Sekolah = req.body;
       const conn = await connect();
 
-      const result = await conn.query("UPDATE sekolah SET ? WHERE id = ?", [updateSekolah, id]);
+       await conn.query("UPDATE sekolah SET ? WHERE id = ?", [updateSekolah, id]);
       return res.status(200).json({
         message: "Data sekolah berhasil di update",
-        result,
       });
     } catch (error) {
       const err = error as Error;
