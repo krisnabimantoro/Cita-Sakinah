@@ -6,7 +6,7 @@ const CardFasilitas = ({ img, title, textColor, borderColor }) => (
       src={img}
       alt="img-fasilitas"
       draggable="false"
-      className="rounded-t-lg object-cover"
+      className="rounded-t-lg object-cover h-48 w-full"
     />
     <div className="mx-4 mt-2 mb-4 flex flex-col gap-2">
       <h1 className={`${textColor} font-semibold text-lg`}>{title}</h1>

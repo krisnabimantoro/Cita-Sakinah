@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import TableDashboard from "../../../components/ui/tabledashboard";
 import Button from "../../../components/ui/button";
 import InputField from "../../../components/form/inputfield";
 import ImageUploadForm from "../../../components/form/imageupload";
 import Modal from "../../../components/modal/modal";
-import { dataFasilitas } from "../../../data/dataadmin";
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 import { LuPen } from "react-icons/lu";
 import { IoIosSearch } from "react-icons/io";
 import Pagination from "../../../components/ui/pagination";
+import { toast } from "react-hot-toast";
 
 const FasilitasPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(dataFasilitas);
+  const [filteredData, setFilteredData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,31 +25,88 @@ const FasilitasPage = () => {
   const [formData, setFormData] = useState({
     title: "",
     sekolah: "",
+    sekolahId: "",
     gambar: "",
     tanggal: "",
   });
+
   const [previewImage, setPreviewImage] = useState("");
+  const [schoolOptions, setSchoolOptions] = useState([]);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Fasilitas ";
 
-    setFilteredData(
-      dataFasilitas.filter((fasilitas) =>
-        fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/fasilitas");
+        const formattedData = response.data.map((item) => ({
+          id: item.id,
+          title: item.namaFasilitas,
+          gambar: `${import.meta.env.VITE_API_URL}/storage/uploads/${
+            item.imageName
+          }`,
+          sekolah: item.namaSekolah,
+          tanggal: new Date().toISOString().split("T")[0],
+        }));
+        setFilteredData(formattedData);
+        setOriginalData(formattedData);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    const fetchSchools = async () => {
+      try {
+        const response = await axios.get("/api/sekolah");
+        const options = response.data.map((school) => ({
+          label: school.namaSekolah,
+          value: school.namaSekolah,
+          id: school.id,
+        }));
+        setSchoolOptions(options);
+      } catch (error) {
+        console.error("Error fetching school data: ", error);
+      }
+    };
+
+    fetchData();
+    fetchSchools();
+  }, []);
+
+  useEffect(() => {
+    const filtered = searchQuery
+      ? originalData.filter((fasilitas) =>
+          fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : originalData;
+
+    setFilteredData(filtered);
     setCurrentPage(1);
-  }, [searchQuery]);
+  }, [searchQuery, originalData]);
 
   const handleAddClick = () => {
-    setFormData({ title: "", sekolah: "", gambar: "", tanggal: "" });
+    setFormData({
+      title: "",
+      sekolah: "",
+      sekolahId: "",
+      gambar: "",
+      tanggal: "",
+    });
     setPreviewImage("");
     setIsEdit(false);
     setIsModalOpen(true);
   };
 
   const handleEditClick = (fasilitas) => {
-    setFormData(fasilitas);
+    const selectedSchool = schoolOptions.find(
+      (option) => option.label === fasilitas.sekolah
+    );
+    setFormData({
+      title: fasilitas.title,
+      sekolah: fasilitas.sekolah,
+      sekolahId: selectedSchool?.id || "",
+      gambar: fasilitas.gambar,
+    });
     setPreviewImage(fasilitas.gambar);
     setSelectedFasilitas(fasilitas);
     setIsEdit(true);
@@ -59,10 +118,21 @@ const FasilitasPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    setFilteredData(filteredData.filter((item) => item !== selectedFasilitas));
-    setSelectedFasilitas(null);
-    setIsDeleteModalOpen(false);
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `/api/fasilitas/${selectedFasilitas.id}`
+      );
+      setFilteredData(
+        filteredData.filter((item) => item.id !== selectedFasilitas.id)
+      );
+      toast.success(response.data.message);
+      setSelectedFasilitas(null);
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      console.error("Error deleting facility: ", error);
+      toast.error("Failed to delete facility");
+    }
   };
 
   const handleCancelDelete = () => {
@@ -70,29 +140,100 @@ const FasilitasPage = () => {
     setSelectedFasilitas(null);
   };
 
-  const handleSaveFasilitas = () => {
+  const handleSaveFasilitas = async () => {
     const currentDate = new Date().toISOString().split("T")[0];
-    if (isEdit) {
-      setFilteredData(
-        filteredData.map((item) =>
-          item === selectedFasilitas
-            ? { ...formData, tanggal: currentDate, id: item.id }
-            : item
-        )
-      );
-    } else {
-      setFilteredData([
-        ...filteredData,
-        { ...formData, id: Date.now().toString(), tanggal: currentDate },
-      ]);
+    const formDataToSend = new FormData();
+
+    if (formData.title !== (isEdit ? selectedFasilitas.title : "")) {
+      formDataToSend.append("namaFasilitas", formData.title);
     }
-    setIsModalOpen(false);
-    setSelectedFasilitas(null);
+
+    if (formData.sekolahId !== (isEdit ? selectedFasilitas.sekolahId : "")) {
+      formDataToSend.append("sekolahId", formData.sekolahId);
+    }
+
+    if (formData.gambar !== (isEdit ? selectedFasilitas.gambar : "")) {
+      formDataToSend.append("file", formData.gambar);
+    }
+
+    try {
+      let response;
+
+      if (isEdit) {
+        response = await axios.patch(
+          `/api/fasilitas/${selectedFasilitas.id}`,
+          formDataToSend,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        response = await axios.post(
+          `/api/fasilitas?sekolahId=${formData.sekolahId}`,
+          formDataToSend,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success(response.data.message);
+        const newFacility = {
+          ...formData,
+          id: response.data.id || selectedFasilitas.id,
+          gambar: previewImage || formData.gambar,
+          tanggal: currentDate,
+        };
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+
+        if (!isEdit) {
+          setFilteredData([...filteredData, newFacility]);
+        } else {
+          setFilteredData(
+            filteredData.map((item) =>
+              item.id === selectedFasilitas.id
+                ? { ...formData, tanggal: currentDate, id: item.id }
+                : item
+            )
+          );
+        }
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(
+          isEdit ? error.response.data.message : error.response.data.message
+        );
+      }
+      console.error("Error saving facility: ", error);
+    } finally {
+      setIsModalOpen(false);
+      setSelectedFasilitas(null);
+    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "sekolah") {
+      const selectedSchool = schoolOptions.find(
+        (option) => option.value === value
+      );
+      setFormData({
+        ...formData,
+        sekolah: value,
+        sekolahId: selectedSchool?.id || "",
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -101,17 +242,11 @@ const FasilitasPage = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
-        setFormData({ ...formData, gambar: reader.result });
+        setFormData({ ...formData, gambar: file });
       };
       reader.readAsDataURL(file);
     }
   };
-
-  const schoolOptions = [
-    { label: "TPA Cita Sakinah", value: "TPA Cita Sakinah" },
-    { label: "KB 'Aisyiyah 24", value: "KB 'Aisyiyah 24" },
-    { label: "TK ABA 33", value: "TK ABA 33" },
-  ];
 
   const columnsFasilitas = [
     { header: "Judul", field: "title", truncate: 20, width: "w-[20%]" },
@@ -216,12 +351,12 @@ const FasilitasPage = () => {
       >
         <div className="flex flex-col gap-4">
           <InputField
-            label="Judul"
+            label="Judul Fasilitas"
             id="title"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            placeholder="Masukkan Judul"
+            placeholder="Masukkan Judul Fasilitas"
           />
           <InputField
             label="Nama Sekolah"

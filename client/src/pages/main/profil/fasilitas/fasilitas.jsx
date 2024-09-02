@@ -33,11 +33,11 @@ const FasilitasPage = () => {
 
   const sections = [
     {
-      school: "Taman Kanak-Kanak",
-      alias: "TK",
-      bg: "bg-main",
-      text: "text-button",
-      garis: "border-main",
+      school: "Tempat Penitipan Anak",
+      alias: "TPA",
+      bg: "bg-second",
+      text: "text-main",
+      garis: "border-button",
     },
     {
       school: "Kelompok Bermain",
@@ -47,11 +47,11 @@ const FasilitasPage = () => {
       garis: "border-button",
     },
     {
-      school: "Tempat Penitipan Anak",
-      alias: "TPA",
-      bg: "bg-second",
-      text: "text-main",
-      garis: "border-button",
+      school: "Taman Kanak-Kanak",
+      alias: "TK",
+      bg: "bg-main",
+      text: "text-button",
+      garis: "border-main",
     },
   ];
 
