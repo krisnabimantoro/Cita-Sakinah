@@ -14,6 +14,7 @@ import authMiddleware from "./middlewares/auth.middleware";
 
 router.post("/test", testController.createSchool);
 router.get("/test", testController.displayData);
+router.post("/test/array", testController.cekArray);
 
 //Sekolah endpoint
 router.get("/sekolah", sekolahController.displayData);

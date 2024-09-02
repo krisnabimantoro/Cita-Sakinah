@@ -17,4 +17,16 @@ export default {
     const result = await conn.query("SELECT * FROM test");
     return res.json(result[0]);
   },
+  async cekArray(req: Request, res: Response) {
+    const tag = req.body;
+    console.log(tag);
+    const tagsArray = tag.tagSekolah.split(",");
+
+    for(const display of tagsArray){
+
+      console.log(display);
+    }
+
+    return res.json(tagsArray);
+  },
 };

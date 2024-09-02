@@ -3,5 +3,6 @@ export default interface informasiModel {
   judul: String;
   tanggal: Date;
   deskripsi: String;
-  sekolahId: Number;
+  
+  tagSekolah:String
 }

@@ -276,7 +276,10 @@ export default {
         namaSekolah: row.namaSekolah,
         fileName: row.fileName ? row.fileName.split(",") : [],
       }));
-
+      if (!result || result.length === 0) {
+        console.log("No data found for the given id");
+        return res.status(404).json({ message: "No data found" });
+      }
       return res.json(result);
     } catch (error) {
       const err = error as Error;

@@ -9,14 +9,12 @@ const updateValidationSchema = Yup.object().shape({
   judul: Yup.string().typeError("Inputan untuk 'judul' harus berupa huruf"),
   tanggal: Yup.date().typeError("Inputan untuk 'tanggal' harus berupa tanggal yang valid"),
   deskripsi: Yup.string().typeError("Inputan untuk 'deskripsi' harus berupa huruf"),
-  sekolahId: Yup.number().typeError("Inputan untuk 'sekolahId' harus berupa angka"),
 });
 
 const createValidationSchema = Yup.object().shape({
   judul: Yup.string().required("Judul harus diisi").typeError("Inputan untuk 'judul' harus berupa huruf"),
   tanggal: Yup.date().required("Tanggal harus diisi").typeError("Inputan untuk 'tanggal' harus berupa tanggal yang valid"),
   deskripsi: Yup.string().required("Deskripsi harus diisi").typeError("Inputan untuk 'deskripsi' harus berupa huruf"),
-  sekolahId: Yup.number().required("Sekolah ID harus diisi").typeError("Inputan untuk 'sekolahId' harus berupa angka"),
 });
 
 export default {
@@ -33,22 +31,25 @@ export default {
       //   //   console.log(imagePaths);
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
-      const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO informasi (judul,tanggal,deskripsi,sekolahId) values (?,?,?,?)`, [
+      const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO informasi (judul,tanggal,deskripsi) values (?,?,?)`, [
         data.judul,
         data.tanggal,
         data.deskripsi,
-        data.sekolahId,
       ]);
 
       const informasiId = insertData.insertId;
 
+      const tagsArray = data.tagSekolah.split(",");
+
+      for (const tagSekolah of tagsArray) {
+        console.log(tagSekolah);
+        await conn.query(`insert into tagInformasi(informasiId,sekolahId) values (?,?) `, [informasiId, tagSekolah]);
+      }
       for (const imagePath of imagePaths) {
         await conn.query("INSERT INTO imageInformasi (informasiId, fileName) VALUES (?, ?)", [informasiId, imagePath]);
       }
       return res.status(201).json({
-        message: "Informasi berhasil dibuat!",
-        insertData,
-        imagePaths,
+        message: "Informasi Berhasil Dibuat!",
       });
     } catch (error) {
       const err = error as Error;
@@ -128,8 +129,22 @@ export default {
   async displayData(req: Request, res: Response) {
     try {
       const conn = await connect();
-      const [rows] = await conn.query(
-        `select i.*, group_concat(ii.fileName) as fileName, s.namaSekolah from informasi i left join imageInformasi ii on i.id = ii.informasiId left join sekolah s on i.sekolahId = s.id group by i.id`
+      const [rows] = await conn.query<any>(
+        `SELECT 
+          i.*, 
+          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
+          GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
+          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
+        FROM 
+          informasi i 
+        LEFT JOIN 
+          imageInformasi ii ON i.id = ii.informasiId 
+        LEFT JOIN
+          tagInformasi ti ON i.id = ti.informasiId
+        LEFT JOIN 
+          sekolah s ON ti.sekolahId = s.id 
+        GROUP BY 
+          i.id`
       );
       const result = (rows as any[]).map((row) => ({
         id: row.id,
@@ -137,8 +152,9 @@ export default {
         tanggal: row.tanggal,
         deskripsi: row.deskripsi,
         fileName: row.fileName ? row.fileName.split(",") : [],
-        namaSekolah: row.namaSekolah,
+        namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
       }));
+
       return res.json({ result });
     } catch (error) {
       const err = error as Error;
@@ -183,18 +199,23 @@ export default {
       const id = req.params.id;
 
       const [rows] = await conn.query(
-        `select 
-            i.*, group_concat(ii.fileName) as fileName, s.namaSekolah 
-        from 
-            informasi i 
-        left join 
-            imageInformasi ii on i.id = ii.informasiId 
-        left join 
-            sekolah s on i.sekolahId = s.id 
+        `SELECT 
+          i.*, 
+          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
+          GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
+          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
+        FROM 
+          informasi i 
+        LEFT JOIN 
+          imageInformasi ii ON i.id = ii.informasiId 
+        LEFT JOIN
+          tagInformasi ti ON i.id = ti.informasiId
+        LEFT JOIN 
+          sekolah s ON ti.sekolahId = s.id 
         where
-            i.id = ?
-        group by 
-            i.id`,
+          i.id = ?
+        GROUP BY 
+          i.id`,
         [id]
       );
 
@@ -204,8 +225,12 @@ export default {
         tanggal: row.tanggal,
         deskripsi: row.deskripsi,
         fileName: row.fileName ? row.fileName.split(",") : [],
-        namaSekolah: row.namaSekolah,
+        namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
       }));
+      if (!result || result.length === 0) {
+        console.log("No data found for the given id");
+        return res.status(404).json({ message: "No data found" });
+      }
       return res.json({ result });
     } catch (error) {
       const err = error as Error;
