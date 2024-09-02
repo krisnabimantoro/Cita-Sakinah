@@ -3,7 +3,7 @@ import Button from "../../../../../components/ui/button";
 import { PiMapPinBold } from "react-icons/pi";
 import Img from "../../../../../assets/svg/profil.svg";
 
-const IntroSection = ({ data }) => {
+const IntroSection = ({ data, apiData }) => {
   const handleClick = () => {
     window.open(data.maps, "_blank");
   };
@@ -14,7 +14,7 @@ const IntroSection = ({ data }) => {
         <div className="text-main flex flex-col gap-8">
           <div>
             <h1 className="font-bold text-4xl">{data.sekolah}</h1>
-            <span className="font-medium text-2xl">{data.nama}</span>
+            <span className="font-medium text-2xl">{apiData.namaSekolah}</span>
           </div>
           <div className="flex flex-col gap-3">
             <div>

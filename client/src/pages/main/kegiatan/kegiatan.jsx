@@ -1,25 +1,41 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import HeaderMenu from "../../../components/ui/header";
 import HeaderImg from "../../../assets/svg/profil.svg";
 import CardKeg from "../../../components/ui/cardkeg";
 import LoadingCard from "../../../components/loading/loadingcard";
 import FilterButtons from "../../../components/ui/filterbutton";
-import { dataKeg } from "../../../data/datakeg";
 import { LuFilter } from "react-icons/lu";
 import Button from "../../../components/ui/button";
 import DropdownFilter from "../../../components/ui/dropdownfilter";
+import { formatDate } from "../../../utils/formatting";
 
 const KegiatanPage = () => {
   const [filter, setFilter] = useState("Semua Aktivitas");
   const [schoolFilter, setSchoolFilter] = useState([]);
+  const [schools, setSchools] = useState([]);
+  const [activities, setActivities] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Kegiatan";
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+
+    const fetchData = async () => {
+      try {
+        const schoolResponse = await axios.get("/api/sekolah");
+        setSchools(schoolResponse.data.map((school) => school.namaSekolah));
+
+        const activityResponse = await axios.get("/api/kegiatan");
+        setActivities(activityResponse.data);
+      } catch (error) {
+        console.error("There was an error fetching the data!", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleSchoolFilterChange = (school) => {
@@ -30,12 +46,12 @@ const KegiatanPage = () => {
     );
   };
 
-  const filteredData = dataKeg.filter(
+  const filteredData = activities.filter(
     (item) =>
-      (filter === "Semua Aktivitas" || item.tagUtama === filter) &&
+      (filter === "Semua Aktivitas" || item.namaKegiatan === filter) &&
       (schoolFilter.length === 0 ||
         schoolFilter.some((selected) =>
-          item.tagSekolah.startsWith(selected.split(" ")[0])
+          item.namaSekolah.startsWith(selected.split(" ")[0])
         ))
   );
 
@@ -62,8 +78,7 @@ const KegiatanPage = () => {
             />
             <DropdownFilter
               isOpen={isDropdownOpen}
-              onClose={() => setIsDropdownOpen(false)}
-              options={["TPA Cita Sakinah", "KB 'Aisyiyah 24", "TK ABA 33"]}
+              options={schools}
               selectedOptions={schoolFilter}
               onSelect={handleSchoolFilterChange}
             />
@@ -75,14 +90,18 @@ const KegiatanPage = () => {
               <LoadingCard key={index} />
             ) : (
               <CardKeg
-                key={index}
+                key={item.id}
                 id={item.id}
-                img={item.img}
-                title={item.titleCard}
-                detail={item.detail}
-                date={item.tanggal}
-                tagUtama={item.tagUtama}
-                tagSekolah={item.tagSekolah}
+                img={[
+                  `${import.meta.env.VITE_API_URL}/storage/uploads/${
+                    item.fileName[0]
+                  }`,
+                ]}
+                title={item.judul}
+                detail={item.deskripsi}
+                date={formatDate(item.tanggal)}
+                tagUtama={item.namaKegiatan}
+                tagSekolah={item.namaSekolah}
               />
             )
           )}

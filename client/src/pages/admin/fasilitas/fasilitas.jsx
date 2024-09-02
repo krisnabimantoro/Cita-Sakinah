@@ -234,7 +234,7 @@ const FasilitasPage = () => {
             options={schoolOptions}
           />
           <ImageUploadForm
-            title="Upload Gambar Fasilitas"
+            label="Upload Gambar Fasilitas"
             fileInputRef={fileInputRef}
             handleImageUpload={handleImageUpload}
             previewImages={previewImage}

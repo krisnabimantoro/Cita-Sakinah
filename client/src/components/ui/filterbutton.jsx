@@ -3,7 +3,7 @@ import React from "react";
 const FilterButtons = ({ currentFilter, onFilterChange }) => {
   const filters = [
     "Semua Aktivitas",
-    "Kegiatan Siswa",
+    "Kegiatan Anak",
     "Kegiatan Guru",
     "Prestasi",
   ];

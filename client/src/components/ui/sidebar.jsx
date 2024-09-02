@@ -2,15 +2,16 @@ import React, { useState, useEffect } from "react";
 import LogoAdmin from "../../assets/svg/logo.svg";
 import { LuLogOut } from "react-icons/lu";
 import { dataSidebar } from "../../data/datasidebar";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Modal from "../../components/modal/modal";
 import { toast } from "react-hot-toast";
+import { useAuth } from "../../hooks/useAuth";
+import axios from "axios";
 
 const Sidebar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
-
-  const navigate = useNavigate();
+  const { logout, user, role, namaSekolah } = useAuth();
 
   useEffect(() => {
     const handleResize = () => {
@@ -28,10 +29,38 @@ const Sidebar = () => {
     setIsModalOpen(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminRoute");
-    toast.success("Logout Berhasil");
-    navigate("/auth/login");
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        "/api/user/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        logout();
+        localStorage.removeItem("adminRoute");
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("Gagal logout. Silakan coba lagi.");
+        }
+      } else if (error.request) {
+        toast.error(
+          "Tidak ada respons dari server. Silakan periksa koneksi internet Anda."
+        );
+      } else {
+        console.log(error);
+        toast.error("Terjadi kesalahan tak terduga. Silakan coba lagi.");
+      }
+    }
   };
 
   const handleCancel = () => {
@@ -50,7 +79,7 @@ const Sidebar = () => {
             src={LogoAdmin}
             alt="logo-admin"
             draggable="false"
-            className="w-20 cursor-pointer"
+            className="w-20"
           />
           {!isMobile && (
             <h1 className="text-2xl text-main font-bold text-center">
@@ -92,8 +121,8 @@ const Sidebar = () => {
         >
           {!isMobile && (
             <div className="flex flex-col">
-              <h2 className="text-2xl font-medium">Admin TPA</h2>
-              <h4 className="text-xs">TPA Cita Sakinah</h4>
+              <h2 className="text-2xl font-medium">{role}</h2>
+              <h4 className="text-xs">{namaSekolah}</h4>
             </div>
           )}
           <button onClick={handleLogoutClick}>

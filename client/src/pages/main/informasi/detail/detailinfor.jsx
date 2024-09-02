@@ -1,32 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { dataInfor } from "../../../../data/datainfor";
-import NotFoundPage from "../../../notfound";
+import axios from "axios";
 import { FaRegBuilding } from "react-icons/fa";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { Download, Zoom } from "yet-another-react-lightbox/plugins";
 import { RiArrowLeftLine } from "react-icons/ri";
+import { formatDate } from "../../../../utils/formatting";
 
 const DetailInforPage = () => {
   const { id } = useParams();
-  const informasi = dataInfor.find((infor) => infor.id === parseInt(id));
+  const [informasi, setInformasi] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = `Cita Sakinah | Detail Informasi #${id}`;
+    const fetchinformasi = async () => {
+      try {
+        const response = await axios.get(`/api/informasi/${id}`);
+        setInformasi(response.data.result[0]);
+      } catch (error) {
+        console.error("Error fetching informasi data from API:", error);
+      }
+    };
+
+    fetchinformasi();
   }, [id]);
 
+  useEffect(() => {
+    if (informasi) {
+      document.title = `Cita Sakinah | Detail Informasi #${informasi.id}`;
+    }
+  }, [informasi, id]);
+
   if (!informasi) {
-    return <NotFoundPage />;
+    return (
+      <div className="flex justify-center h-screen items-center text-main font-semibold">
+        LOADING .......
+      </div>
+    );
   }
 
   const handleOpenLightbox = (index) => {
     setCurrentIndex(index);
     setIsOpen(true);
   };
+
+  const imageUrlBase = `${import.meta.env.VITE_API_URL}/storage/uploads`;
 
   return (
     <>
@@ -42,55 +63,60 @@ const DetailInforPage = () => {
           <div className="flex flex-col md:flex-row gap-10">
             <div className="md:w-[60%] flex flex-col gap-10">
               <img
-                src={informasi.img[0]}
+                src={`${imageUrlBase}/${informasi.fileName[0]}`}
                 alt={`img-detail-0`}
                 className="rounded-2xl w-full cursor-pointer"
                 onClick={() => handleOpenLightbox(0)}
               />
               <div className="flex gap-5 flex-col">
                 <div className="flex mb-2 text-white font-semibold sm:text-lg gap-2">
-                  {informasi.tagSekolah.map((tag, index) => (
+                  {/* {informasi.namaSekolah.map((tag, index) => (
                     <span
                       key={index}
                       className="bg-button px-2 py-1 rounded-md flex items-center gap-2 capitalize"
                     >
                       <FaRegBuilding /> {tag}
                     </span>
-                  ))}
+                  ))} */}
                 </div>
                 <div>
                   <h1 className="font-bold text-main text-2xl sm:text-4xl">
-                    {informasi.title}
+                    {informasi.judul}
                   </h1>
                   <h3 className="text-abugelap font-medium text-lg">
-                    {informasi.date}
+                    {formatDate(informasi.tanggal)}
                   </h3>
                 </div>
                 <p className="text-abugelap text-base text-justify">
-                  {informasi.detail}
+                  {informasi.deskripsi}
                 </p>
               </div>
             </div>
 
             <div className="md:w-[40%] grid grid-cols-2 gap-5 h-fit">
-              {informasi.img.slice(1).map((src, index) => (
-                <img
-                  key={index + 1}
-                  src={src}
-                  alt={`img-detail-${index + 1}`}
-                  className="rounded-2xl w-full cursor-pointer"
-                  onClick={() => handleOpenLightbox(index + 1)}
-                />
-              ))}
+              {informasi.fileName &&
+                informasi.fileName
+                  .slice(1)
+                  .map((fileName, index) => (
+                    <img
+                      key={index + 1}
+                      src={`${imageUrlBase}/${fileName}`}
+                      alt={`img-detail-${index + 1}`}
+                      className="rounded-2xl w-full cursor-pointer"
+                      onClick={() => handleOpenLightbox(index + 1)}
+                    />
+                  ))}
             </div>
           </div>
         </div>
-        {isOpen && (
+        {isOpen && informasi.fileName && (
           <Lightbox
             open={isOpen}
             close={() => setIsOpen(false)}
             index={currentIndex}
-            slides={informasi.img.map((src) => ({ src }))}
+            slides={informasi.fileName.map((fileName) => ({
+              src: `${imageUrlBase}/${fileName}`,
+            }))}
             plugins={[Download, Zoom]}
           />
         )}

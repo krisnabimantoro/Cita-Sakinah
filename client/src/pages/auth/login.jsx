@@ -4,15 +4,17 @@ import InputField from "../../components/form/inputfield";
 import { FiUser } from "react-icons/fi";
 import { CgLock } from "react-icons/cg";
 import Button from "../../components/ui/button";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "../../components/loading/loadingspinner";
+import axios from "axios";
+import { useAuth } from "../../hooks/useAuth";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -28,16 +30,40 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(async () => {
-      try {
-        toast.success("Login Berhasil");
-        navigate("/admin/dashboard");
-      } catch (error) {
-        toast.error("Error");
-      } finally {
-        setLoading(false);
+    try {
+      const response = await axios.post("/api/user/auth/login", formData);
+      if (response.status === 200) {
+        await login({ token: response.data.token });
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
       }
-    }, 2000);
+    } catch (error) {
+      setLoading(false);
+      if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            toast.error(error.response.data.message);
+            break;
+          case 404:
+            toast.error(error.response.data.message);
+            break;
+          case 500:
+            toast.error(error.response.data.message);
+            break;
+          default:
+            toast.error("Terjadi kesalahan. Silakan coba lagi.");
+        }
+      } else if (error.request) {
+        toast.error(
+          "Tidak ada respons yang diterima dari server. Harap periksa koneksi internet Anda."
+        );
+      } else {
+        toast.error("Terdapat Error, Silahkan Coba Lagi!");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

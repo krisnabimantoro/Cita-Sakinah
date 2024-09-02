@@ -3,7 +3,6 @@ export const dataSekolah = [
   {
     singkatan: "TPA",
     sekolah: "Tempat Penitipan Anak",
-    nama: "Cita Sakinah",
     alamat:
       "Perum Griya Permata Alam Blok O nomer 5-6 RT.4 RW.11 Ngijo Karangploso Malang",
     berdiri: "23 November 2014",
@@ -29,7 +28,6 @@ export const dataSekolah = [
   {
     singkatan: "KB",
     sekolah: "Kelompok Bermain",
-    nama: "'Aisyiyah 24",
     alamat: "Jalan Merdeka No. 12 RT.2 RW.3 Tlogomas Malang",
     berdiri: "15 Januari 2010",
     yayasan: "Aisyiyah Cabang Tlogomas",
@@ -55,7 +53,6 @@ export const dataSekolah = [
   {
     singkatan: "TK",
     sekolah: "Taman Kanak-Kanak",
-    nama: "ABA 33",
     alamat: "Jalan Pahlawan No. 9 RT.1 RW.2 Klojen Malang",
     berdiri: "5 Juli 2005",
     yayasan: "Aisyiyah Cabang Klojen",

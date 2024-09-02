@@ -1,23 +1,39 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import HeaderMenu from "../../../components/ui/header";
 import HeaderImg from "../../../assets/svg/profil.svg";
 import CardInfor from "../../../components/ui/cardinfor";
 import LoadingCard from "../../../components/loading/loadingcard";
-import { dataInfor } from "../../../data/datainfor";
 import Button from "../../../components/ui/button";
 import { LuFilter } from "react-icons/lu";
 import DropdownFilter from "../../../components/ui/dropdownfilter";
+import { formatDate } from "../../../utils/formatting";
 
 const InformasiPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [schools, setSchools] = useState([]);
+  const [informasi, setInformasi] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Informasi";
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+
+    const fetchData = async () => {
+      try {
+        const schoolResponse = await axios.get("/api/sekolah");
+        setSchools(schoolResponse.data.map((school) => school.namaSekolah));
+
+        const informasiResponse = await axios.get("/api/informasi");
+        setInformasi(informasiResponse.data.result);
+      } catch (error) {
+        console.error("There was an error fetching the data!", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleSelect = (option) => {
@@ -30,11 +46,11 @@ const InformasiPage = () => {
 
   const filteredData =
     selectedOptions.length === 0
-      ? dataInfor
-      : dataInfor.filter((item) =>
-          item.tagSekolah.some((school) =>
-            selectedOptions.some((selected) =>
-              school.startsWith(selected.split(" ")[0])
+      ? informasi
+      : informasi.filter((item) =>
+          selectedOptions.some((selected) =>
+            item.namaSekolah.some((schoolName) =>
+              schoolName.startsWith(selected.split(" ")[0])
             )
           )
         );
@@ -61,7 +77,7 @@ const InformasiPage = () => {
             />
             <DropdownFilter
               isOpen={isOpen}
-              options={["TPA Cita Sakinah", "KB 'Aisyiyah 24", "TK ABA 33"]}
+              options={schools}
               selectedOptions={selectedOptions}
               onSelect={handleSelect}
             />
@@ -73,13 +89,19 @@ const InformasiPage = () => {
               <LoadingCard key={index} />
             ) : (
               <CardInfor
-                key={index}
+                key={item.id}
                 id={item.id}
-                img={item.img}
-                title={item.title}
-                detail={item.detail}
-                date={item.date}
-                tagSekolah={item.tagSekolah}
+                img={[
+                  `${import.meta.env.VITE_API_URL}/storage/uploads/${
+                    item.fileName[0]
+                  }`,
+                ]}
+                title={item.judul}
+                detail={item.deskripsi}
+                date={formatDate(item.tanggal)}
+                tagSekolah={item.namaSekolah.map(
+                  (school) => school.split(" ")[0]
+                )}
               />
             )
           )}

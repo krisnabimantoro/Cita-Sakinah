@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import HeaderMenu from "../../../components/ui/header";
 import HeaderImg from "../../../assets/svg/profil.svg";
-import StrukturImg from "../../../assets/svg/struktur.svg";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { Download, Zoom } from "yet-another-react-lightbox/plugins";
@@ -10,12 +10,23 @@ import LoadingStruktur from "../../../components/loading/loadingstruktur";
 const StrukturPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [strukturImg, setStrukturImg] = useState("");
 
   useEffect(() => {
     document.title = "Cita Sakinah | Struktur";
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+
+    const fetchStructureImage = async () => {
+      try {
+        const response = await axios.get("/api/struktur");
+        setStrukturImg(response.data.result[0].imageName);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch structure image:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchStructureImage();
   }, []);
 
   return (
@@ -31,7 +42,9 @@ const StrukturPage = () => {
           <LoadingStruktur />
         ) : (
           <img
-            src={StrukturImg}
+            src={`${
+              import.meta.env.VITE_API_URL
+            }/storage/uploads/${strukturImg}`}
             alt="struktur-citasakinah"
             draggable="false"
             className="object-cover cursor-pointer"
@@ -44,7 +57,9 @@ const StrukturPage = () => {
             close={() => setIsOpen(false)}
             slides={[
               {
-                src: StrukturImg,
+                src: `${
+                  import.meta.env.VITE_API_URL
+                }/storage/uploads/${strukturImg}`,
                 downloadFilename: "Struktur Organisasi",
               },
             ]}

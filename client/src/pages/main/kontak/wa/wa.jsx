@@ -1,28 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputField from "../../../../components/form/inputfield";
 import Button from "../../../../components/ui/button";
+import axios from "axios";
 
 const WaSection = () => {
   const [formData, setFormData] = useState({
     namalengkap: "",
-    sekolah: "TPA Cita Sakinah",
+    sekolah: "",
+    sekolahId: "",
     pesan: "",
   });
+  const [schoolOptions, setSchoolOptions] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        const schoolResponse = await axios.get("/api/sekolah");
+        const schoolData = schoolResponse.data;
+
+        const schoolOptions = schoolData.map((school) => ({
+          value: school.namaSekolah,
+          label: school.namaSekolah,
+          id: school.id,
+        }));
+
+        setSchoolOptions(schoolOptions);
+        if (schoolOptions.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            sekolah: schoolOptions[0].value,
+            sekolahId: schoolOptions[0].id,
+          }));
+        }
+      } catch (error) {
+        console.error("Failed to fetch schools:", error);
+      }
+    };
+
+    fetchSchools();
+  }, []);
+
+  useEffect(() => {
+    const fetchContact = async () => {
+      if (formData.sekolahId) {
+        try {
+          const contactResponse = await axios.get(
+            `/api/user/kontak/${formData.sekolahId}`
+          );
+          const contactData = contactResponse.data.result[0];
+          setPhoneNumber(contactData.noHandphone);
+        } catch (error) {
+          console.error("Failed to fetch contact number:", error);
+        }
+      }
+    };
+
+    fetchContact();
+  }, [formData.sekolahId]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "sekolah") {
+      const selectedSchool = schoolOptions.find(
+        (school) => school.value === value
+      );
+      setFormData((prev) => ({
+        ...prev,
+        sekolah: selectedSchool.value,
+        sekolahId: selectedSchool.id,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const schoolNumbers = {
-      "TPA Cita Sakinah": "",
-      "KB 'Aisyiyah 24": "",
-      "TK ABA 33": "",
-    };
-
-    const phoneNumber = schoolNumbers[formData.sekolah];
     const message = `Nama Lengkap: ${formData.namalengkap}%0APesan: ${formData.pesan}`;
     const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
@@ -56,11 +115,7 @@ const WaSection = () => {
             name="sekolah"
             value={formData.sekolah}
             onChange={handleChange}
-            options={[
-              { value: "TPA Cita Sakinah", label: "TPA Cita Sakinah" },
-              { value: "KB 'Aisyiyah 24", label: "KB 'Aisyiyah 24" },
-              { value: "TK ABA 33", label: "TK ABA 33" },
-            ]}
+            options={schoolOptions}
           />
         </div>
         <InputField

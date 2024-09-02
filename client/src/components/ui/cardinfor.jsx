@@ -15,17 +15,12 @@ const CardInfor = ({ id, img, title, detail, date, tagSekolah }) => {
       onClick={handleClick}
     >
       <div className="relative">
-        {img.map((src, index) => (
-          <img
-            key={index}
-            src={src}
-            alt={`img-card-${index}`}
-            draggable="false"
-            className={`rounded-t-xl object-cover w-full ${
-              index > 0 ? "hidden" : ""
-            }`}
-          />
-        ))}
+        <img
+          src={img[0]}
+          alt={`img-card`}
+          draggable="false"
+          className={`rounded-t-xl object-cover w-full h-48`}
+        />
       </div>
       <div className="p-5 flex flex-col h-[206px]">
         <div className="flex flex-col justify-between h-full">
@@ -51,7 +46,7 @@ const CardInfor = ({ id, img, title, detail, date, tagSekolah }) => {
               onClick={handleClick}
               className="text-button text-sm font-semibold"
             >
-              Lihat Selengkapnya
+              Lihat Detail
             </button>
           </div>
         </div>
