@@ -70,7 +70,7 @@ export default {
       console.log(idImage);
       if (idImage) {
         const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
-        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [
+        const [oldImages] = await conn. query<any>(`SELECT fileName FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [
           idImageArray,
           informasiId,
         ]);

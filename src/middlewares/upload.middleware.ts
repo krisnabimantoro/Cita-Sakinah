@@ -2,7 +2,8 @@ import multer from "multer";
 import path from "path";
 import { encryptImage } from "../utils/encryption";
 import sharpCompression from "sharp";
-
+import compressImage from "../utils/compress.image";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 
 const storage = multer.diskStorage({
   destination(req, file, callback) {
@@ -27,15 +28,28 @@ const handleMulterError = (err: any, req: any, res: any, next: Function) => {
   }
   next(err); // Pass other errors to the default error handler
 };
+const compress: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.file && req.file.size > 5000) {
+    await compressImage(req.file.filename);
+  }
+  next();
+};
 
-// function compressImage(req: any) {
-//   sharp(req.file).jpeg({ quality: 50 });
-// }
-
+// Multiple files compression middleware
+const compressImages: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.files && Array.isArray(req.files)) {
+    for (const img of req.files) {
+      if (img.size > 5000) {
+        await compressImage(img.filename);
+      }
+    }
+  }
+  next();
+};
 const upload = multer({
   storage,
   limits: {
-    fileSize: 1024 * 1024 * 5,
+    fileSize: 1024 * 1024 * 100,
   },
 
   fileFilter(_, file, callback) {
@@ -51,8 +65,8 @@ const upload = multer({
 // export const single = upload.single("file");
 // export const multiple = upload.array("files", 10);
 
-export const single = [upload.single("file"), handleMulterError];
-export const multiple = [upload.array("files", 10), handleMulterError];
+export const single = [upload.single("file"), compress];
+export const multiple = [upload.array("files", 10), compressImages];
 
 export default {
   single,

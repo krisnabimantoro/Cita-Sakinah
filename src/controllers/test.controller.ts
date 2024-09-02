@@ -22,11 +22,22 @@ export default {
     console.log(tag);
     const tagsArray = tag.tagSekolah.split(",");
 
-    for(const display of tagsArray){
-
+    for (const display of tagsArray) {
       console.log(display);
     }
 
     return res.json(tagsArray);
+  },
+  async tesImage(req: Request, res: Response) {
+    const conn = await connect();
+    const imagePaths = req.file as Express.Multer.File | undefined;
+    const imageUrl = imagePaths?.filename;
+
+    // console.log(imagePaths?.size)
+
+    // return res.json({
+    //   imagePaths[0]
+    // })
+
   },
 };
