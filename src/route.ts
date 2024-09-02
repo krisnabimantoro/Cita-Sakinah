@@ -39,6 +39,7 @@ router.delete("/informasi/:id", uploadMiddleware.single, informasiController.del
 router.post("/user/auth/login", authController.login);
 router.post("/user/auth/register", authController.register);
 router.post("/user/logout", authMiddleware, authController.logout);
+router.get("/user/kontak/:sekolahId", authController.kontak);
 
 //struktur
 router.put("/struktur", uploadMiddleware.single, strukturController.changeStructure);
