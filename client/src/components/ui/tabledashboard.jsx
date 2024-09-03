@@ -43,7 +43,9 @@ const TableDashboard = ({ columns, data }) => {
                       <div className="cursor-pointer">{item[col.field]}</div>
                     ) : col.field === "gambar" ? (
                       <img
-                        src={item[col.field]}
+                        src={`${import.meta.env.VITE_API_URL}/storage/uploads/${
+                          item[col.field]
+                        }`}
                         alt={item.title}
                         className="w-20 h-20 object-cover rounded-lg"
                       />

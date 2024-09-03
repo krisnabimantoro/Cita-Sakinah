@@ -42,9 +42,7 @@ const FasilitasPage = () => {
         const formattedData = response.data.map((item) => ({
           id: item.id,
           title: item.namaFasilitas,
-          gambar: `${import.meta.env.VITE_API_URL}/storage/uploads/${
-            item.imageName
-          }`,
+          gambar: item.imageName,
           sekolah: item.namaSekolah,
           tanggal: new Date().toISOString().split("T")[0],
         }));
@@ -107,7 +105,9 @@ const FasilitasPage = () => {
       sekolahId: selectedSchool?.id || "",
       gambar: fasilitas.gambar,
     });
-    setPreviewImage(fasilitas.gambar);
+    setPreviewImage(
+      `${import.meta.env.VITE_API_URL}/storage/uploads/${fasilitas.gambar}`
+    );
     setSelectedFasilitas(fasilitas);
     setIsEdit(true);
     setIsModalOpen(true);
@@ -141,7 +141,6 @@ const FasilitasPage = () => {
   };
 
   const handleSaveFasilitas = async () => {
-    const currentDate = new Date().toISOString().split("T")[0];
     const formDataToSend = new FormData();
 
     if (formData.title !== (isEdit ? selectedFasilitas.title : "")) {
@@ -183,27 +182,9 @@ const FasilitasPage = () => {
 
       if (response.status === 200 || response.status === 201) {
         toast.success(response.data.message);
-        const newFacility = {
-          ...formData,
-          id: response.data.id || selectedFasilitas.id,
-          gambar: previewImage || formData.gambar,
-          tanggal: currentDate,
-        };
         setTimeout(() => {
           window.location.reload();
         }, 1000);
-
-        if (!isEdit) {
-          setFilteredData([...filteredData, newFacility]);
-        } else {
-          setFilteredData(
-            filteredData.map((item) =>
-              item.id === selectedFasilitas.id
-                ? { ...formData, tanggal: currentDate, id: item.id }
-                : item
-            )
-          );
-        }
       }
     } catch (error) {
       if (error.response && error.response.status === 500) {
