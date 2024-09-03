@@ -19,9 +19,10 @@ const storage = multer.diskStorage({
 
 const handleMulterError = (err: any, req: any, res: any, next: Function) => {
   if (err instanceof multer.MulterError) {
-    if (err.code === "LIMIT_FILE_SIZE") {
-      console.log(req);
-      return res.status(400).json({ error: err.message });
+    if (err.code === "LIMIT_UNEXPECTED_FILE") {
+      // console.log(req);
+      
+      return res.status(400).json({ message:"Maksimal Upload 5 Foto" });
     }
     // Handle other Multer errors
     return res.status(400).json({ error: err.message });
@@ -65,8 +66,8 @@ const upload = multer({
 // export const single = upload.single("file");
 // export const multiple = upload.array("files", 10);
 
-export const single = [upload.single("file"), compress];
-export const multiple = [upload.array("files", 10), compressImages];
+export const single = [upload.single("file"), compress,handleMulterError];
+export const multiple = [upload.array("files", 5), compressImages,handleMulterError];
 
 export default {
   single,
