@@ -29,7 +29,7 @@ export default {
       const [rows] = await conn.query(
         `
         select 
-          k.*, group_concat(ik.fileName) as fileName, kk.namaKegiatan, s.namaSekolah FROM kegiatan k 
+          k.*,  DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal, GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, kk.namaKegiatan, s.namaSekolah FROM kegiatan k 
         LEFT JOIN
           kategorikegiatan kk ON k.jenisKegiatan = kk.id
         LEFT JOIN 
@@ -254,7 +254,7 @@ export default {
       const [rows] = await conn.query(
         `
         select 
-          k.*, group_concat(ik.fileName) as fileName, kk.namaKegiatan, s.namaSekolah FROM kegiatan k 
+          k.*,  DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, kk.namaKegiatan, s.namaSekolah FROM kegiatan k 
         LEFT JOIN
           kategorikegiatan kk ON k.jenisKegiatan = kk.id
         LEFT JOIN 

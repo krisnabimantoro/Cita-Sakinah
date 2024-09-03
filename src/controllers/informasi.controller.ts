@@ -135,6 +135,7 @@ export default {
       const [rows] = await conn.query<any>(
         `SELECT 
           i.*, 
+          DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
           GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
           GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
           GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
@@ -204,6 +205,7 @@ export default {
       const [rows] = await conn.query(
         `SELECT 
           i.*, 
+          DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
           GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
           GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
           GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
@@ -243,5 +245,4 @@ export default {
       });
     }
   },
- 
 };
