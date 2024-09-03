@@ -208,7 +208,8 @@ export default {
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
           GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
           GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
-          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
+          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah,
+          GROUP_CONCAT(distinct ii.idImage ORDER BY ii.idImage ASC) AS idImage 
         FROM 
           informasi i 
         LEFT JOIN 
@@ -224,14 +225,26 @@ export default {
         [id]
       );
 
+      const image = (rows as any[]).map((row) => {
+        const idImages = row.idImage ? row.idImage.split(",") : [];
+        const fileNames = row.fileName ? row.fileName.split(",") : [];
+
+        return fileNames.map((fileName: string, index: number) => ({
+          idImage: idImages[index],
+          fileName: fileName,
+        }));
+      });
+
       const result = (rows as any[]).map((row) => ({
         id: row.id,
         judul: row.judul,
         tanggal: row.tanggal,
         deskripsi: row.deskripsi,
-        fileName: row.fileName ? row.fileName.split(",") : [],
-        namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
+        namaKegiatan: row.namaKegiatan,
+        namaSekolah: row.namaSekolah,
+        image,
       }));
+
       if (!result || result.length === 0) {
         console.log("No data found for the given id");
         return res.status(404).json({ message: "No data found" });

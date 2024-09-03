@@ -33,7 +33,7 @@ export default {
     const imagePaths = req.file as Express.Multer.File | undefined;
     const imageUrl = imagePaths?.filename;
 
-    // console.log(imagePaths?.size)
+    console.log(imagePaths)
 
     // return res.json({
     //   imagePaths[0]

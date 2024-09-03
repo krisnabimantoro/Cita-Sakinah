@@ -253,21 +253,39 @@ export default {
 
       const [rows] = await conn.query(
         `
-        select 
-          k.*,  DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, kk.namaKegiatan, s.namaSekolah FROM kegiatan k 
+        SELECT 
+            k.*,  
+            DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  
+            GROUP_CONCAT(ik.idImage ORDER BY ik.fileName ASC) AS idImage, 
+            GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, 
+            kk.namaKegiatan, 
+            s.namaSekolah 
+        FROM 
+            kegiatan k 
         LEFT JOIN
-          kategorikegiatan kk ON k.jenisKegiatan = kk.id
+            kategorikegiatan kk ON k.jenisKegiatan = kk.id
         LEFT JOIN 
-          imageKegiatan ik ON k.id = ik.kegiatanId 
-        left JOIN
-          sekolah s ON k.sekolahId = s.id 
-        where 
-          k.id = ?
+            imageKegiatan ik ON k.id = ik.kegiatanId 
+        LEFT JOIN
+            sekolah s ON k.sekolahId = s.id 
+        WHERE 
+            k.id = ?
         GROUP BY 
-          k.id 
+            k.id, kk.namaKegiatan, s.namaSekolah;
+ 
         `,
         [id]
       );
+
+      const image = (rows as any[]).map((row) => {
+        const idImages = row.idImage ? row.idImage.split(",") : [];
+        const fileNames = row.fileName ? row.fileName.split(",") : [];
+
+        return fileNames.map((fileName: string, index: number) => ({
+          idImage: idImages[index],
+          fileName: fileName,
+        }));
+      });
 
       const result = (rows as any[]).map((row) => ({
         id: row.id,
@@ -276,13 +294,14 @@ export default {
         deskripsi: row.deskripsi,
         namaKegiatan: row.namaKegiatan,
         namaSekolah: row.namaSekolah,
-        fileName: row.fileName ? row.fileName.split(",") : [],
+        image,
       }));
+
       if (!result || result.length === 0) {
         console.log("No data found for the given id");
         return res.status(404).json({ message: "No data found" });
       }
-      return res.json(result);
+      return res.json({ result });
     } catch (error) {
       const err = error as Error;
       res.status(500).json({

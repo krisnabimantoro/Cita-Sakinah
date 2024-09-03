@@ -66,7 +66,7 @@ const upload = multer({
 // export const single = upload.single("file");
 // export const multiple = upload.array("files", 10);
 
-export const single = [upload.single("file"), compress,handleMulterError];
+export const single = [upload.single("file"), compress];
 export const multiple = [upload.array("files", 5), compressImages,handleMulterError];
 
 export default {
