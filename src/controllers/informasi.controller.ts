@@ -115,7 +115,7 @@ export default {
         removeFile(imageDelete.fileName);
       }
 
-      await conn.query(`delete from tagInformasi where informasiId = ?`,[id])
+      await conn.query(`delete from tagInformasi where informasiId = ?`, [id]);
       await conn.query(`DELETE FROM imageInformasi  WHERE informasiId = ?`, [id]);
       await conn.query(`DELETE FROM informasi  WHERE id = ?`, [id]);
       return res.status(200).json({
@@ -243,4 +243,5 @@ export default {
       });
     }
   },
+ 
 };

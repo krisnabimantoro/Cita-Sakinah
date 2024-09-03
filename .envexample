@@ -1,0 +1,6 @@
+HOST_DB = "localhost"
+USER_DB ="host"
+DATABASE_NAME ="db_name"
+PASSWORD_DB ="password_db"
+
+SECRET= "12345678901234567890123456789012"

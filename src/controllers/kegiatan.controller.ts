@@ -51,7 +51,6 @@ export default {
         fileName: row.fileName ? row.fileName.split(",") : [],
       }));
 
-      console.log(result[0].fileName);
       return res.json(result);
     } catch (error) {
       const err = error as Error;
@@ -289,6 +288,19 @@ export default {
       res.status(500).json({
         information: err.message,
         message: "Gagal menampilkan data kegiatan!",
+      });
+    }
+  },
+  async displayJenisKegiayan(req: Request, res: Response) {
+    try {
+      const conn = await connect();
+      const [rows] = await conn.query(`select * from kategoriKegiatan`);
+      return res.status(200).json({ rows });
+    } catch (error) {
+      const err = error as Error;
+      res.status(500).json({
+        information: err.message,
+        message: "Gagal menampilkan data jenis kegiatan!",
       });
     }
   },
