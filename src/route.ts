@@ -24,7 +24,7 @@ router.patch("/sekolah/:id", sekolahController.updateData);
 //Kegiatan endpoint
 router.post("/kegiatan", uploadMiddleware.multiple, kegiatanConctroller.createData);
 router.get("/kegiatan", kegiatanConctroller.displayData);
-router.get("/kegiatan/jenis", kegiatanConctroller.displayJenisKegiayan);
+router.get("/kegiatan/jenis", kegiatanConctroller.displayJenisKegiatan);
 router.get("/kegiatan/filter", kegiatanConctroller.filterDisplay);
 router.get("/kegiatan/:id", kegiatanConctroller.selected);
 router.patch("/kegiatan/:id", uploadMiddleware.multiple, kegiatanConctroller.updateData);

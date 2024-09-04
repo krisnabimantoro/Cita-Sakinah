@@ -41,11 +41,11 @@ export default {
 
       const informasiId = insertData.insertId;
 
-      const tagsArray = data.tagSekolah.split(",");
+      const tagsArray = data.sekolahId.split(",");
 
-      for (const tagSekolah of tagsArray) {
+      for (const sekolahId of tagsArray) {
         // console.log(tagSekolah);
-        await conn.query(`insert into tagInformasi(informasiId,sekolahId) values (?,?) `, [informasiId, tagSekolah]);
+        await conn.query(`insert into tagInformasi(informasiId,sekolahId) values (?,?) `, [informasiId, sekolahId]);
       }
       // console.log(imagePaths);
       for (const imagePath of imagePaths) {
@@ -77,10 +77,6 @@ export default {
           informasiId,
         ]);
 
-        // if (oldImages===i) {
-          
-        // }
-        // console.log
         for (const img of oldImages) {
           removeFile(img.fileName);
         }
@@ -89,12 +85,32 @@ export default {
 
       const files = req.files as Express.Multer.File[] | undefined;
       const imagePaths = files ? files.map((file: { filename: string }) => file.filename) : [];
+
       for (const imagePath of imagePaths) {
         await conn.query(`INSERT INTO imageInformasi (informasiId, fileName) VALUES (?, ?)`, [informasiId, imagePath]);
       }
 
-      if (data.deskripsi || data.judul || data.tagSekolah || data.tanggal) {
-        await conn.query(`UPDATE informasi set ? WHERE id = ?`, [data, informasiId]);
+      const tagsArray = data.sekolahId.split(",");
+
+      if (tagsArray) {
+        const [oldInformasiTag] = await conn.query(`select sekolahId from tagInformasi`);
+        if (oldInformasiTag) {
+          await conn.query(`delete from tagInformasi where informasiId=?  `, [informasiId]);
+        }
+        for (const sekolahId of tagsArray) {
+          // console.log(sekolahId);
+          await conn.query(`insert into tagInformasi(informasiId,sekolahId) values (?,?) `, [informasiId, sekolahId]);
+        }
+      }
+
+      if (data.judul) {
+        await conn.query(`UPDATE informasi set judul=? WHERE id = ?`, [data.judul, informasiId]);
+      }
+      if (data.deskripsi) {
+        await conn.query(`UPDATE informasi set deskripsi=? WHERE id = ?`, [data.deskripsi, informasiId]);
+      }
+      if (data.tanggal) {
+        await conn.query(`UPDATE informasi set tanggal=? WHERE id = ?`, [data.tanggal, informasiId]);
       }
 
       return res.status(200).json({
@@ -177,10 +193,9 @@ export default {
           image: images,
           namaSekolah: namaSekolah,
         };
-
       });
 
-      return res.json( result );
+      return res.json(result);
     } catch (error) {
       const err = error as Error;
       res.status(500).json({
