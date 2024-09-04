@@ -138,7 +138,8 @@ export default {
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
           GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
           GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
-          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
+          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah,
+          GROUP_CONCAT(distinct ii.idImage ORDER BY ii.idImage ASC) AS idImage 
         FROM 
           informasi i 
         LEFT JOIN 
@@ -147,19 +148,39 @@ export default {
           tagInformasi ti ON i.id = ti.informasiId
         LEFT JOIN 
           sekolah s ON ti.sekolahId = s.id 
+        
         GROUP BY 
           i.id`
       );
-      const result = (rows as any[]).map((row) => ({
-        id: row.id,
-        judul: row.judul,
-        tanggal: row.tanggal,
-        deskripsi: row.deskripsi,
-        fileName: row.fileName ? row.fileName.split(",") : [],
-        namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
-      }));
+      const result = (rows as any[]).map((row) => {
+        const idImages = row.idImage ? row.idImage.split(",") : [];
+        const fileNames = row.fileName ? row.fileName.split(",") : [];
 
-      return res.json({ result });
+        const images = fileNames.map((fileName: string, index: number) => ({
+          idImage: idImages[index],
+          fileName: fileName,
+        }));
+
+        const namaSekolah = row.namaSekolah ? row.namaSekolah.split(",") : [];
+
+        return {
+          id: row.id,
+          judul: row.judul,
+          tanggal: row.tanggal,
+          deskripsi: row.deskripsi,
+          image: images,
+          namaSekolah: namaSekolah,
+        };
+
+        // id: row.id,
+        // judul: row.judul,
+        // tanggal: row.tanggal,
+        // deskripsi: row.deskripsi,
+        // fileName: row.fileName ? row.fileName.split(",") : [],
+        // namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
+      });
+
+      return res.json( result );
     } catch (error) {
       const err = error as Error;
       res.status(500).json({
@@ -201,15 +222,13 @@ export default {
     try {
       const conn = await connect();
       const id = req.params.id;
-
       const [rows] = await conn.query(
         `SELECT 
           i.*, 
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
           GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
           GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
-          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah,
-          GROUP_CONCAT(distinct ii.idImage ORDER BY ii.idImage ASC) AS idImage 
+          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
         FROM 
           informasi i 
         LEFT JOIN 
@@ -224,32 +243,19 @@ export default {
           i.id`,
         [id]
       );
-
-      const image = (rows as any[]).map((row) => {
-        const idImages = row.idImage ? row.idImage.split(",") : [];
-        const fileNames = row.fileName ? row.fileName.split(",") : [];
-
-        return fileNames.map((fileName: string, index: number) => ({
-          idImage: idImages[index],
-          fileName: fileName,
-        }));
-      });
-
       const result = (rows as any[]).map((row) => ({
         id: row.id,
         judul: row.judul,
         tanggal: row.tanggal,
         deskripsi: row.deskripsi,
-        namaKegiatan: row.namaKegiatan,
-        namaSekolah: row.namaSekolah,
-        image,
+        fileName: row.fileName ? row.fileName.split(",") : [],
+        namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
       }));
-
       if (!result || result.length === 0) {
         console.log("No data found for the given id");
         return res.status(404).json({ message: "No data found" });
       }
-      return res.json({ result });
+      return res.json(result);
     } catch (error) {
       const err = error as Error;
       res.status(500).json({

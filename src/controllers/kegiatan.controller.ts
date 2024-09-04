@@ -28,28 +28,44 @@ export default {
       const conn = await connect();
       const [rows] = await conn.query(
         `
-        select 
-          k.*,  DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal, GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, kk.namaKegiatan, s.namaSekolah FROM kegiatan k 
-        LEFT JOIN
-          kategorikegiatan kk ON k.jenisKegiatan = kk.id
-        LEFT JOIN 
-          imageKegiatan ik ON k.id = ik.kegiatanId 
-        left JOIN
-          sekolah s ON k.sekolahId = s.id 
-        GROUP BY 
-          k.id 
-        `
+    SELECT 
+          k.*,  
+          DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  
+          GROUP_CONCAT(ik.idImage ORDER BY ik.fileName ASC) AS idImage, 
+          GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, 
+          kk.namaKegiatan, 
+          s.namaSekolah 
+      FROM 
+          kegiatan k 
+      LEFT JOIN
+        kategorikegiatan kk ON k.jenisKegiatan = kk.id
+      LEFT JOIN 
+        imageKegiatan ik ON k.id = ik.kegiatanId 
+      LEFT JOIN
+        sekolah s ON k.sekolahId = s.id 
+      GROUP BY 
+        k.id;
+      `
       );
+      const result = (rows as any[]).map((row) => {
+        const idImages = row.idImage ? row.idImage.split(",") : [];
+        const fileNames = row.fileName ? row.fileName.split(",") : [];
 
-      const result = (rows as any[]).map((row) => ({
-        id: row.id,
-        judul: row.judul,
-        tanggal: row.tanggal,
-        deskripsi: row.deskripsi,
-        namaKegiatan: row.namaKegiatan,
-        namaSekolah: row.namaSekolah,
-        fileName: row.fileName ? row.fileName.split(",") : [],
-      }));
+        const images = fileNames.map((fileName: string, index: number) => ({
+          idImage: idImages[index],
+          fileName: fileName,
+        }));
+
+        return {
+          id: row.id,
+          judul: row.judul,
+          tanggal: row.tanggal,
+          deskripsi: row.deskripsi,
+          namaKegiatan: row.namaKegiatan,
+          namaSekolah: row.namaSekolah,
+          image: images,
+        };
+      });
 
       return res.json(result);
     } catch (error) {
@@ -250,43 +266,29 @@ export default {
     try {
       const conn = await connect();
       const id = req.params.id;
-
       const [rows] = await conn.query(
         `
-        SELECT 
-            k.*,  
-            DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  
-            GROUP_CONCAT(ik.idImage ORDER BY ik.fileName ASC) AS idImage, 
-            GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, 
-            kk.namaKegiatan, 
-            s.namaSekolah 
-        FROM 
-            kegiatan k 
-        LEFT JOIN
-            kategorikegiatan kk ON k.jenisKegiatan = kk.id
-        LEFT JOIN 
-            imageKegiatan ik ON k.id = ik.kegiatanId 
-        LEFT JOIN
-            sekolah s ON k.sekolahId = s.id 
-        WHERE 
-            k.id = ?
-        GROUP BY 
-            k.id, kk.namaKegiatan, s.namaSekolah;
- 
+    SELECT 
+        k.*, 
+        DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal, 
+        GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, 
+        kk.namaKegiatan, 
+        s.namaSekolah 
+    FROM 
+        kegiatan k 
+    LEFT JOIN 
+        kategorikegiatan kk ON k.jenisKegiatan = kk.id 
+    LEFT JOIN 
+        imageKegiatan ik ON k.id = ik.kegiatanId 
+    LEFT JOIN 
+        sekolah s ON k.sekolahId = s.id 
+    WHERE 
+        k.id = ? 
+    GROUP BY 
+    k.id
         `,
         [id]
       );
-
-      const image = (rows as any[]).map((row) => {
-        const idImages = row.idImage ? row.idImage.split(",") : [];
-        const fileNames = row.fileName ? row.fileName.split(",") : [];
-
-        return fileNames.map((fileName: string, index: number) => ({
-          idImage: idImages[index],
-          fileName: fileName,
-        }));
-      });
-
       const result = (rows as any[]).map((row) => ({
         id: row.id,
         judul: row.judul,
@@ -294,14 +296,13 @@ export default {
         deskripsi: row.deskripsi,
         namaKegiatan: row.namaKegiatan,
         namaSekolah: row.namaSekolah,
-        image,
+        fileName: row.fileName ? row.fileName.split(",") : [],
       }));
-
       if (!result || result.length === 0) {
         console.log("No data found for the given id");
         return res.status(404).json({ message: "No data found" });
       }
-      return res.json({ result });
+      return res.json(result);
     } catch (error) {
       const err = error as Error;
       res.status(500).json({
