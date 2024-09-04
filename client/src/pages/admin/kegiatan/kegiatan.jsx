@@ -4,49 +4,109 @@ import Button from "../../../components/ui/button";
 import InputField from "../../../components/form/inputfield";
 import ImageUploadForm from "../../../components/form/imageupload";
 import Modal from "../../../components/modal/modal";
-import { dataKegiatan } from "../../../data/dataadmin";
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 import { LuPen } from "react-icons/lu";
 import { IoIosSearch } from "react-icons/io";
 import Pagination from "../../../components/ui/pagination";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+// import { useAuth } from "../../../hooks/useAuth";
 
 const KegiatanPage = () => {
+  // const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(dataKegiatan);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedKegiatan, setSelectedKegiatan] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [previewImage, setPreviewImage] = useState([]);
+  const [dataKegiatan, setDataKegiatan] = useState([]);
+  const [kegiatanOptions, setKegiatanOptions] = useState([]);
+  const [schoolOptions, setSchoolOptions] = useState([]);
+  const [imagesToDelete, setImagesToDelete] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
+    tanggal: "",
     desc: "",
     tipe: "",
-    tanggal: "",
-    sekolah: [],
+    jenisKegiatan: "",
+    sekolah: "",
+    sekolahId: "",
     gambar: [],
   });
-  const [previewImage, setPreviewImage] = useState([]);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Kegiatan ";
 
-    setFilteredData(
-      dataKegiatan.filter((kegiatan) =>
-        kegiatan.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+    const fetchData = async () => {
+      try {
+        const [kegiatanRes, jenisRes, sekolahRes] = await Promise.all([
+          axios.get("/api/kegiatan"),
+          axios.get("/api/kegiatan/jenis"),
+          axios.get("/api/sekolah"),
+        ]);
+
+        const formattedData = kegiatanRes.data.map((item) => ({
+          id: item.id,
+          title: item.judul,
+          tanggal: item.tanggal,
+          desc: item.deskripsi,
+          tipe: item.namaKegiatan,
+          sekolah: item.namaSekolah,
+          gambar: item.image.map((img) => ({
+            idImage: img.idImage,
+            fileName: img.fileName,
+          })),
+        }));
+
+        setFilteredData(formattedData);
+        setDataKegiatan(formattedData);
+
+        setKegiatanOptions(
+          jenisRes.data.rows.map((jenis) => ({
+            label: jenis.namaKegiatan,
+            value: jenis.namaKegiatan,
+            id: jenis.id,
+          }))
+        );
+
+        setSchoolOptions(
+          sekolahRes.data.map((school) => ({
+            label: school.namaSekolah,
+            value: school.namaSekolah,
+            id: school.id,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filtered = searchQuery
+      ? dataKegiatan.filter((kegiatan) =>
+          kegiatan.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : dataKegiatan;
+
+    setFilteredData(filtered);
     setCurrentPage(1);
-  }, [searchQuery]);
+  }, [searchQuery, dataKegiatan]);
 
   const handleAddClick = () => {
     setFormData({
       title: "",
+      tanggal: "",
       desc: "",
       tipe: "",
-      tanggal: "",
-      sekolah: [],
+      jenisKegiatan: "",
+      sekolah: "",
+      sekolahId: "",
       gambar: [],
     });
     setPreviewImage([]);
@@ -55,8 +115,34 @@ const KegiatanPage = () => {
   };
 
   const handleEditClick = (kegiatan) => {
-    setFormData(kegiatan);
-    setPreviewImage(kegiatan.gambar);
+    const selectedSchool = schoolOptions.find(
+      (option) => option.label === kegiatan.sekolah
+    );
+    const selectedJenis = kegiatanOptions.find(
+      (option) => option.label === kegiatan.tipe
+    );
+
+    setFormData({
+      title: kegiatan.title,
+      desc: kegiatan.desc,
+      tanggal: kegiatan.tanggal,
+      tipe: kegiatan.tipe,
+      jenisKegiatan: selectedJenis?.id || "",
+      sekolah: kegiatan.sekolah,
+      sekolahId: selectedSchool?.id || "",
+      gambar: kegiatan.gambar.map((img) => ({
+        idImage: img.idImage,
+        fileName: img.fileName,
+      })),
+    });
+
+    setPreviewImage(
+      kegiatan.gambar.map((img) => ({
+        idImage: img.idImage,
+        url: `${import.meta.env.VITE_API_URL}/storage/uploads/${img.fileName}`,
+      }))
+    );
+
     setSelectedKegiatan(kegiatan);
     setIsEdit(true);
     setIsEditModalOpen(true);
@@ -67,12 +153,21 @@ const KegiatanPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    setFilteredData((prevData) =>
-      prevData.filter((item) => item !== selectedKegiatan)
-    );
-    setIsDeleteModalOpen(false);
-    setSelectedKegiatan(null);
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `/api/kegiatan/${selectedKegiatan.id}`
+      );
+      setFilteredData(
+        filteredData.filter((item) => item.id !== selectedKegiatan.id)
+      );
+      toast.success(response.data.message);
+      setIsDeleteModalOpen(false);
+      setSelectedKegiatan(null);
+    } catch (error) {
+      console.error("Error deleting facility: ", error);
+      toast.error("Failed to delete facility");
+    }
   };
 
   const handleCancelDelete = () => {
@@ -80,73 +175,123 @@ const KegiatanPage = () => {
     setSelectedKegiatan(null);
   };
 
-  const handleSaveKegiatan = () => {
-    if (isEdit) {
-      setFilteredData((prevData) =>
-        prevData.map((item) =>
-          item === selectedKegiatan ? { ...formData, id: item.id } : item
-        )
-      );
-    } else {
-      setFilteredData((prevData) => [
-        ...prevData,
-        { ...formData, id: Date.now().toString() },
-      ]);
+  const handleSaveKegiatan = async () => {
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("judul", formData.title);
+    formDataToSend.append("deskripsi", formData.desc);
+    formDataToSend.append("tanggal", formData.tanggal);
+    formDataToSend.append("jenisKegiatan", formData.jenisKegiatan);
+    formDataToSend.append("sekolahId", formData.sekolahId);
+
+    formData.gambar.forEach((file) => {
+      if (!file.idImage) {
+        formDataToSend.append("files", file.file);
+      }
+    });
+
+    try {
+      let response;
+      const deleteParams =
+        imagesToDelete.length > 0 ? `idImage=${imagesToDelete.join(",")}` : "";
+
+      if (isEdit) {
+        response = await axios.patch(
+          `/api/kegiatan/${selectedKegiatan.id}?${deleteParams}`,
+          formDataToSend,
+          {
+            headers: {
+              // Authorization: `Bearer ${user}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        response = await axios.post("/api/kegiatan", formDataToSend, {
+          headers: {
+            // Authorization: `Bearer ${user}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success(response.data.message);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(
+          isEdit ? error.response.data.message : error.response.data.message
+        );
+      }
+      console.error("Error saving kegiatan: ", error);
+    } finally {
+      setIsEditModalOpen(false);
+      setSelectedKegiatan(null);
     }
-    setIsEditModalOpen(false);
-    setSelectedKegiatan(null);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "sekolah") {
+      const selectedSchool = schoolOptions.find(
+        (option) => option.value === value
+      );
+      setFormData({
+        ...formData,
+        sekolah: value,
+        sekolahId: selectedSchool?.id || "",
+      });
+    } else if (name === "tipe") {
+      const selectedJenis = kegiatanOptions.find(
+        (option) => option.value === value
+      );
+      setFormData({
+        ...formData,
+        tipe: value,
+        jenisKegiatan: selectedJenis?.id || "",
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    files.map((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage((prev) => [...prev, reader.result]);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          gambar: [...prevFormData.gambar, reader.result],
-        }));
-      };
-      reader.readAsDataURL(file);
-      return reader.result;
-    });
+    const newPreviewImages = files.map((file) => ({
+      idImage: null,
+      url: URL.createObjectURL(file),
+    }));
+
+    console.log(newPreviewImages);
+    setPreviewImage((prev) => [...prev, ...newPreviewImages]);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      gambar: [
+        ...prevFormData.gambar,
+        ...files.map((file) => ({ idImage: null, file })),
+      ],
+    }));
   };
 
   const handleDeleteImage = (index) => {
+    const deletedImage = formData.gambar[index];
+
+    if (deletedImage.idImage) {
+      setImagesToDelete((prev) => [...prev, deletedImage.idImage]);
+    }
+
     setPreviewImage((prevImages) => prevImages.filter((_, i) => i !== index));
     setFormData((prevFormData) => ({
       ...prevFormData,
       gambar: prevFormData.gambar.filter((_, i) => i !== index),
     }));
   };
-
-  const handleSchoolChange = (e) => {
-    const { value, checked } = e.target;
-    setFormData((prevFormData) => {
-      const updatedSekolah = checked
-        ? [...prevFormData.sekolah, value]
-        : prevFormData.sekolah.filter((school) => school !== value);
-      return { ...prevFormData, sekolah: updatedSekolah };
-    });
-  };
-
-  const schoolOptions = [
-    { label: "TPA Cita Sakinah", value: "TPA Cita Sakinah" },
-    { label: "KB 'Aisyiyah 24", value: "KB 'Aisyiyah 24" },
-    { label: "TK ABA 33", value: "TK ABA 33" },
-  ];
-
-  const kegiatanOptions = [
-    { label: "Kegiatan Guru", value: "Kegiatan Guru" },
-    { label: "Kegiatan Siswa", value: "Kegiatan Siswa" },
-    { label: "Prestasi", value: "Prestasi" },
-  ];
 
   const columnsKegiatan = [
     { header: "Judul", field: "title", truncate: 15, width: "w-[15%]" },
@@ -163,17 +308,9 @@ const KegiatanPage = () => {
     { header: "Aksi", field: "action", truncate: 0, width: "w-[10%]" },
   ];
 
-  const formatSchools = (schools) => {
-    if (schools.length === schoolOptions.length) {
-      return "Semua";
-    }
-    return schools.join(", ");
-  };
-
   const dataReal = filteredData.map((kegiatan) => ({
     ...kegiatan,
-    sekolah: formatSchools(kegiatan.sekolah),
-    gambar: kegiatan.gambar[0] || "",
+    gambar: kegiatan.gambar[0].fileName,
     action: (
       <div className="flex gap-3 items-center">
         <LuPen
@@ -286,6 +423,16 @@ const KegiatanPage = () => {
             options={kegiatanOptions}
           />
           <InputField
+            label="Nama Sekolah"
+            id="sekolah"
+            name="sekolah"
+            value={formData.sekolah}
+            onChange={handleInputChange}
+            placeholder="Pilih Nama Sekolah"
+            dropdown
+            options={schoolOptions}
+          />
+          <InputField
             label="Tanggal Kegiatan"
             id="tanggal"
             name="tanggal"
@@ -296,30 +443,8 @@ const KegiatanPage = () => {
             }
             placeholder="Masukkan Tanggal Kegiatan"
           />
-          <div className="flex flex-col">
-            <label className="text-main font-semibold text-sm mb-2">
-              Nama Sekolah
-            </label>
-            <div className="flex gap-6">
-              {schoolOptions.map((option) => (
-                <div key={option.value} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    id={option.value}
-                    value={option.value}
-                    checked={formData.sekolah.includes(option.value)}
-                    onChange={handleSchoolChange}
-                    className="mr-2"
-                  />
-                  <label htmlFor={option.value} className="text-main text-sm">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
           <ImageUploadForm
-            label="Upload Gambar Kegiatan"
+            label="Upload Gambar Kegiatan (max 5)"
             id="gambar"
             name="gambar"
             onChange={handleImageUpload}

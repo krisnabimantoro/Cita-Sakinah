@@ -42,10 +42,15 @@ const ImageUploadForm = ({
               {previewImages.map((image, index) => (
                 <div key={index} className="relative w-20 h-20">
                   <img
-                    src={image}
-                    alt={`Preview ${index}`}
+                    src={image.url}
+                    alt={`Preview ${image.idImage}`}
                     className="w-full h-full object-cover rounded-lg"
                   />
+                  {/* {image.idImage && (
+                    <div className="absolute top-0 left-0 bg-gray-800 text-white text-xs px-2 py-1 rounded-tr-lg rounded-bl-lg">
+                      {image.idImage}
+                    </div>
+                  )} */}
                   <button
                     type="button"
                     onClick={() => onDeleteImage(index)}
