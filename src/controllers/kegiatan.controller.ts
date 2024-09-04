@@ -31,7 +31,7 @@ export default {
     SELECT 
           k.*,  
           DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  
-          GROUP_CONCAT(ik.idImage ORDER BY ik.fileName ASC) AS idImage, 
+          GROUP_CONCAT(ik.idImage ORDER BY ik.idImage ASC) AS idImage, 
           GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, 
           kk.namaKegiatan, 
           s.namaSekolah 

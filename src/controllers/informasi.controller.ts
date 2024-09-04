@@ -172,12 +172,6 @@ export default {
           namaSekolah: namaSekolah,
         };
 
-        // id: row.id,
-        // judul: row.judul,
-        // tanggal: row.tanggal,
-        // deskripsi: row.deskripsi,
-        // fileName: row.fileName ? row.fileName.split(",") : [],
-        // namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
       });
 
       return res.json( result );
