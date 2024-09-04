@@ -74,6 +74,10 @@ export default {
           idImageArray,
           informasiId,
         ]);
+
+        // if (oldImages===i) {
+          
+        // }
         // console.log
         for (const img of oldImages) {
           removeFile(img.fileName);
