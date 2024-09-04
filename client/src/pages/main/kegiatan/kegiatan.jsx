@@ -94,7 +94,7 @@ const KegiatanPage = () => {
                 id={item.id}
                 img={[
                   `${import.meta.env.VITE_API_URL}/storage/uploads/${
-                    item.fileName[0]
+                    item.image[0].fileName
                   }`,
                 ]}
                 title={item.judul}

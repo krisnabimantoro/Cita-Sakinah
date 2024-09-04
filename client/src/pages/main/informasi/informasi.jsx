@@ -25,7 +25,7 @@ const InformasiPage = () => {
         setSchools(schoolResponse.data.map((school) => school.namaSekolah));
 
         const informasiResponse = await axios.get("/api/informasi");
-        setInformasi(informasiResponse.data.result);
+        setInformasi(informasiResponse.data);
       } catch (error) {
         console.error("There was an error fetching the data!", error);
       } finally {
@@ -93,7 +93,7 @@ const InformasiPage = () => {
                 id={item.id}
                 img={[
                   `${import.meta.env.VITE_API_URL}/storage/uploads/${
-                    item.fileName[0]
+                    item.image[0].fileName
                   }`,
                 ]}
                 title={item.judul}

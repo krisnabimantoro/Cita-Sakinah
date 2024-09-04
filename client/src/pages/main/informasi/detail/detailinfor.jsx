@@ -19,7 +19,7 @@ const DetailInforPage = () => {
     const fetchinformasi = async () => {
       try {
         const response = await axios.get(`/api/informasi/${id}`);
-        setInformasi(response.data.result[0]);
+        setInformasi(response.data[0]);
       } catch (error) {
         console.error("Error fetching informasi data from API:", error);
       }
