@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const FilterButtons = ({ currentFilter, onFilterChange }) => {
-  const filters = [
-    "Semua Aktivitas",
-    "Kegiatan Anak",
-    "Kegiatan Guru",
-    "Prestasi",
-  ];
+  const [filters, setFilters] = useState([]);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await axios.get("/api/kegiatan/jenis");
+        const apiFilters = response.data.rows.map((item) => item.namaKegiatan);
+        setFilters(["Semua Aktivitas", ...apiFilters]);
+      } catch (error) {
+        console.error("Error fetching filter options: ", error);
+      }
+    };
+
+    fetchFilters();
+  }, []);
 
   return (
     <div className="flex flex-wrap gap-4">
