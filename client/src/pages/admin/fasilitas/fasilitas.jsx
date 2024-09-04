@@ -143,13 +143,8 @@ const FasilitasPage = () => {
   const handleSaveFasilitas = async () => {
     const formDataToSend = new FormData();
 
-    if (formData.title !== (isEdit ? selectedFasilitas.title : "")) {
-      formDataToSend.append("namaFasilitas", formData.title);
-    }
-
-    if (formData.sekolahId !== (isEdit ? selectedFasilitas.sekolahId : "")) {
-      formDataToSend.append("sekolahId", formData.sekolahId);
-    }
+    formDataToSend.append("namaFasilitas", formData.title);
+    formDataToSend.append("sekolahId", formData.sekolahId);
 
     if (formData.gambar !== (isEdit ? selectedFasilitas.gambar : "")) {
       formDataToSend.append("file", formData.gambar);
@@ -164,6 +159,7 @@ const FasilitasPage = () => {
           formDataToSend,
           {
             headers: {
+              // Authorization: `Bearer ${user}`,
               "Content-Type": "multipart/form-data",
             },
           }
@@ -174,6 +170,7 @@ const FasilitasPage = () => {
           formDataToSend,
           {
             headers: {
+              // Authorization: `Bearer ${user}`,
               "Content-Type": "multipart/form-data",
             },
           }
