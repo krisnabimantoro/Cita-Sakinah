@@ -3,11 +3,12 @@ import connect from "../utils/database";
 import strukturModel from "../models/struktur.model";
 import removeFile from "../utils/remove.file";
 
+import { db } from "../server";
 export default {
   async changeStructure(req: Request, res: Response) {
     try {
       const strukturModel: strukturModel = req.body;
-      const conn = await connect();
+      const conn = await db;
       const [oldImage] = await conn.query<any>(`select imageName from struktur where id = 1`);
       // console.log(oldImage[0].imageName);
 
@@ -34,7 +35,7 @@ export default {
   },
   async getStucture(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const [result] = await conn.query<any>("select imageName from struktur where id = 1");
 
       return res.status(200).json({

@@ -11,7 +11,8 @@ import cors from "cors";
 // async function startServer() {
 const app = express();
 const PORT = process.env.PORT || 3000;
-connect();
+
+export const db = connect();
 
 app.use(
   cors({

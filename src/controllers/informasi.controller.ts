@@ -5,6 +5,8 @@ import removeFile from "../utils/remove.file";
 import { ResultSetHeader } from "mysql2";
 import * as Yup from "yup";
 
+import { db } from "../server";
+
 const updateValidationSchema = Yup.object().shape({
   judul: Yup.string().typeError("Inputan untuk 'judul' harus berupa huruf"),
   tanggal: Yup.date().typeError("Inputan untuk 'tanggal' harus berupa tanggal yang valid"),
@@ -21,7 +23,7 @@ export default {
   async createData(req: Request, res: Response) {
     try {
       await createValidationSchema.validate(req.body);
-      const conn = await connect();
+      const conn = await db;
       const data: informasiModel = req.body;
 
       const files = req.files as Express.Multer.File[] | undefined;
@@ -66,7 +68,7 @@ export default {
       const informasiId = req.params.id;
       const idImage = req.query.idImage;
       const data: informasiModel = req.body;
-      const conn = await connect();
+      const conn = await db;
 
       if (idImage) {
         const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
@@ -108,7 +110,7 @@ export default {
   },
   async deleteData(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const id = req.params.id;
 
       const [imagePath] = await conn.query<any>(`select fileName from imageInformasi where informasiId = ?`, [id]);
@@ -135,7 +137,7 @@ export default {
   },
   async displayData(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const [rows] = await conn.query<any>(
         `SELECT 
           i.*, 
@@ -190,7 +192,7 @@ export default {
   async filterData(req: Request, res: Response) {
     try {
       const sekolahId = req.query.sekolahId;
-      const conn = await connect();
+      const conn = await db;
 
       console.log("cek");
       if (sekolahId) {
@@ -218,7 +220,7 @@ export default {
   },
   async selected(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const id = req.params.id;
       const [rows] = await conn.query(
         `SELECT 

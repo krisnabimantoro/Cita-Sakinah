@@ -7,6 +7,7 @@ import { encrypt, decrypt } from "../utils/encryption";
 import * as Yup from "yup";
 import Sekolah from "../models/sekolah.model";
 
+import { db } from "../server";
 export const blacklistedTokens = new Set<string>();
 const validateLoginSchema = Yup.object().shape({
   username: Yup.string().required("Username harus diisi"),
@@ -16,8 +17,8 @@ const validateLoginSchema = Yup.object().shape({
 export default {
   async register(req: Request, res: Response) {
     const userModel: userModel = req.body;
-    const conn = await connect();
 
+    const conn = await db;
     const SECRET: string = process.env.SECRET || "";
     const encryptPassword = encrypt(SECRET, userModel.password);
     const result = await conn.query(
@@ -38,7 +39,7 @@ export default {
       await validateLoginSchema.validate(req.body);
       const userModel: userModel = req.body;
 
-      const conn = await connect();
+      const conn = await db;
 
       const SECRET: string = process.env.SECRET || "";
       const [PASSWORD] = await conn.query<any>(`SELECT PASSWORD FROM users WHERE username=? `, [userModel.username]);
@@ -116,7 +117,7 @@ export default {
   },
   async kontak(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const sekolahId = req.params.sekolahId;
 
       const [result] = await conn.query<any>(

@@ -4,6 +4,7 @@ import fasilitasModel from "../models/fasilitas.model";
 import removeFile from "../utils/remove.file";
 import * as Yup from "yup";
 
+import { db } from "../server";
 const createValidationSchema = Yup.object().shape({
   namaFasilitas: Yup.string().required("Nama fasilitas harus diisi").typeError("Inputan untuk 'namaFasilitas' harus berupa huruf"),
 });
@@ -16,7 +17,7 @@ export default {
   async createData(req: Request, res: Response) {
     try {
       await createValidationSchema.validate(req.body);
-      const conn = await connect();
+      const conn = await db;
       const dataModel: fasilitasModel = req.body;
       const sekolahId = req.query.sekolahId;
 
@@ -45,7 +46,7 @@ export default {
   async updateData(req: Request, res: Response) {
     try {
       await updateValidationSchema.validate(req.body);
-      const conn = await connect();
+      const conn = await db;
       const dataModel: fasilitasModel = req.body;
       const id = req.params.id;
 
@@ -81,7 +82,7 @@ export default {
 
   async deleteData(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const id = req.params.id;
 
       const [imagePath] = await conn.query<any>(`select imageName from fasilitas where id = ?`, [id]);
@@ -101,7 +102,7 @@ export default {
   },
   async displayData(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const display = await conn.query(`select f.*,s.namaSekolah from fasilitas f join sekolah s on f.sekolahId = s.id`);
       return res.status(200).json(display[0]);
     } catch (error) {

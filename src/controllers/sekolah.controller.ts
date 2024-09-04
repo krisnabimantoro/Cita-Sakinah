@@ -3,6 +3,7 @@ import connect from "../utils/database";
 import Sekolah from "../models/sekolah.model";
 import * as Yup from "yup";
 
+import { db } from "../server";
 const updateValidationSchema = Yup.object().shape({
   namaSekolah: Yup.string().typeError("Inputan untuk 'Nama Sekolah' harus berupa huruf"),
   jamPulang: Yup.string().typeError("Inputan untuk 'Jam Pulang' harus berupa huruf"),
@@ -14,7 +15,7 @@ const updateValidationSchema = Yup.object().shape({
 export default {
   async displayData(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
       const result = await conn.query("SELECT * FROM sekolah");
       return res.status(200).json(result[0]);
     } catch (error) {
@@ -30,9 +31,10 @@ export default {
       await updateValidationSchema.validate(req.body);
       const id = req.params.id;
       const updateSekolah: Sekolah = req.body;
-      const conn = await connect();
+     
+      const conn = await db;
 
-       await conn.query("UPDATE sekolah SET ? WHERE id = ?", [updateSekolah, id]);
+      await conn.query("UPDATE sekolah SET ? WHERE id = ?", [updateSekolah, id]);
       return res.status(200).json({
         message: "Data sekolah berhasil di update",
       });

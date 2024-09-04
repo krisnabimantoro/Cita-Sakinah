@@ -5,6 +5,7 @@ import { ResultSetHeader } from "mysql2";
 import removeFile from "../utils/remove.file";
 import * as Yup from "yup";
 import compressImage from "../utils/compress.image";
+import { db } from "../server";
 
 const updateValidationSchema = Yup.object().shape({
   judul: Yup.string().typeError("Inputan untuk 'judul' harus berupa huruf"),
@@ -25,7 +26,8 @@ const createValidationSchema = Yup.object().shape({
 export default {
   async displayData(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      const conn = await db;
+
       const [rows] = await conn.query(
         `
     SELECT 
@@ -79,7 +81,8 @@ export default {
   async createData(req: Request, res: Response) {
     try {
       await createValidationSchema.validate(req.body);
-      const conn = await connect();
+
+      const conn = await db;
       const data: kegiatan = req.body;
 
       let files: any = req.files as Express.Multer.File[] | undefined;
@@ -125,7 +128,8 @@ export default {
       const idImage = req.query.idImage;
       const data: kegiatan = req.body;
       // const imgKegiatan:
-      const conn = await connect();
+
+      const conn = await db;
 
       if (idImage) {
         const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
@@ -166,7 +170,8 @@ export default {
   async deleteData(req: Request, res: Response) {
     try {
       const id = req.params.id;
-      const conn = await connect();
+
+      const conn = await db;
 
       const [imagePath] = await conn.query<any>(`select fileName from imageKegiatan where kegiatanId = ?`, [id]);
       // console.log(imagePath.length)
@@ -264,7 +269,8 @@ export default {
   },
   async selected(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      
+      const conn = await db;
       const id = req.params.id;
       const [rows] = await conn.query(
         `
@@ -311,9 +317,10 @@ export default {
       });
     }
   },
-  async displayJenisKegiayan(req: Request, res: Response) {
+  async displayJenisKegiatan(req: Request, res: Response) {
     try {
-      const conn = await connect();
+      
+      const conn = await db;
       const [rows] = await conn.query(`select * from kategoriKegiatan`);
       return res.status(200).json({ rows });
     } catch (error) {
