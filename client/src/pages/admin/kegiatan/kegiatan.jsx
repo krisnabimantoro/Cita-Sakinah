@@ -176,6 +176,11 @@ const KegiatanPage = () => {
   };
 
   const handleSaveKegiatan = async () => {
+    if (formData.gambar.length === 0) {
+      toast.error("Minimal 1 gambar yang diupload");
+      return;
+    }
+
     const formDataToSend = new FormData();
 
     formDataToSend.append("judul", formData.title);
