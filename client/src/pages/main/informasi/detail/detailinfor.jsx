@@ -29,10 +29,19 @@ const DetailInforPage = () => {
   }, [id]);
 
   useEffect(() => {
-    if (informasi) {
-      document.title = `Cita Sakinah | Detail Informasi #${informasi.id}`;
-    }
-  }, [informasi, id]);
+    const timeoutId = setTimeout(() => {
+      if (!informasi) {
+        navigate("/");
+        window.location.reload();
+      }
+    }, 5000);
+
+    document.title = informasi
+      ? `Cita Sakinah | Detail Informasi #${informasi.id}`
+      : `Cita Sakinah | No Data`;
+
+    return () => clearTimeout(timeoutId);
+  }, [informasi, navigate]);
 
   if (!informasi) {
     return (
@@ -61,23 +70,23 @@ const DetailInforPage = () => {
             <span>Kembali</span>
           </button>
           <div className="flex flex-col md:flex-row gap-10">
-            <div className="md:w-[60%] flex flex-col gap-10">
+            <div className="md:w-[70%] flex flex-col gap-10">
               <img
                 src={`${imageUrlBase}/${informasi.fileName[0]}`}
-                alt={`img-detail-0`}
-                className="rounded-2xl w-full cursor-pointer"
+                alt={`img-detail`}
+                className="rounded-2xl w-full cursor-pointer h-[460px] object-cover"
                 onClick={() => handleOpenLightbox(0)}
               />
               <div className="flex gap-5 flex-col">
-                <div className="flex mb-2 text-white font-semibold sm:text-lg gap-2">
-                  {/* {informasi.namaSekolah.map((tag, index) => (
+                <div className="flex mb-2 text-white font-semibold sm:text-lg gap-4">
+                  {informasi.namaSekolah.map((tag, index) => (
                     <span
                       key={index}
                       className="bg-button px-2 py-1 rounded-md flex items-center gap-2 capitalize"
                     >
                       <FaRegBuilding /> {tag}
                     </span>
-                  ))} */}
+                  ))}
                 </div>
                 <div>
                   <h1 className="font-bold text-main text-2xl sm:text-4xl">
@@ -93,7 +102,7 @@ const DetailInforPage = () => {
               </div>
             </div>
 
-            <div className="md:w-[40%] grid grid-cols-2 gap-5 h-fit">
+            <div className="md:w-[30%] grid grid-cols-2 gap-5 h-fit">
               {informasi.fileName &&
                 informasi.fileName
                   .slice(1)
@@ -102,7 +111,7 @@ const DetailInforPage = () => {
                       key={index + 1}
                       src={`${imageUrlBase}/${fileName}`}
                       alt={`img-detail-${index + 1}`}
-                      className="rounded-2xl w-full cursor-pointer"
+                      className="rounded-2xl w-full cursor-pointer h-40 object-cover"
                       onClick={() => handleOpenLightbox(index + 1)}
                     />
                   ))}

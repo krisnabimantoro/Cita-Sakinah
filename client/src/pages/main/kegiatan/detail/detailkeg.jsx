@@ -30,10 +30,19 @@ const DetailKegPage = () => {
   }, [id]);
 
   useEffect(() => {
-    if (kegiatan) {
-      document.title = `Cita Sakinah | Detail Kegiatan #${kegiatan.id}`;
-    }
-  }, [kegiatan, id]);
+    const timeoutId = setTimeout(() => {
+      if (!kegiatan) {
+        navigate("/");
+        window.location.reload();
+      }
+    }, 5000);
+
+    document.title = kegiatan
+      ? `Cita Sakinah | Detail Kegiatan #${kegiatan.id}`
+      : `Cita Sakinah | No Data`;
+
+    return () => clearTimeout(timeoutId);
+  }, [kegiatan, navigate]);
 
   if (!kegiatan) {
     return (
@@ -62,11 +71,11 @@ const DetailKegPage = () => {
             <span>Kembali</span>
           </button>
           <div className="flex flex-col md:flex-row gap-10">
-            <div className="md:w-[60%] flex flex-col gap-10">
+            <div className="md:w-[70%] flex flex-col gap-10">
               <img
                 src={`${imageUrlBase}/${kegiatan.fileName[0]}`}
                 alt={`img-detail`}
-                className="rounded-2xl w-full cursor-pointer"
+                className="rounded-2xl w-full cursor-pointer h-[460px] object-cover"
                 onClick={() => handleOpenLightbox(0)}
               />
               <div className="flex gap-5 flex-col">
@@ -93,7 +102,7 @@ const DetailKegPage = () => {
               </div>
             </div>
 
-            <div className="md:w-[40%] grid grid-cols-2 gap-5 h-fit">
+            <div className="md:w-[30%] grid grid-cols-2 gap-5 h-fit">
               {kegiatan.fileName &&
                 kegiatan.fileName
                   .slice(1)
@@ -102,7 +111,7 @@ const DetailKegPage = () => {
                       key={index + 1}
                       src={`${imageUrlBase}/${fileName}`}
                       alt={`img-detail-${index + 1}`}
-                      className="rounded-2xl w-full cursor-pointer"
+                      className="rounded-2xl w-full cursor-pointer h-40 object-cover"
                       onClick={() => handleOpenLightbox(index + 1)}
                     />
                   ))}
