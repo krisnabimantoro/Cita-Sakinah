@@ -165,8 +165,8 @@ const KegiatanPage = () => {
       setIsDeleteModalOpen(false);
       setSelectedKegiatan(null);
     } catch (error) {
-      console.error("Error deleting facility: ", error);
-      toast.error("Failed to delete facility");
+      console.error("Error deleting kegiatan: ", error);
+      toast.error("Failed to delete kegiatan");
     }
   };
 
@@ -263,12 +263,17 @@ const KegiatanPage = () => {
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
+
+    if (formData.gambar.length + files.length > 5) {
+      toast.error("Pilihan maksimal 5 foto");
+      return;
+    }
+
     const newPreviewImages = files.map((file) => ({
       idImage: null,
       url: URL.createObjectURL(file),
     }));
 
-    console.log(newPreviewImages);
     setPreviewImage((prev) => [...prev, ...newPreviewImages]);
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -294,7 +299,7 @@ const KegiatanPage = () => {
   };
 
   const columnsKegiatan = [
-    { header: "Judul", field: "title", truncate: 15, width: "w-[15%]" },
+    { header: "Judul", field: "title", truncate: 15, width: "w-[10%]" },
     { header: "Gambar", field: "gambar", truncate: 10, width: "w-[10%]" },
     { header: "Deskripsi", field: "desc", truncate: 25, width: "w-[20%]" },
     { header: "Tipe Kegiatan", field: "tipe", truncate: 20, width: "w-[15%]" },
@@ -310,7 +315,8 @@ const KegiatanPage = () => {
 
   const dataReal = filteredData.map((kegiatan) => ({
     ...kegiatan,
-    gambar: kegiatan.gambar[0].fileName,
+    gambar:
+      kegiatan.gambar.length > 0 ? kegiatan.gambar[0].fileName : "No Image",
     action: (
       <div className="flex gap-3 items-center">
         <LuPen

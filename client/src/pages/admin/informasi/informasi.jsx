@@ -1,53 +1,124 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TableDashboard from "../../../components/ui/tabledashboard";
 import Button from "../../../components/ui/button";
 import InputField from "../../../components/form/inputfield";
 import ImageUploadForm from "../../../components/form/imageupload";
 import Modal from "../../../components/modal/modal";
-import { dataInformasi } from "../../../data/dataadmin";
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 import { LuPen } from "react-icons/lu";
 import { IoIosSearch } from "react-icons/io";
 import Pagination from "../../../components/ui/pagination";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+// import { useAuth } from "../../../hooks/useAuth";
 
 const InformasiPage = () => {
+  // const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(dataInformasi);
+  const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedInformasi, setSelectedInformasi] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [previewImage, setPreviewImage] = useState([]);
+  const [dataInformasi, setDataInformasi] = useState([]);
+  const [schoolOptions, setSchoolOptions] = useState([]);
+  const [imagesToDelete, setImagesToDelete] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
+    tanggal: "",
     desc: "",
     sekolah: [],
+    sekolahId: [],
     gambar: [],
   });
-  const [previewImage, setPreviewImage] = useState([]);
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Informasi ";
 
-    setFilteredData(
-      dataInformasi.filter((informasi) =>
-        informasi.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+    const fetchData = async () => {
+      try {
+        const [informasiRes, sekolahRes] = await Promise.all([
+          axios.get("/api/informasi"),
+          axios.get("/api/sekolah"),
+        ]);
+
+        const formattedData = informasiRes.data.map((item) => ({
+          id: item.id,
+          title: item.judul,
+          tanggal: item.tanggal,
+          desc: item.deskripsi,
+          sekolah: item.namaSekolah,
+          gambar: item.image.map((img) => ({
+            idImage: img.idImage,
+            fileName: img.fileName,
+          })),
+        }));
+
+        setFilteredData(formattedData);
+        setDataInformasi(formattedData);
+
+        setSchoolOptions(
+          sekolahRes.data.map((school) => ({
+            label: school.namaSekolah,
+            value: school.namaSekolah,
+            id: school.id,
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filtered = searchQuery
+      ? dataInformasi.filter((informasi) =>
+          informasi.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : dataInformasi;
+
+    setFilteredData(filtered);
     setCurrentPage(1);
-  }, [searchQuery]);
+  }, [searchQuery, dataInformasi]);
 
   const handleAddClick = () => {
-    setFormData({ title: "", desc: "", sekolah: [], gambar: [] });
+    setFormData({
+      title: "",
+      tanggal: "",
+      desc: "",
+      sekolah: [],
+      sekolahId: [],
+      gambar: [],
+    });
     setPreviewImage([]);
     setIsEdit(false);
     setIsEditModalOpen(true);
   };
 
   const handleEditClick = (informasi) => {
-    setFormData(informasi);
-    setPreviewImage(informasi.gambar);
+    setFormData({
+      title: informasi.title,
+      desc: informasi.desc,
+      tanggal: informasi.tanggal,
+      sekolah: [],
+      sekolahId: [],
+      gambar: informasi.gambar.map((img) => ({
+        idImage: img.idImage,
+        fileName: img.fileName,
+      })),
+    });
+
+    setPreviewImage(
+      informasi.gambar.map((img) => ({
+        idImage: img.idImage,
+        url: `${import.meta.env.VITE_API_URL}/storage/uploads/${img.fileName}`,
+      }))
+    );
+
     setSelectedInformasi(informasi);
     setIsEdit(true);
     setIsEditModalOpen(true);
@@ -58,12 +129,21 @@ const InformasiPage = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    setFilteredData((prevData) =>
-      prevData.filter((item) => item !== selectedInformasi)
-    );
-    setIsDeleteModalOpen(false);
-    setSelectedInformasi(null);
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `/api/informasi/${selectedInformasi.id}`
+      );
+      setFilteredData(
+        filteredData.filter((item) => item.id !== selectedInformasi.id)
+      );
+      toast.success(response.data.message);
+      setIsDeleteModalOpen(false);
+      setSelectedInformasi(null);
+    } catch (error) {
+      console.error("Error deleting informasi: ", error);
+      toast.error("Failed to delete informasi");
+    }
   };
 
   const handleCancelDelete = () => {
@@ -71,45 +151,118 @@ const InformasiPage = () => {
     setSelectedInformasi(null);
   };
 
-  const handleSaveInformasi = () => {
-    if (isEdit) {
-      setFilteredData((prevData) =>
-        prevData.map((item) =>
-          item === selectedInformasi ? { ...formData, id: item.id } : item
-        )
-      );
-    } else {
-      setFilteredData((prevData) => [
-        ...prevData,
-        { ...formData, id: Date.now().toString() },
-      ]);
+  const handleSaveInformasi = async () => {
+    if (formData.sekolah.length === 0) {
+      toast.error("Harus memilih minimal 1 sekolah");
+      return;
     }
-    setIsEditModalOpen(false);
-    setSelectedInformasi(null);
+
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("judul", formData.title);
+    formDataToSend.append("deskripsi", formData.desc);
+    formDataToSend.append("tanggal", formData.tanggal);
+    formDataToSend.append("sekolahId", formData.sekolahId.join(","));
+
+    formData.gambar.forEach((file) => {
+      if (!file.idImage) {
+        formDataToSend.append("files", file.file);
+      }
+    });
+
+    try {
+      let response;
+      const deleteParams =
+        imagesToDelete.length > 0 ? `idImage=${imagesToDelete.join(",")}` : "";
+
+      if (isEdit) {
+        response = await axios.patch(
+          `/api/informasi/${selectedInformasi.id}?${deleteParams}`,
+          formDataToSend,
+          {
+            headers: {
+              // Authorization: `Bearer ${user}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        response = await axios.post("/api/informasi", formDataToSend, {
+          headers: {
+            // Authorization: `Bearer ${user}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+      if (response.status === 200 || response.status === 201) {
+        toast.success(response.data.message);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(
+          isEdit ? error.response.data.message : error.response.data.message
+        );
+      }
+      console.error("Error saving informasi: ", error);
+    } finally {
+      setIsEditModalOpen(false);
+      setSelectedInformasi(null);
+    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === "sekolah") {
+      const selectedSchool = schoolOptions.find(
+        (option) => option.value === value
+      );
+      setFormData({
+        ...formData,
+        sekolah: value,
+        sekolahId: selectedSchool?.id
+          ? [...formData.sekolahId, selectedSchool.id]
+          : [],
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    files.map((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage((prev) => [...prev, reader.result]);
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          gambar: [...prevFormData.gambar, reader.result],
-        }));
-      };
-      reader.readAsDataURL(file);
-      return reader.result;
-    });
+
+    if (formData.gambar.length + files.length > 5) {
+      toast.error("Pilihan maksimal 5 foto");
+      return;
+    }
+
+    const newPreviewImages = files.map((file) => ({
+      idImage: null,
+      url: URL.createObjectURL(file),
+    }));
+
+    setPreviewImage((prev) => [...prev, ...newPreviewImages]);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      gambar: [
+        ...prevFormData.gambar,
+        ...files.map((file) => ({ idImage: null, file })),
+      ],
+    }));
   };
 
   const handleDeleteImage = (index) => {
+    const deletedImage = formData.gambar[index];
+
+    if (deletedImage.idImage) {
+      setImagesToDelete((prev) => [...prev, deletedImage.idImage]);
+    }
+
     setPreviewImage((prevImages) => prevImages.filter((_, i) => i !== index));
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -119,28 +272,40 @@ const InformasiPage = () => {
 
   const handleSchoolChange = (e) => {
     const { value, checked } = e.target;
+
     setFormData((prevFormData) => {
+      const selectedSchool = schoolOptions.find(
+        (school) => school.label === value
+      );
+
+      if (!selectedSchool) return prevFormData;
+
       const updatedSekolah = checked
-        ? [...prevFormData.sekolah, value]
-        : prevFormData.sekolah.filter((school) => school !== value);
-      return { ...prevFormData, sekolah: updatedSekolah };
+        ? [...(prevFormData.sekolah || []), value]
+        : (prevFormData.sekolah || []).filter((school) => school !== value);
+
+      const updatedSekolahId = checked
+        ? [...(prevFormData.sekolahId || []), selectedSchool.id]
+        : (prevFormData.sekolahId || []).filter(
+            (id) => id !== selectedSchool.id
+          );
+
+      return {
+        ...prevFormData,
+        sekolah: updatedSekolah,
+        sekolahId: updatedSekolahId,
+      };
     });
   };
 
-  const schoolOptions = [
-    { label: "TPA Cita Sakinah", value: "TPA Cita Sakinah" },
-    { label: "KB 'Aisyiyah 24", value: "KB 'Aisyiyah 24" },
-    { label: "TK ABA 33", value: "TK ABA 33" },
-  ];
-
   const columnsInformasi = [
-    { header: "Judul", field: "title", truncate: 20, width: "w-[20%]" },
+    { header: "Judul", field: "title", truncate: 20, width: "w-[15%]" },
     { header: "Gambar", field: "gambar", truncate: 10, width: "w-[10%]" },
-    { header: "Deskripsi", field: "desc", truncate: 35, width: "w-[30%]" },
+    { header: "Deskripsi", field: "desc", truncate: 35, width: "w-[20%]" },
     {
       header: "Tanggal Informasi",
       field: "tanggal",
-      truncate: 15,
+      truncate: 20,
       width: "w-[15%]",
     },
     { header: "Sekolah", field: "sekolah", truncate: 20, width: "w-[15%]" },
@@ -157,7 +322,9 @@ const InformasiPage = () => {
   const dataReal = filteredData.map((informasi) => ({
     ...informasi,
     sekolah: formatSchools(informasi.sekolah),
-    gambar: informasi.gambar[0] || "",
+    gambar:
+      informasi.gambar.length > 0 ? informasi.gambar[0].fileName : "No Image",
+
     action: (
       <div className="flex gap-3 items-center">
         <LuPen
@@ -293,7 +460,7 @@ const InformasiPage = () => {
             </div>
           </div>
           <ImageUploadForm
-            label="Upload Gambar Informasi"
+            label="Upload Gambar Informasi (max 5)"
             id="gambar"
             name="gambar"
             onChange={handleImageUpload}
