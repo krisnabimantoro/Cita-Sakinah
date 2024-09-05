@@ -46,7 +46,7 @@ const FasilitasPage = () => {
           title: item.namaFasilitas,
           gambar: item.imageName,
           sekolah: item.namaSekolah,
-          tanggal: new Date().toISOString().split("T")[0],
+          tanggal: item.tanggalDibuat,
         }));
         setFilteredData(formattedData);
         setOriginalData(formattedData);
@@ -329,7 +329,7 @@ const FasilitasPage = () => {
         width="w-[500px]"
         justify="justify-center"
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 overflow-auto">
           <InputField
             label="Judul Fasilitas"
             id="title"
