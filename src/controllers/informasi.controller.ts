@@ -159,7 +159,7 @@ export default {
           i.*, 
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
           GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
-          GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
+          GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahId, 
           GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah,
           GROUP_CONCAT(distinct ii.idImage ORDER BY ii.idImage ASC) AS idImage 
         FROM 
@@ -185,13 +185,20 @@ export default {
 
         const namaSekolah = row.namaSekolah ? row.namaSekolah.split(",") : [];
 
+        const sekolahId = row.sekolahId ? row.sekolahId.split(",") : [];
+
+        const sekolah = namaSekolah.map((namaSekolah: string, index: number) => ({
+          sekolahId: sekolahId[index],
+          namaSekolah: namaSekolah,
+        }));
+
         return {
           id: row.id,
           judul: row.judul,
           tanggal: row.tanggal,
           deskripsi: row.deskripsi,
           image: images,
-          namaSekolah: namaSekolah,
+          sekolah: sekolah,
         };
       });
 
