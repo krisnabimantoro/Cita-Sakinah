@@ -3,4 +3,5 @@ export default interface fasilitas {
   namaFasilitas: String;
   imageName: String;
   sekolahId: Number;
+  tanggalDibuat: Date;
 }

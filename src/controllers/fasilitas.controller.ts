@@ -20,16 +20,19 @@ export default {
       const conn = await db;
       const dataModel: fasilitasModel = req.body;
       const sekolahId = req.query.sekolahId;
+      let date_time = new Date();
 
       const imagePaths = req.file as Express.Multer.File | undefined;
       const imageUrl = imagePaths?.filename;
 
       if (!imageUrl) return res.status(500).json({ message: "Input gambar kosong" });
 
-      await conn.query(`insert into fasilitas (namaFasilitas, imageName,sekolahId) values (?,?,?)`, [
+      const tanggalDibuat = date_time.toISOString().slice(0,10)
+      await conn.query(`insert into fasilitas (namaFasilitas, imageName,sekolahId,tanggalDibuat) values (?,?,?,?)`, [
         dataModel.namaFasilitas,
         imageUrl,
         sekolahId,
+        tanggalDibuat
       ]);
 
       res.status(201).json({
@@ -103,7 +106,7 @@ export default {
   async displayData(req: Request, res: Response) {
     try {
       const conn = await db;
-      const display = await conn.query(`select f.*,s.namaSekolah from fasilitas f join sekolah s on f.sekolahId = s.id`);
+      const display = await conn.query(`select f.*, DATE_FORMAT(f.tanggalDibuat, '%Y-%m-%d') AS tanggalDibuat, s.namaSekolah from fasilitas f join sekolah s on f.sekolahId = s.id`);
       return res.status(200).json(display[0]);
     } catch (error) {
       const err = error as Error;
