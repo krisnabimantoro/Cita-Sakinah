@@ -49,8 +49,8 @@ const InformasiPage = () => {
       ? informasi
       : informasi.filter((item) =>
           selectedOptions.some((selected) =>
-            item.namaSekolah.some((schoolName) =>
-              schoolName.startsWith(selected.split(" ")[0])
+            item.sekolah?.some((school) =>
+              school?.namaSekolah?.startsWith(selected.split(" ")[0])
             )
           )
         );
@@ -99,8 +99,8 @@ const InformasiPage = () => {
                 title={item.judul}
                 detail={item.deskripsi}
                 date={formatDate(item.tanggal)}
-                tagSekolah={item.namaSekolah.map(
-                  (school) => school.split(" ")[0]
+                tagSekolah={item.sekolah.map(
+                  (sekolah) => sekolah.namaSekolah.split(" ")[0]
                 )}
               />
             )
