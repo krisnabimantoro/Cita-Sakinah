@@ -2,7 +2,7 @@ export default interface kegiatan {
   id: Number;
   judul: String;
   tanggal: Date;
-  deskripsi: String;
+  deskripsi: string;
   jenisKegiatan: Number;
   sekolahId: Number;
 }

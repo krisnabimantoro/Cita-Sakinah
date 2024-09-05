@@ -4,6 +4,8 @@ import informasiModel from "../models/informasi.model";
 import removeFile from "../utils/remove.file";
 import { ResultSetHeader } from "mysql2";
 import * as Yup from "yup";
+import { compressText } from "../utils/compress.data";
+import { decompressText } from "../utils/decompress.data";
 
 import { db } from "../server";
 
@@ -33,10 +35,13 @@ export default {
       //   //   console.log(imagePaths);
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
+      const compressDeskripsi =  compressText(data.deskripsi);
+
+      // console.log(compressDeskripsi);
       const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO informasi (judul,tanggal,deskripsi) values (?,?,?)`, [
         data.judul,
         data.tanggal,
-        data.deskripsi,
+        compressDeskripsi,
       ]);
 
       const informasiId = insertData.insertId;
@@ -107,7 +112,8 @@ export default {
         await conn.query(`UPDATE informasi set judul=? WHERE id = ?`, [data.judul, informasiId]);
       }
       if (data.deskripsi) {
-        await conn.query(`UPDATE informasi set deskripsi=? WHERE id = ?`, [data.deskripsi, informasiId]);
+        const compressDeskripsi = compressText(data.deskripsi);
+        await conn.query(`UPDATE informasi set deskripsi=? WHERE id = ?`, [compressDeskripsi, informasiId]);
       }
       if (data.tanggal) {
         await conn.query(`UPDATE informasi set tanggal=? WHERE id = ?`, [data.tanggal, informasiId]);
@@ -192,11 +198,13 @@ export default {
           namaSekolah: namaSekolah,
         }));
 
+        const decompressDeskripsi = decompressText(row.deskripsi);
+
         return {
           id: row.id,
           judul: row.judul,
           tanggal: row.tanggal,
-          deskripsi: row.deskripsi,
+          deskripsi: decompressDeskripsi,
           image: images,
           sekolah: sekolah,
         };
@@ -265,14 +273,16 @@ export default {
           i.id`,
         [id]
       );
+
       const result = (rows as any[]).map((row) => ({
         id: row.id,
         judul: row.judul,
         tanggal: row.tanggal,
-        deskripsi: row.deskripsi,
+        deskripsi: decompressText(row.deskripsi),
         fileName: row.fileName ? row.fileName.split(",") : [],
         namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
       }));
+      // console.log(result)
       if (!result || result.length === 0) {
         console.log("No data found for the given id");
         return res.status(404).json({ message: "No data found" });
