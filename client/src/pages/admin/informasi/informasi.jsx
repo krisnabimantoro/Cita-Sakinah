@@ -30,7 +30,6 @@ const InformasiPage = () => {
     title: "",
     tanggal: "",
     desc: "",
-    sekolah: [],
     sekolahId: [],
     gambar: [],
   });
@@ -50,7 +49,10 @@ const InformasiPage = () => {
           title: item.judul,
           tanggal: item.tanggal,
           desc: item.deskripsi,
-          sekolah: item.namaSekolah,
+          sekolah: item.sekolah.map((sekolah) => ({
+            sekolahId: sekolah.sekolahId,
+            namaSekolah: sekolah.namaSekolah,
+          })),
           gambar: item.image.map((img) => ({
             idImage: img.idImage,
             fileName: img.fileName,
@@ -90,7 +92,6 @@ const InformasiPage = () => {
       title: "",
       tanggal: "",
       desc: "",
-      sekolah: [],
       sekolahId: [],
       gambar: [],
     });
@@ -100,17 +101,22 @@ const InformasiPage = () => {
   };
 
   const handleEditClick = (informasi) => {
+    const sekolahIds = informasi.sekolah.map((sekolah) =>
+      parseInt(sekolah.sekolahId, 10)
+    );
+
     setFormData({
       title: informasi.title,
       desc: informasi.desc,
       tanggal: informasi.tanggal,
-      sekolah: [],
-      sekolahId: [],
+      sekolahId: sekolahIds,
       gambar: informasi.gambar.map((img) => ({
         idImage: img.idImage,
         fileName: img.fileName,
       })),
     });
+
+    // console.log("Selected Sekolah ID on Edit:", sekolahIds);
 
     setPreviewImage(
       informasi.gambar.map((img) => ({
@@ -152,7 +158,7 @@ const InformasiPage = () => {
   };
 
   const handleSaveInformasi = async () => {
-    if (formData.sekolah.length === 0) {
+    if (formData.sekolahId.length === 0) {
       toast.error("Harus memilih minimal 1 sekolah");
       return;
     }
@@ -174,6 +180,8 @@ const InformasiPage = () => {
         formDataToSend.append("files", file.file);
       }
     });
+
+    // console.log([...formDataToSend.entries()]);
 
     try {
       let response;
@@ -222,20 +230,7 @@ const InformasiPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "sekolah") {
-      const selectedSchool = schoolOptions.find(
-        (option) => option.value === value
-      );
-      setFormData({
-        ...formData,
-        sekolah: value,
-        sekolahId: selectedSchool?.id
-          ? [...formData.sekolahId, selectedSchool.id]
-          : [],
-      });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleImageUpload = (e) => {
@@ -277,56 +272,51 @@ const InformasiPage = () => {
 
   const handleSchoolChange = (e) => {
     const { value, checked } = e.target;
+    const selectedSchoolId = parseInt(value, 10);
 
-    setFormData((prevFormData) => {
-      const selectedSchool = schoolOptions.find(
-        (school) => school.label === value
-      );
+    setFormData((prev) => {
+      const newSelectedSchools = checked
+        ? [...prev.sekolahId, selectedSchoolId]
+        : prev.sekolahId.filter((id) => id !== selectedSchoolId);
 
-      if (!selectedSchool) return prevFormData;
-
-      const updatedSekolah = checked
-        ? [...(prevFormData.sekolah || []), value]
-        : (prevFormData.sekolah || []).filter((school) => school !== value);
-
-      const updatedSekolahId = checked
-        ? [...(prevFormData.sekolahId || []), selectedSchool.id]
-        : (prevFormData.sekolahId || []).filter(
-            (id) => id !== selectedSchool.id
-          );
-
-      return {
-        ...prevFormData,
-        sekolah: updatedSekolah,
-        sekolahId: updatedSekolahId,
-      };
+      // console.log("Selected School Value:", value);
+      // console.log("Checked Status:", checked);
+      // console.log("Selected School ID:", selectedSchoolId);
+      // console.log("Updated school IDs:", newSelectedSchools);
+      return { ...prev, sekolahId: newSelectedSchools };
     });
   };
 
   const columnsInformasi = [
     { header: "Judul", field: "title", truncate: 20, width: "w-[15%]" },
     { header: "Gambar", field: "gambar", truncate: 10, width: "w-[10%]" },
-    { header: "Deskripsi", field: "desc", truncate: 35, width: "w-[20%]" },
+    { header: "Deskripsi", field: "desc", truncate: 35, width: "w-[15%]" },
     {
       header: "Tanggal Informasi",
       field: "tanggal",
       truncate: 20,
-      width: "w-[15%]",
+      width: "w-[20%]",
     },
     { header: "Sekolah", field: "sekolah", truncate: 20, width: "w-[15%]" },
     { header: "Aksi", field: "action", truncate: 0, width: "w-[10%]" },
   ];
 
-  const formatSchools = (schools) => {
-    if (schools.length === schoolOptions.length) {
-      return "Semua";
+  const formatSchools = (schoolIds) => {
+    const selectedSchools = schoolOptions
+      .filter((option) => schoolIds.includes(option.id))
+      .map((option) => option.label);
+
+    if (selectedSchools.length === schoolOptions.length) {
+      return "Semua Sekolah";
     }
-    return schools.join(", ");
+    return selectedSchools.join(", ");
   };
 
   const dataReal = filteredData.map((informasi) => ({
     ...informasi,
-    sekolah: formatSchools(informasi.sekolah),
+    sekolah: formatSchools(
+      informasi.sekolah.map((sch) => parseInt(sch.sekolahId))
+    ),
     gambar:
       informasi.gambar.length > 0 ? informasi.gambar[0].fileName : "No Image",
 
@@ -414,7 +404,7 @@ const InformasiPage = () => {
         width="w-[528px]"
         justify="justify-center"
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 overflow-auto">
           <InputField
             label="Judul"
             id="title"
@@ -448,16 +438,19 @@ const InformasiPage = () => {
             </label>
             <div className="flex gap-6">
               {schoolOptions.map((option) => (
-                <div key={option.value} className="flex items-center mb-2">
+                <div key={option.id} className="form-check">
                   <input
                     type="checkbox"
-                    id={option.value}
-                    value={option.value}
-                    checked={formData.sekolah.includes(option.value)}
+                    className="form-check-input"
+                    id={`school-${option.id}`}
+                    value={option.id}
+                    checked={formData.sekolahId.includes(option.id)}
                     onChange={handleSchoolChange}
-                    className="mr-2"
                   />
-                  <label htmlFor={option.value} className="text-main text-sm">
+                  <label
+                    className="form-check-label"
+                    htmlFor={`school-${option.id}`}
+                  >
                     {option.label}
                   </label>
                 </div>
