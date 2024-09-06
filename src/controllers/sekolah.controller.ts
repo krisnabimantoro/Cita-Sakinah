@@ -57,7 +57,7 @@ export default {
       if (updateSekolah.jumlahRuangan) {
         await conn.query("UPDATE sekolah SET jumlahRuangan = ? WHERE id = ?", [updateSekolah.jumlahRuangan, id]);
       }
-      if (updateSekolah.namaSekolah && !users.noHandphone) {
+      if (updateSekolah.namaSekolah){
         await conn.query("UPDATE sekolah SET namaSekolah = ? WHERE id = ?", [updateSekolah.namaSekolah, id]);
       }
 
