@@ -4,8 +4,6 @@ import informasiModel from "../models/informasi.model";
 import removeFile from "../utils/remove.file";
 import { ResultSetHeader } from "mysql2";
 import * as Yup from "yup";
-import { compressText } from "../utils/compress.data";
-import { decompressText } from "../utils/decompress.data";
 
 import { db } from "../server";
 
@@ -35,13 +33,11 @@ export default {
       //   //   console.log(imagePaths);
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
-      const compressDeskripsi = compressText(data.deskripsi);
-
       // console.log(compressDeskripsi);
       const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO informasi (judul,tanggal,deskripsi) values (?,?,?)`, [
         data.judul,
         data.tanggal,
-        compressDeskripsi,
+        data.deskripsi,
       ]);
 
       const informasiId = insertData.insertId;
@@ -112,8 +108,7 @@ export default {
         await conn.query(`UPDATE informasi set judul=? WHERE id = ?`, [data.judul, informasiId]);
       }
       if (data.deskripsi) {
-        const compressDeskripsi = compressText(data.deskripsi);
-        await conn.query(`UPDATE informasi set deskripsi=? WHERE id = ?`, [compressDeskripsi, informasiId]);
+        await conn.query(`UPDATE informasi set deskripsi=? WHERE id = ?`, [data.deskripsi, informasiId]);
       }
       if (data.tanggal) {
         await conn.query(`UPDATE informasi set tanggal=? WHERE id = ?`, [data.tanggal, informasiId]);
@@ -202,13 +197,11 @@ export default {
           namaSekolah: namaSekolah,
         }));
 
-        const decompressDeskripsi = decompressText(row.deskripsi);
-
         return {
           id: row.id,
           judul: row.judul,
           tanggal: row.tanggal,
-          deskripsi: decompressDeskripsi,
+          deskripsi: row.deskripsi,
           image: images,
           sekolah: sekolah,
         };
@@ -288,7 +281,7 @@ export default {
         id: row.id,
         judul: row.judul,
         tanggal: row.tanggal,
-        deskripsi: decompressText(row.deskripsi),
+        deskripsi: row.deskripsi,
         fileName: row.fileName ? row.fileName.split(",") : [],
         namaSekolah: row.namaSekolah ? row.namaSekolah.split(",") : [],
       }));

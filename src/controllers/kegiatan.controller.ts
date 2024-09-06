@@ -7,9 +7,6 @@ import * as Yup from "yup";
 import compressImage from "../utils/compress.image";
 import { db } from "../server";
 
-import { compressText } from "../utils/compress.data";
-import { decompressText } from "../utils/decompress.data";
-
 const updateValidationSchema = Yup.object().shape({
   judul: Yup.string().typeError("Inputan untuk 'judul' harus berupa huruf"),
   tanggal: Yup.date().typeError("Inputan untuk 'tanggal' harus berupa tanggal yang valid"),
@@ -61,13 +58,11 @@ export default {
           fileName: fileName,
         }));
 
-        const decompressDeskripsi = decompressText(row.deskripsi);
-
         return {
           id: row.id,
           judul: row.judul,
           tanggal: row.tanggal,
-          deskripsi: decompressDeskripsi,
+          deskripsi: row.deskripsi,
           namaKegiatan: row.namaKegiatan,
           namaSekolah: row.namaSekolah,
           image: images,
@@ -108,10 +103,9 @@ export default {
       // const imageUrl =
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
-      const compressDeskripsi = compressText(data.deskripsi);
       const [insertData] = await conn.query<ResultSetHeader>(
         `INSERT INTO kegiatan (judul,tanggal,deskripsi,jenisKegiatan,sekolahId) values (?,?,?,?,?)`,
-        [data.judul, data.tanggal, compressDeskripsi, data.jenisKegiatan, data.sekolahId]
+        [data.judul, data.tanggal, data.deskripsi, data.jenisKegiatan, data.sekolahId]
       );
 
       const kegiatanId = insertData.insertId;
@@ -161,8 +155,7 @@ export default {
         await conn.query(`INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)`, [kegiatanId, imagePath]);
       }
       if (data.deskripsi) {
-        const compressDeskripsi = compressText(data.deskripsi);
-        await conn.query(`UPDATE kegiatan set deskripsi=? WHERE id = ?`, [compressDeskripsi, kegiatanId]);
+        await conn.query(`UPDATE kegiatan set deskripsi=? WHERE id = ?`, [data.deskripsi, kegiatanId]);
       }
       if (data.jenisKegiatan || data.judul || data.sekolahId || data.tanggal) {
         await conn.query(`UPDATE  kegiatan set ? WHERE id = ?`, [data, kegiatanId]);
@@ -310,7 +303,7 @@ export default {
         id: row.id,
         judul: row.judul,
         tanggal: row.tanggal,
-        deskripsi: decompressText(row.deskripsi),
+        deskripsi: row.deskripsi,
         namaKegiatan: row.namaKegiatan,
         namaSekolah: row.namaSekolah,
         fileName: row.fileName ? row.fileName.split(",") : [],
