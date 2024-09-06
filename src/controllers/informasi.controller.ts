@@ -35,7 +35,7 @@ export default {
       //   //   console.log(imagePaths);
       if (imagePaths.length < 1) return res.status(500).json({ message: "Input gambar kosong" });
 
-      const compressDeskripsi =  compressText(data.deskripsi);
+      const compressDeskripsi = compressText(data.deskripsi);
 
       // console.log(compressDeskripsi);
       const [insertData] = await conn.query<ResultSetHeader>(`INSERT INTO informasi (judul,tanggal,deskripsi) values (?,?,?)`, [
@@ -164,21 +164,25 @@ export default {
         `SELECT 
           i.*, 
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
-          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
-          GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahId, 
-          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah,
-          GROUP_CONCAT(distinct ii.idImage ORDER BY ii.idImage ASC) AS idImage 
+          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName,  
+          (
+            SELECT GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.id ASC)
+            FROM sekolah s
+            JOIN tagInformasi ti ON ti.sekolahId = s.id
+            WHERE ti.informasiId = i.id
+          ) AS namaSekolah,
+          (
+            SELECT GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC)
+            FROM tagInformasi ti
+            WHERE ti.informasiId = i.id
+          ) AS sekolahId, 
+          GROUP_CONCAT(DISTINCT ii.idImage ORDER BY ii.idImage ASC) AS idImage 
         FROM 
           informasi i 
         LEFT JOIN 
           imageInformasi ii ON i.id = ii.informasiId 
-        LEFT JOIN
-          tagInformasi ti ON i.id = ti.informasiId
-        LEFT JOIN 
-          sekolah s ON ti.sekolahId = s.id 
-        
         GROUP BY 
-          i.id`
+          i.id;`
       );
       const result = (rows as any[]).map((row) => {
         const idImages = row.idImage ? row.idImage.split(",") : [];
@@ -256,19 +260,25 @@ export default {
         `SELECT 
           i.*, 
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
-          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName, 
-          GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC) AS sekolahIds, 
-          GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.namaSekolah ASC) AS namaSekolah
+          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName,  
+          (
+            SELECT GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.id ASC)
+            FROM sekolah s
+            JOIN tagInformasi ti ON ti.sekolahId = s.id
+            WHERE ti.informasiId = i.id
+          ) AS namaSekolah,
+          (
+            SELECT GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC)
+            FROM tagInformasi ti
+            WHERE ti.informasiId = i.id
+          ) AS sekolahId, 
+          GROUP_CONCAT(DISTINCT ii.idImage ORDER BY ii.idImage ASC) AS idImage 
         FROM 
           informasi i 
         LEFT JOIN 
           imageInformasi ii ON i.id = ii.informasiId 
-        LEFT JOIN
-          tagInformasi ti ON i.id = ti.informasiId
-        LEFT JOIN 
-          sekolah s ON ti.sekolahId = s.id 
-        where
-          i.id = ?
+        where 
+          i.id=?
         GROUP BY 
           i.id`,
         [id]
