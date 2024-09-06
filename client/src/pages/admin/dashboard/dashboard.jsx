@@ -1,46 +1,78 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import StatDashboard from "../../../components/ui/statdashboard";
-import { dataStatistic } from "../../../data/datastatistic";
 import Modal from "../../../components/modal/modal";
 import InputField from "../../../components/form/inputfield";
+import { toast } from "react-hot-toast";
+import TotalDashboard from "../../../components/ui/totalDashboard";
+// import { useAuth } from "../../../hooks/useAuth";
+import { BsPersonArmsUp } from "react-icons/bs";
+import { FiUser } from "react-icons/fi";
+import { LuBuilding2 } from "react-icons/lu";
 
 const DashboardPage = () => {
+  // const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentEditData, setCurrentEditData] = useState(null);
+  const [dataStatistic, setDataStatistic] = useState([]);
   const [formData, setFormData] = useState({
-    poinTpa: "",
-    poinKb: "",
-    poinTk: "",
-    nameTpa: "",
-    nameKb: "",
-    nameTk: "",
+    jumlahAnak: "",
+    jumlahPengajar: "",
+    jumlahRuangan: "",
+    jamPulang: "",
+    namaSekolah: "",
   });
 
   useEffect(() => {
     document.title = "Cita Sakinah | Admin - Dashboard";
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/sekolah");
+        const formattedData = response.data.map((item) => ({
+          id: item.id,
+          jumlahAnak: item.jumlahAnak,
+          jumlahPengajar: item.jumlahPengajar,
+          jumlahRuangan: item.jumlahRuangan,
+          jamPulang: item.jamPulang,
+          namaSekolah: item.namaSekolah,
+        }));
+        setDataStatistic(formattedData);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    if (currentEditData) {
-      setFormData({
-        poinTpa: currentEditData.poinTpa,
-        poinKb: currentEditData.poinKb,
-        poinTk: currentEditData.poinTk,
-        nameTpa: currentEditData.nameTpa,
-        nameKb: currentEditData.nameKb,
-        nameTk: currentEditData.nameTk,
-      });
-    }
-  }, [currentEditData]);
+  const calculateTotals = () => {
+    const totalAnak = dataStatistic.reduce(
+      (acc, curr) => acc + curr.jumlahAnak,
+      0
+    );
+    const totalPengajar = dataStatistic.reduce(
+      (acc, curr) => acc + curr.jumlahPengajar,
+      0
+    );
+    const totalRuangan = dataStatistic.reduce(
+      (acc, curr) => acc + curr.jumlahRuangan,
+      0
+    );
 
-  const handleEditClick = (data) => {
-    setCurrentEditData(data);
-    setIsModalOpen(true);
+    return { totalAnak, totalPengajar, totalRuangan };
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setCurrentEditData(null);
+  const handleEditClick = (data) => {
+    setFormData({
+      jumlahAnak: data.jumlahAnak,
+      jumlahPengajar: data.jumlahPengajar,
+      jumlahRuangan: data.jumlahRuangan,
+      jamPulang: data.jamPulang,
+      namaSekolah: data.namaSekolah,
+    });
+    setCurrentEditData(data);
+    setIsModalOpen(true);
   };
 
   const handleInputChange = (e) => {
@@ -48,26 +80,91 @@ const DashboardPage = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const submitModal = () => {
-    setIsModalOpen(false);
-    alert("Data edited successfully");
-    window.location.reload();
+  const submitModal = async () => {
+    if (
+      !formData.jumlahAnak ||
+      !formData.jumlahPengajar ||
+      !formData.jumlahRuangan ||
+      !formData.jamPulang ||
+      !formData.namaSekolah
+    ) {
+      toast.error("Semua field harus diisi!");
+      return;
+    }
+
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("jumlahAnak", formData.jumlahAnak);
+    formDataToSend.append("jumlahPengajar", formData.jumlahPengajar);
+    formDataToSend.append("jumlahRuangan", formData.jumlahRuangan);
+    formDataToSend.append("jamPulang", formData.jamPulang);
+    formDataToSend.append("namaSekolah", formData.namaSekolah);
+
+    console.log([...formDataToSend.entries()]);
+    console.log(currentEditData.id);
+
+    try {
+      const response = await axios.patch(
+        `/api/sekolah/${currentEditData.id}`,
+        formDataToSend,
+        {
+          headers: {
+            // Authorization: `Bearer ${user}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 500) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.response.data.message);
+      }
+      console.error("Error updating school data", error);
+    } finally {
+      setIsModalOpen(false);
+      setCurrentEditData(null);
+    }
   };
+
+  const { totalAnak, totalPengajar, totalRuangan } = calculateTotals();
 
   return (
     <div className="flex flex-col gap-7">
       <h1 className="text-main font-bold text-2xl">Dashboard</h1>
+      <div className="flex gap-10">
+        <TotalDashboard
+          totalCount={totalRuangan}
+          totalName={"Ruangan"}
+          icon={<LuBuilding2 size={24} />}
+        />
+        <TotalDashboard
+          totalCount={totalAnak}
+          totalName={"Anak"}
+          icon={<BsPersonArmsUp size={24} />}
+        />
+        <TotalDashboard
+          totalCount={totalPengajar}
+          totalName={"Pengajar"}
+          icon={<FiUser size={24} />}
+        />
+      </div>
       <div className="flex flex-col gap-5">
         {dataStatistic.map((stat, index) => (
           <StatDashboard
             key={index}
-            poinTpa={stat.poinTpa}
-            poinKb={stat.poinKb}
-            poinTk={stat.poinTk}
-            nameTpa={stat.nameTpa}
-            nameKb={stat.nameKb}
-            nameTk={stat.nameTk}
-            nameTotal={stat.nameTotal}
+            jamPulang={stat.jamPulang}
+            jumlahAnak={stat.jumlahAnak}
+            jumlahPengajar={stat.jumlahPengajar}
+            jumlahRuangan={stat.jumlahRuangan}
+            namaSekolah={stat.namaSekolah}
             onEdit={() => handleEditClick(stat)}
           />
         ))}
@@ -75,33 +172,51 @@ const DashboardPage = () => {
       <Modal
         isOpen={isModalOpen}
         onConfirm={submitModal}
-        onCancel={closeModal}
+        onCancel={() => setIsModalOpen(false)}
         confirm="Simpan"
+        width="w-[400px]"
+        justify="justify-center"
       >
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 overflow-auto">
           <InputField
-            label={formData.nameTpa}
-            type="number"
-            name="poinTpa"
-            value={formData.poinTpa}
+            label="Nama Sekolah"
+            type="text"
+            name="namaSekolah"
+            value={formData.namaSekolah}
             onChange={handleInputChange}
-            placeholder={formData.nameTpa}
+            placeholder="Nama Sekolah"
           />
           <InputField
-            label={formData.nameKb}
+            label="Jumlah Anak"
             type="number"
-            name="poinKb"
-            value={formData.poinKb}
+            name="jumlahAnak"
+            value={formData.jumlahAnak}
             onChange={handleInputChange}
-            placeholder={formData.nameKb}
+            placeholder="Jumlah Anak"
           />
           <InputField
-            label={formData.nameTk}
+            label="Jumlah Pengajar"
             type="number"
-            name="poinTk"
-            value={formData.poinTk}
+            name="jumlahPengajar"
+            value={formData.jumlahPengajar}
             onChange={handleInputChange}
-            placeholder={formData.nameTk}
+            placeholder="Jumlah Pengajar"
+          />
+          <InputField
+            label="Jumlah Ruangan"
+            type="number"
+            name="jumlahRuangan"
+            value={formData.jumlahRuangan}
+            onChange={handleInputChange}
+            placeholder="Jumlah Ruangan"
+          />
+          <InputField
+            label="Jam Pulang"
+            type="time"
+            name="jamPulang"
+            value={formData.jamPulang}
+            onChange={handleInputChange}
+            placeholder="Jam Pulang"
           />
         </div>
       </Modal>
