@@ -19,7 +19,7 @@ router.post("/test/image", uploadMiddleware.single, testController.tesImage);
 
 //Sekolah endpoint
 router.get("/sekolah", sekolahController.displayData);
-router.patch("/sekolah/:id", sekolahController.updateData);
+router.patch("/sekolah/:id",uploadMiddleware.single, sekolahController.updateData);
 
 //Kegiatan endpoint
 router.post("/kegiatan", uploadMiddleware.multiple, kegiatanConctroller.createData);

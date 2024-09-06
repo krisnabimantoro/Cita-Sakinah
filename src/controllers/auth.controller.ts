@@ -134,4 +134,23 @@ export default {
       });
     }
   },
+  async profile(req: Request, res: Response) {
+    try {
+      const authorizationHeader = req.headers.authorization;
+
+      if (!authorizationHeader) {
+        return res.status(400).json({
+          message: "Logout failed: No token provided",
+        });
+      }
+
+      const [prefix, accessToken] = authorizationHeader.split(" ");
+
+      if (prefix !== "Bearer" || !accessToken) {
+        return res.status(400).json({
+          message: "Logout failed: Invalid token format",
+        });
+      }
+    } catch (error) {}
+  },
 };
