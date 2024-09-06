@@ -278,11 +278,6 @@ const InformasiPage = () => {
       const newSelectedSchools = checked
         ? [...prev.sekolahId, selectedSchoolId]
         : prev.sekolahId.filter((id) => id !== selectedSchoolId);
-
-      // console.log("Selected School Value:", value);
-      // console.log("Checked Status:", checked);
-      // console.log("Selected School ID:", selectedSchoolId);
-      // console.log("Updated school IDs:", newSelectedSchools);
       return { ...prev, sekolahId: newSelectedSchools };
     });
   };
@@ -312,8 +307,18 @@ const InformasiPage = () => {
     return selectedSchools.join(", ");
   };
 
+  const extractTextFromPTags = (htmlString) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+    const paragraphs = doc.querySelectorAll("p");
+    return Array.from(paragraphs)
+      .map((p) => p.textContent)
+      .join(" ");
+  };
+
   const dataReal = filteredData.map((informasi) => ({
     ...informasi,
+    desc: extractTextFromPTags(informasi.desc),
     sekolah: formatSchools(
       informasi.sekolah.map((sch) => parseInt(sch.sekolahId))
     ),
@@ -413,6 +418,14 @@ const InformasiPage = () => {
             onChange={handleInputChange}
             placeholder="Masukkan Judul"
           />
+          {/* <InputField
+            label="Deskripsi"
+            id="desc"
+            name="desc"
+            value={formData.desc}
+            onChange={handleInputChange}
+            placeholder="Masukkan Deskripsi"
+          /> */}
           <InputField
             label="Deskripsi"
             id="desc"
@@ -420,6 +433,7 @@ const InformasiPage = () => {
             value={formData.desc}
             onChange={handleInputChange}
             placeholder="Masukkan Deskripsi"
+            isDesc={true}
           />
           <InputField
             label="Tanggal Informasi"
@@ -438,7 +452,7 @@ const InformasiPage = () => {
             </label>
             <div className="flex gap-6">
               {schoolOptions.map((option) => (
-                <div key={option.id} className="form-check">
+                <div key={option.id} className="form-check flex gap-1 items-center">
                   <input
                     type="checkbox"
                     className="form-check-input"
@@ -448,7 +462,7 @@ const InformasiPage = () => {
                     onChange={handleSchoolChange}
                   />
                   <label
-                    className="form-check-label"
+                    className="form-check-label text-main"
                     htmlFor={`school-${option.id}`}
                   >
                     {option.label}

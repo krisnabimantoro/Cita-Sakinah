@@ -195,6 +195,8 @@ const KegiatanPage = () => {
       }
     });
 
+    // console.log([...formDataToSend.entries()]);
+
     try {
       let response;
       const deleteParams =
@@ -318,8 +320,18 @@ const KegiatanPage = () => {
     { header: "Aksi", field: "action", truncate: 0, width: "w-[10%]" },
   ];
 
+  const extractTextFromPTags = (htmlString) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+    const paragraphs = doc.querySelectorAll("p");
+    return Array.from(paragraphs)
+      .map((p) => p.textContent)
+      .join(" ");
+  };
+
   const dataReal = filteredData.map((kegiatan) => ({
     ...kegiatan,
+    desc: extractTextFromPTags(kegiatan.desc),
     gambar:
       kegiatan.gambar.length > 0 ? kegiatan.gambar[0].fileName : "No Image",
     action: (
@@ -406,7 +418,7 @@ const KegiatanPage = () => {
         width="w-[528px]"
         justify="justify-center"
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 overflow-auto">
           <InputField
             label="Judul"
             id="title"
@@ -415,6 +427,14 @@ const KegiatanPage = () => {
             onChange={handleInputChange}
             placeholder="Masukkan Judul"
           />
+          {/* <InputField
+            label="Deskripsi"
+            id="desc"
+            name="desc"
+            value={formData.desc}
+            onChange={handleInputChange}
+            placeholder="Masukkan Deskripsi"
+          /> */}
           <InputField
             label="Deskripsi"
             id="desc"
@@ -422,6 +442,7 @@ const KegiatanPage = () => {
             value={formData.desc}
             onChange={handleInputChange}
             placeholder="Masukkan Deskripsi"
+            isDesc={true}
           />
           <InputField
             label="Tipe Kegiatan"

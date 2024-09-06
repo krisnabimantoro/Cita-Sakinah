@@ -9,6 +9,15 @@ const CardInfor = ({ id, img, title, detail, date, tagSekolah }) => {
     navigate(`/informasi/${id}`);
   };
 
+  const extractTextFromPTags = (htmlString) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+    const paragraphs = doc.querySelectorAll("p");
+    return Array.from(paragraphs)
+      .map((p) => p.textContent)
+      .join(" ");
+  };
+
   return (
     <div
       className="bg-white w-full md:w-[375px] rounded-xl mb-6 border border-abugelap border-opacity-30 shadow-md cursor-pointer"
@@ -37,7 +46,9 @@ const CardInfor = ({ id, img, title, detail, date, tagSekolah }) => {
             </div>
             <div className="flex flex-col text-main">
               <h3 className="text-xl font-semibold mb-2">{title}</h3>
-              <p className="mb-2 truncate">{detail}</p>
+              <p className="mb-2 font-normal truncate">
+                {extractTextFromPTags(detail)}
+              </p>
             </div>
           </div>
           <div className="flex justify-between">

@@ -96,9 +96,10 @@ const DetailKegPage = () => {
                     {formatDate(kegiatan.tanggal)}
                   </h3>
                 </div>
-                <p className="text-abugelap text-base text-justify">
-                  {kegiatan.deskripsi}
-                </p>
+                <div
+                  className="text-abugelap ql-editor"
+                  dangerouslySetInnerHTML={{ __html: kegiatan.deskripsi }}
+                />
               </div>
             </div>
 

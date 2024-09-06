@@ -96,9 +96,10 @@ const DetailInforPage = () => {
                     {formatDate(informasi.tanggal)}
                   </h3>
                 </div>
-                <p className="text-abugelap text-base text-justify">
-                  {informasi.deskripsi}
-                </p>
+                <div
+                  className="text-abugelap ql-editor"
+                  dangerouslySetInnerHTML={{ __html: informasi.deskripsi }}
+                />
               </div>
             </div>
 

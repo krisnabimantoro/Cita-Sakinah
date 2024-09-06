@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import ReactQuill from "react-quill"; // Import ReactQuill
+import "react-quill/dist/quill.snow.css"; // Import ReactQuill styles
 
 const InputField = ({
   icon,
@@ -15,6 +17,7 @@ const InputField = ({
   passwordInput = false,
   textarea = false,
   dropdown = false,
+  isDesc = false,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -25,6 +28,18 @@ const InputField = ({
   const handleOptionSelect = (optionValue) => {
     onChange({ target: { name, value: optionValue } });
     setIsDropdownOpen(false);
+  };
+
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      // [{ font: [] }],
+      [{ size: ["small", false, "large", "huge"] }],
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ align: [] }],
+      // ["clean"],
+    ],
   };
 
   return (
@@ -38,7 +53,18 @@ const InputField = ({
         className={`flex items-center border border-main rounded-lg p-3 text-main`}
       >
         {icon && <span className="px-2 text-xl opacity-70">{icon}</span>}
-        {textarea ? (
+
+        {isDesc ? (
+          <ReactQuill
+            value={value}
+            onChange={(content) =>
+              onChange({ target: { name, value: content } })
+            }
+            placeholder={placeholder}
+            modules={quillModules}
+            className="flex-1 outline-none w-full"
+          />
+        ) : textarea ? (
           <textarea
             id={id}
             name={name}
