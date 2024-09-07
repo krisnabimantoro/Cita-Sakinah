@@ -45,7 +45,7 @@ const CardInfor = ({ id, img, title, detail, date, tagSekolah }) => {
               ))}
             </div>
             <div className="flex flex-col text-main">
-              <h3 className="text-xl font-semibold mb-2">{title}</h3>
+              <h3 className="text-xl font-semibold mb-2 truncate">{title}</h3>
               <p className="mb-2 font-normal truncate">
                 {extractTextFromPTags(detail)}
               </p>

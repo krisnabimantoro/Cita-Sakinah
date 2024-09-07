@@ -9,7 +9,7 @@ const CardFasilitas = ({ img, title, textColor, borderColor }) => (
       className="rounded-t-lg object-cover h-48 w-full"
     />
     <div className="mx-4 mt-2 mb-4 flex flex-col gap-2">
-      <h1 className={`${textColor} font-semibold text-lg`}>{title}</h1>
+      <h1 className={`${textColor} font-semibold text-lg truncate`}>{title}</h1>
       <div className={`border ${borderColor} w-[180px]`} />
     </div>
   </div>

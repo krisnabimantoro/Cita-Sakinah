@@ -21,6 +21,7 @@ const DashboardPage = () => {
     jumlahRuangan: "",
     jamPulang: "",
     namaSekolah: "",
+    noHandphone: "",
   });
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const DashboardPage = () => {
           jumlahRuangan: item.jumlahRuangan,
           jamPulang: item.jamPulang,
           namaSekolah: item.namaSekolah,
+          noHandphone: item.noHandphone,
         }));
         setDataStatistic(formattedData);
       } catch (error) {
@@ -70,6 +72,7 @@ const DashboardPage = () => {
       jumlahRuangan: data.jumlahRuangan,
       jamPulang: data.jamPulang,
       namaSekolah: data.namaSekolah,
+      noHandphone: data.noHandphone,
     });
     setCurrentEditData(data);
     setIsModalOpen(true);
@@ -86,6 +89,7 @@ const DashboardPage = () => {
       !formData.jumlahPengajar ||
       !formData.jumlahRuangan ||
       !formData.jamPulang ||
+      !formData.noHandphone ||
       !formData.namaSekolah
     ) {
       toast.error("Semua field harus diisi!");
@@ -99,9 +103,7 @@ const DashboardPage = () => {
     formDataToSend.append("jumlahRuangan", formData.jumlahRuangan);
     formDataToSend.append("jamPulang", formData.jamPulang);
     formDataToSend.append("namaSekolah", formData.namaSekolah);
-
-    console.log([...formDataToSend.entries()]);
-    console.log(currentEditData.id);
+    formDataToSend.append("noHandphone", formData.noHandphone);
 
     try {
       const response = await axios.patch(
@@ -165,6 +167,7 @@ const DashboardPage = () => {
             jumlahPengajar={stat.jumlahPengajar}
             jumlahRuangan={stat.jumlahRuangan}
             namaSekolah={stat.namaSekolah}
+            noHandphone={stat.noHandphone}
             onEdit={() => handleEditClick(stat)}
           />
         ))}
@@ -185,6 +188,14 @@ const DashboardPage = () => {
             value={formData.namaSekolah}
             onChange={handleInputChange}
             placeholder="Nama Sekolah"
+          />
+          <InputField
+            label="Nomor Telepon Sekolah"
+            type="number"
+            name="noHandphone"
+            value={formData.noHandphone}
+            onChange={handleInputChange}
+            placeholder="Nomor Telepon Sekolah"
           />
           <InputField
             label="Jumlah Anak"

@@ -232,7 +232,7 @@ const FasilitasPage = () => {
     { header: "Judul", field: "title", truncate: 20, width: "w-[20%]" },
     { header: "Gambar", field: "gambar", truncate: 0, width: "w-[20%]" },
     {
-      header: "Tanggal Diubah",
+      header: "Tanggal Dibuat",
       field: "tanggal",
       truncate: 15,
       width: "w-[20%]",

@@ -11,6 +11,9 @@
   scroll-behavior: smooth;
 }
 
+/* .ql-editor {
+  padding: 0;
+} */
 /*=============== SCROLL BAR ===============*/
 ::-webkit-scrollbar {
   width: 6px;

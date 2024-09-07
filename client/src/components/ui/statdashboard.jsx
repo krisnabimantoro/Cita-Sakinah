@@ -7,6 +7,7 @@ const StatDashboard = ({
   jumlahRuangan,
   jamPulang,
   namaSekolah,
+  noHandphone,
   onEdit,
 }) => {
   return (
@@ -38,7 +39,7 @@ const StatDashboard = ({
         </div>
         <div className="flex flex-col items-center gap-4 font-semibold">
           <h3 className="text-center">{namaSekolah}</h3>
-          <h2 className="text-center">Isi Nomor HP</h2>
+          <h2 className="text-center">{noHandphone}</h2>
           <button
             className="flex items-center justify-center gap-5 bg-button px-8 py-2 rounded-full"
             onClick={onEdit}
