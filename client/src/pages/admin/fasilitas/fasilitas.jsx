@@ -10,10 +10,10 @@ import { LuPen } from "react-icons/lu";
 import { IoIosSearch } from "react-icons/io";
 import Pagination from "../../../components/ui/pagination";
 import { toast } from "react-hot-toast";
-// import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 const FasilitasPage = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
@@ -161,7 +161,7 @@ const FasilitasPage = () => {
           formDataToSend,
           {
             headers: {
-              // Authorization: `Bearer ${user}`,
+              Authorization: `Bearer ${user}`,
               "Content-Type": "multipart/form-data",
             },
           }
@@ -172,7 +172,7 @@ const FasilitasPage = () => {
           formDataToSend,
           {
             headers: {
-              // Authorization: `Bearer ${user}`,
+              Authorization: `Bearer ${user}`,
               "Content-Type": "multipart/form-data",
             },
           }

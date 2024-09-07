@@ -5,13 +5,13 @@ import Modal from "../../../components/modal/modal";
 import InputField from "../../../components/form/inputfield";
 import { toast } from "react-hot-toast";
 import TotalDashboard from "../../../components/ui/totalDashboard";
-// import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 import { BsPersonArmsUp } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { LuBuilding2 } from "react-icons/lu";
 
 const DashboardPage = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentEditData, setCurrentEditData] = useState(null);
   const [dataStatistic, setDataStatistic] = useState([]);
@@ -111,7 +111,7 @@ const DashboardPage = () => {
         formDataToSend,
         {
           headers: {
-            // Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${user}`,
             "Content-Type": "application/json",
           },
         }

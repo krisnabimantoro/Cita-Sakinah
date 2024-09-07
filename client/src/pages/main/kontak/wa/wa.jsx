@@ -82,7 +82,11 @@ const WaSection = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const message = `Nama Lengkap: ${formData.namalengkap}%0APesan: ${formData.pesan}`;
+    const message =
+      `*Nama Lengkap:* ${formData.namalengkap}%0A` +
+      `*Keperluan untuk:* ${formData.sekolah}%0A` +
+      `*Pesan:* ${formData.pesan}`;
+
     const waUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
     window.open(waUrl, "_blank");

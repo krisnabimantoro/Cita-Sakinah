@@ -10,10 +10,10 @@ import { IoIosSearch } from "react-icons/io";
 import Pagination from "../../../components/ui/pagination";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-// import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 const InformasiPage = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,8 +116,6 @@ const InformasiPage = () => {
       })),
     });
 
-    // console.log("Selected Sekolah ID on Edit:", sekolahIds);
-
     setPreviewImage(
       informasi.gambar.map((img) => ({
         idImage: img.idImage,
@@ -181,8 +179,6 @@ const InformasiPage = () => {
       }
     });
 
-    // console.log([...formDataToSend.entries()]);
-
     try {
       let response;
       const deleteParams =
@@ -194,7 +190,7 @@ const InformasiPage = () => {
           formDataToSend,
           {
             headers: {
-              // Authorization: `Bearer ${user}`,
+              Authorization: `Bearer ${user}`,
               "Content-Type": "multipart/form-data",
             },
           }
@@ -202,7 +198,7 @@ const InformasiPage = () => {
       } else {
         response = await axios.post("/api/informasi", formDataToSend, {
           headers: {
-            // Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${user}`,
             "Content-Type": "multipart/form-data",
           },
         });
@@ -418,14 +414,6 @@ const InformasiPage = () => {
             onChange={handleInputChange}
             placeholder="Masukkan Judul"
           />
-          {/* <InputField
-            label="Deskripsi"
-            id="desc"
-            name="desc"
-            value={formData.desc}
-            onChange={handleInputChange}
-            placeholder="Masukkan Deskripsi"
-          /> */}
           <InputField
             label="Deskripsi"
             id="desc"
@@ -452,7 +440,10 @@ const InformasiPage = () => {
             </label>
             <div className="flex gap-6">
               {schoolOptions.map((option) => (
-                <div key={option.id} className="form-check flex gap-1 items-center">
+                <div
+                  key={option.id}
+                  className="form-check flex gap-1 items-center"
+                >
                   <input
                     type="checkbox"
                     className="form-check-input"

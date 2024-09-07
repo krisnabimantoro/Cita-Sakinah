@@ -5,13 +5,13 @@ import { FaRegEdit } from "react-icons/fa";
 import Modal from "../../../components/modal/modal";
 import ImageUploadForm from "../../../components/form/imageupload";
 import { toast } from "react-hot-toast";
-// import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 const StrukturPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const fileInputRef = useRef(null);
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [strukturImg, setStrukturImg] = useState("");
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const StrukturPage = () => {
     try {
       const response = await axios.put("/api/struktur", formData, {
         headers: {
-          // Authorization: `Bearer ${user}`,
+          Authorization: `Bearer ${user}`,
           "Content-Type": "multipart/form-data",
         },
       });

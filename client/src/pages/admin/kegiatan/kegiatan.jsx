@@ -10,10 +10,10 @@ import { IoIosSearch } from "react-icons/io";
 import Pagination from "../../../components/ui/pagination";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-// import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 const KegiatanPage = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -195,8 +195,6 @@ const KegiatanPage = () => {
       }
     });
 
-    // console.log([...formDataToSend.entries()]);
-
     try {
       let response;
       const deleteParams =
@@ -208,7 +206,7 @@ const KegiatanPage = () => {
           formDataToSend,
           {
             headers: {
-              // Authorization: `Bearer ${user}`,
+              Authorization: `Bearer ${user}`,
               "Content-Type": "multipart/form-data",
             },
           }
@@ -216,7 +214,7 @@ const KegiatanPage = () => {
       } else {
         response = await axios.post("/api/kegiatan", formDataToSend, {
           headers: {
-            // Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${user}`,
             "Content-Type": "multipart/form-data",
           },
         });
@@ -427,14 +425,6 @@ const KegiatanPage = () => {
             onChange={handleInputChange}
             placeholder="Masukkan Judul"
           />
-          {/* <InputField
-            label="Deskripsi"
-            id="desc"
-            name="desc"
-            value={formData.desc}
-            onChange={handleInputChange}
-            placeholder="Masukkan Deskripsi"
-          /> */}
           <InputField
             label="Deskripsi"
             id="desc"
