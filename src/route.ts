@@ -39,10 +39,10 @@ router.patch("/informasi/:id", authMiddleware, uploadMiddleware.multiple, inform
 router.delete("/informasi/:id", authMiddleware, uploadMiddleware.single, informasiController.deleteData);
 
 //auth
-router.post("/user/auth/login", authMiddleware, authController.login);
+router.post("/user/auth/login", authController.login);
 // router.post("/user/auth/register", authController.register);
 router.post("/user/logout", authMiddleware, authMiddleware, authController.logout);
-router.get("/user/kontak/:sekolahId", authMiddleware, authController.kontak);
+router.get("/user/kontak/:sekolahId",  authController.kontak);
 
 //struktur
 router.put("/struktur", authMiddleware, uploadMiddleware.single, strukturController.changeStructure);
