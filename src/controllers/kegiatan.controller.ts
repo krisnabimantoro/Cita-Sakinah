@@ -48,7 +48,7 @@ export default {
       GROUP BY 
         k.id
         order by
-        k.id desc
+        tanggal desc
       `
       );
       const result = (rows as any[]).map((row) => {

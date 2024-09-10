@@ -179,7 +179,7 @@ export default {
         GROUP BY 
           i.id
         order by
-          i.id desc
+          tanggal desc
 `
       );
       const result = (rows as any[]).map((row) => {
