@@ -30,15 +30,15 @@ export default {
 
       const [rows] = await conn.query(
         `
-    SELECT 
-          k.*,  
-          DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  
-          GROUP_CONCAT(ik.idImage ORDER BY ik.idImage ASC) AS idImage, 
-          GROUP_CONCAT(ik.fileName ORDER BY ik.fileName ASC) AS fileName, 
-          kk.namaKegiatan, 
-          s.namaSekolah 
+      SELECT 
+        k.*,  
+        DATE_FORMAT(k.tanggal, '%Y-%m-%d') AS tanggal,  
+        GROUP_CONCAT(ik.idImage ORDER BY ik.idImage ASC) AS idImage, 
+        GROUP_CONCAT(ik.fileName ORDER BY ik.idImage ASC) AS fileName,  -- Ensures alignment with idImage
+        kk.namaKegiatan, 
+        s.namaSekolah 
       FROM 
-          kegiatan k 
+        kegiatan k 
       LEFT JOIN
         kategorikegiatan kk ON k.jenisKegiatan = kk.id
       LEFT JOIN 
@@ -46,17 +46,22 @@ export default {
       LEFT JOIN
         sekolah s ON k.sekolahId = s.id 
       GROUP BY 
-        k.id;
+        k.id
+        order by
+        k.id desc
       `
       );
       const result = (rows as any[]).map((row) => {
         const idImages = row.idImage ? row.idImage.split(",") : [];
-        const fileNames = row.fileName ? row.fileName.split(",") : [];
+  const fileNames = row.fileName ? row.fileName.split(",") : [];
 
-        const images = fileNames.map((fileName: string, index: number) => ({
-          idImage: idImages[index],
-          fileName: fileName,
-        }));
+  // Map images only if both idImages and fileNames arrays have the same length
+  const images = idImages.length === fileNames.length
+    ? fileNames.map((fileName: string, index: number) => ({
+        idImage: idImages[index],
+        fileName: fileName,
+      }))
+    : [];
 
         return {
           id: row.id,

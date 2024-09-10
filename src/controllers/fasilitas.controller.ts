@@ -106,7 +106,7 @@ export default {
   async displayData(req: Request, res: Response) {
     try {
       const conn = await db;
-      const display = await conn.query(`select f.*, DATE_FORMAT(f.tanggalDibuat, '%Y-%m-%d') AS tanggalDibuat, s.namaSekolah from fasilitas f join sekolah s on f.sekolahId = s.id`);
+      const display = await conn.query(`select f.*, DATE_FORMAT(f.tanggalDibuat, '%Y-%m-%d') AS tanggalDibuat, s.namaSekolah from fasilitas f join sekolah s on f.sekolahId = s.id order by f.id desc`);
       return res.status(200).json(display[0]);
     } catch (error) {
       const err = error as Error;

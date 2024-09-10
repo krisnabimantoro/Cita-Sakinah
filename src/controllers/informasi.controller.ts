@@ -159,7 +159,8 @@ export default {
         `SELECT 
           i.*, 
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
-          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName,  
+          GROUP_CONCAT(DISTINCT ii.idImage ORDER BY ii.idImage ASC) AS idImage, 
+          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.idImage ASC) AS fileName,  
           (
             SELECT GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.id ASC)
             FROM sekolah s
@@ -170,32 +171,40 @@ export default {
             SELECT GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC)
             FROM tagInformasi ti
             WHERE ti.informasiId = i.id
-          ) AS sekolahId, 
-          GROUP_CONCAT(DISTINCT ii.idImage ORDER BY ii.idImage ASC) AS idImage 
+          ) AS sekolahId
         FROM 
           informasi i 
         LEFT JOIN 
           imageInformasi ii ON i.id = ii.informasiId 
         GROUP BY 
-          i.id;`
+          i.id
+        order by
+          i.id desc
+`
       );
       const result = (rows as any[]).map((row) => {
         const idImages = row.idImage ? row.idImage.split(",") : [];
         const fileNames = row.fileName ? row.fileName.split(",") : [];
 
-        const images = fileNames.map((fileName: string, index: number) => ({
-          idImage: idImages[index],
-          fileName: fileName,
-        }));
+        // Map images only if both idImages and fileNames arrays have the same length
+        const images =
+          idImages.length === fileNames.length
+            ? fileNames.map((fileName: string, index: number) => ({
+                idImage: idImages[index],
+                fileName: fileName,
+              }))
+            : [];
 
         const namaSekolah = row.namaSekolah ? row.namaSekolah.split(",") : [];
-
         const sekolahId = row.sekolahId ? row.sekolahId.split(",") : [];
 
-        const sekolah = namaSekolah.map((namaSekolah: string, index: number) => ({
-          sekolahId: sekolahId[index],
-          namaSekolah: namaSekolah,
-        }));
+        const sekolah =
+          namaSekolah.length === sekolahId.length
+            ? namaSekolah.map((namaSekolah: string, index: number) => ({
+                sekolahId: sekolahId[index],
+                namaSekolah: namaSekolah,
+              }))
+            : [];
 
         return {
           id: row.id,
