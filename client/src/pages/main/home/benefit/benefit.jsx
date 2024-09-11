@@ -15,8 +15,8 @@ const BenefitSection = () => {
 
       <div className="px-[60px] py-[135px] flex flex-col items-center gap-[75px]">
         <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-center md:px-[230px]">
-          Mengapa Anda Harus <span className="text-second">Mempercayai</span>{" "}
-          Kami
+          Mengapa Anda Harus <span className="text-second">Memilih</span>{" "}
+          Kami?
         </h1>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-[60px]">
           {benefitData.map((benefit, index) => (

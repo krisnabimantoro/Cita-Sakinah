@@ -30,7 +30,6 @@ export const footerMenuData = [
 export const socialMediaLinks = [
   { icon: <AiFillInstagram />, url: "https://www.instagram.com/paud.cisa/" },
   { icon: <FaTiktok />, url: "https://www.tiktok.com/" },
-  { icon: <FaFacebook />, url: "https://www.facebook.com/" },
   {
     icon: <FaYoutube />,
     url: "https://www.youtube.com/channel/UCw4qgXK1ObfYrELbXgF2IuA",

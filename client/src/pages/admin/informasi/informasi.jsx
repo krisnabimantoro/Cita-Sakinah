@@ -179,6 +179,7 @@ const InformasiPage = () => {
       }
     });
 
+    console.log([...formDataToSend.entries()]);
     try {
       let response;
       const deleteParams =

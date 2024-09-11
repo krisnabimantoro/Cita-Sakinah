@@ -18,8 +18,8 @@ export const dataSekolah = [
     tujuan: `Anak yg berbakti kepada orang tua dan memiliki kemampuan baik diniyah (agama) maupun duniawi adalah harapan orang tua muslimin. Oleh sebab itu anak-anak harus dibekali dengan tameng yang kuat yaitu aqidah shahihah (keyakinan yg benar) dan akhlaqul karimah (perilaku yang mulia). \n\n Maka sistem Pendidikan yang menggabungkan antara kemampuan intelegensi dan kekuatan keyakinan yg diamalkan dalam praktek keseharian adalah suatu tuntutan yg wajar untuk diwujudkan. Dan perlu disadari Bersama bahwa pendirian TPA “Cita Sakinah” Karangploso tidak dapat terlaksana tanpa dukungan segenap masyarakat yg peduli dengan Pendidikan generasi penerus Islam.`,
     pengelola: [
       {
-        lat: -7.900614290855265,
-        lng: 112.60901133934773,
+        lat: -7.898779780592123,
+        lng: 112.6088741063276,
       },
     ],
   },

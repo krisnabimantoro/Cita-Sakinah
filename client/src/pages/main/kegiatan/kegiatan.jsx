@@ -60,7 +60,7 @@ const KegiatanPage = () => {
       <HeaderMenu
         img={HeaderImg}
         title="Kegiatan"
-        desc="Jelajahi beragam kegiatan ekstrakurikuler dan program menarik yang dirancang untuk mengembangkan minat dan bakat siswa."
+        desc="Jelajahi beragam kegiatan menarik yang dirancang untuk mengembangkan minat dan bakat peserta didik sesuai dengan perkembangan usia."
       />
       <section className="mx-[50px] md:mx-[120px] mb-[150px] flex flex-col gap-8">
         <div className="flex flex-wrap justify-between relative gap-4">

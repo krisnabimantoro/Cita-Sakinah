@@ -34,7 +34,7 @@ const StrukturPage = () => {
       <HeaderMenu
         img={HeaderImg}
         title="Struktur Kepengurusan"
-        desc="Struktur kepengurusan kami yang menggambarkan hierarki dan tanggung jawab setiap posisi dalam organisasi dan memastikan setiap bagian dari organisasi berfungsi dengan efisien."
+        desc="Struktur kepengurusan kami yang menggambarkan hierarki dan tanggung jawab setiap posisi dalam organisasi dan memastikan setiap bagian dari organisasi berfungsi dengan efektif."
       />
 
       <section className="mx-[50px] md:mx-[120px] my-[90px] flex justify-center">

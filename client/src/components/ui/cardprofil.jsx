@@ -20,7 +20,7 @@ const CardProfil = ({ img, sekolah, titlesekolah, child, age }) => (
       </div>
       <div className="flex flex-col items-start text-abugelap text-base font-medium">
         <span>Untuk {child}</span>
-        <span>Usia {age} Tahun</span>
+        <span>Usia {age}</span>
       </div>
     </div>
   </div>

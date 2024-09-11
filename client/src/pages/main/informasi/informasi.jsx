@@ -60,7 +60,7 @@ const InformasiPage = () => {
       <HeaderMenu
         img={HeaderImg}
         title="Informasi"
-        desc="Dapatkan informasi terbaru seputar kegiatan, pengumuman, dan berita penting lainnya yang berkaitan dengan sekolah kami."
+        desc="Dapatkan informasi terbaru seputar informasi yang berkaitan dengan sekolah kami."
       />
       <section className="mx-[50px] md:mx-[120px] mb-[150px] flex flex-col gap-8">
         <div className="flex justify-end">
