@@ -424,7 +424,7 @@ const KegiatanPage = () => {
         onCancel={() => setIsEditModalOpen(false)}
         onConfirm={handleSaveKegiatan}
         confirm="Simpan"
-        width="w-[528px]"
+        width="w-[535px]"
         justify="justify-center"
       >
         <div className="flex flex-col gap-4 overflow-auto">
