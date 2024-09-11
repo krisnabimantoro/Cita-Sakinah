@@ -9,6 +9,7 @@ import { LuFilter } from "react-icons/lu";
 import Button from "../../../components/ui/button";
 import DropdownFilter from "../../../components/ui/dropdownfilter";
 import { formatDate } from "../../../utils/formatting";
+import { useNavigate } from "react-router-dom";
 
 const KegiatanPage = () => {
   const [filter, setFilter] = useState("Semua Aktivitas");
@@ -17,6 +18,8 @@ const KegiatanPage = () => {
   const [activities, setActivities] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [noData, setNoData] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Cita Sakinah | Kegiatan";
@@ -28,6 +31,10 @@ const KegiatanPage = () => {
 
         const activityResponse = await axios.get("/api/kegiatan");
         setActivities(activityResponse.data);
+
+        if (activityResponse.data.length === 0) {
+          setNoData(true);
+        }
       } catch (error) {
         console.error("There was an error fetching the data!", error);
       } finally {
@@ -37,6 +44,16 @@ const KegiatanPage = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (noData) {
+      const timer = setTimeout(() => {
+        navigate("/");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [noData, navigate]);
 
   const handleSchoolFilterChange = (school) => {
     setSchoolFilter((prev) =>
@@ -84,28 +101,35 @@ const KegiatanPage = () => {
             />
           </div>
         </div>
-        <div className="flex flex-wrap gap-10">
-          {filteredData.map((item, index) =>
-            isLoading ? (
-              <LoadingCard key={index} />
-            ) : (
-              <CardKeg
-                key={item.id}
-                id={item.id}
-                img={[
-                  `${import.meta.env.VITE_API_URL}/storage/uploads/${
-                    item.image[0].fileName
-                  }`,
-                ]}
-                title={item.judul}
-                detail={item.deskripsi}
-                date={formatDate(item.tanggal)}
-                tagUtama={item.namaKegiatan}
-                tagSekolah={item.namaSekolah}
-              />
-            )
-          )}
-        </div>
+        {noData ? (
+          <p className="text-center text-main mt-20">
+            Tidak ada data kegiatan. Anda akan diarahkan ke beranda dalam 5
+            detik...
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-10">
+            {filteredData.map((item, index) =>
+              isLoading ? (
+                <LoadingCard key={index} />
+              ) : (
+                <CardKeg
+                  key={item.id}
+                  id={item.id}
+                  img={[
+                    `${import.meta.env.VITE_API_URL}/storage/uploads/${
+                      item.image[0].fileName
+                    }`,
+                  ]}
+                  title={item.judul}
+                  detail={item.deskripsi}
+                  date={formatDate(item.tanggal)}
+                  tagUtama={item.namaKegiatan}
+                  tagSekolah={item.namaSekolah}
+                />
+              )
+            )}
+          </div>
+        )}
       </section>
     </>
   );

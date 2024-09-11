@@ -11,7 +11,7 @@ const StatDashboard = ({
   onEdit,
 }) => {
   return (
-    <div className="bg-main rounded-2xl px-[110px] py-[25px] text-white">
+    <div className="bg-main rounded-2xl  py-[25px] text-white">
       <div className="flex gap-20 items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <h2 className="rounded-full bg-button w-20 h-20 flex justify-center items-center text-2xl font-bold">
@@ -35,7 +35,7 @@ const StatDashboard = ({
           <h2 className="rounded-full bg-button w-20 h-20 flex justify-center items-center text-2xl font-bold">
             {jamPulang}
           </h2>
-          <h3 className="font-medium text-center">JamPulang</h3>
+          <h3 className="font-medium text-center">Jam Pulang</h3>
         </div>
         <div className="flex flex-col items-center gap-4 font-semibold">
           <h3 className="text-center">{namaSekolah}</h3>

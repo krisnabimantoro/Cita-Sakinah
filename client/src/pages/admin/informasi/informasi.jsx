@@ -156,6 +156,11 @@ const InformasiPage = () => {
   };
 
   const handleSaveInformasi = async () => {
+    if (!formData.title || !formData.desc || !formData.tanggal) {
+      toast.error("Semua kolom harus diisi!");
+      return;
+    }
+
     if (formData.sekolahId.length === 0) {
       toast.error("Harus memilih minimal 1 sekolah");
       return;
@@ -360,7 +365,7 @@ const InformasiPage = () => {
               </div>
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Cari Judul..."
                 name="search"
                 id="search"
                 value={searchQuery}

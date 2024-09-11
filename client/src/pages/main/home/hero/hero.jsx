@@ -21,8 +21,8 @@ const HeroSection = () => {
             Selamat Datang di Website PAUD Terpadu Cita Sakinah
           </h1>
           <span className="text-base opacity-70">
-            "Membuka Gerbang Kecerdasan Sejak Dini pada dunia
-            pendidikan dengan penuh cinta dan kreativitas."
+            "Membuka Gerbang Kecerdasan Sejak Dini pada Dunia
+            Pendidikan dengan Penuh Cinta dan Kreativitas."
           </span>
         </div>
         <Link to="about" smooth={true} duration={500}>

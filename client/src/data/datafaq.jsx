@@ -1,7 +1,7 @@
 export const faqData = [
   {
     id: 1,
-    question: "Apa saja program yang ditawarkan oleh Lembaga Ini?",
+    question: "Apa saja program yang ditawarkan oleh lembaga ini?",
     answer:
       "PAUD Terpadu Cita Sakinah menawarkan program pendidikan yang komprehensif untuk anak usia dini yang mencakup 6 aspek perkembangan anak. Program ini dirancang untuk mempersiapkan kemandirian peserta didik memasuki pendidikan formal.",
   },
@@ -19,7 +19,7 @@ export const faqData = [
   },
   {
     id: 4,
-    question: "Apa Program Unggulan yang Ada di Lembaga Ini?",
+    question: "Apa program unggulan yang ada di lembaga ini?",
     answer:
       "Ya, kami memberikan pelayanan pembelajaran yang berpusat pada anak, memberikan layanan untuk pendidikan anak inklusi, menciptakan lingkungan pembelajaran yang nyaman dan menyenangkan.",
   },

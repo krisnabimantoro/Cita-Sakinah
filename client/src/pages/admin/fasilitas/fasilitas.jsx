@@ -143,6 +143,11 @@ const FasilitasPage = () => {
   };
 
   const handleSaveFasilitas = async () => {
+    if (!formData.title || !formData.sekolahId || !formData.gambar) {
+      toast.error("Semua field harus diisi!");
+      return;
+    }
+
     const formDataToSend = new FormData();
 
     formDataToSend.append("namaFasilitas", formData.title);
@@ -281,7 +286,7 @@ const FasilitasPage = () => {
               </div>
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Cari Judul..."
                 name="search"
                 id="search"
                 value={searchQuery}

@@ -8,6 +8,7 @@ import Button from "../../../components/ui/button";
 import { LuFilter } from "react-icons/lu";
 import DropdownFilter from "../../../components/ui/dropdownfilter";
 import { formatDate } from "../../../utils/formatting";
+import { useNavigate } from "react-router-dom";
 
 const InformasiPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,8 @@ const InformasiPage = () => {
   const [schools, setSchools] = useState([]);
   const [informasi, setInformasi] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [noData, setNoData] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Cita Sakinah | Informasi";
@@ -26,6 +29,10 @@ const InformasiPage = () => {
 
         const informasiResponse = await axios.get("/api/informasi");
         setInformasi(informasiResponse.data);
+
+        if (informasiResponse.data.length === 0) {
+          setNoData(true);
+        }
       } catch (error) {
         console.error("There was an error fetching the data!", error);
       } finally {
@@ -35,6 +42,16 @@ const InformasiPage = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (noData) {
+      const timer = setTimeout(() => {
+        navigate("/");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [noData, navigate]);
 
   const handleSelect = (option) => {
     setSelectedOptions((prevSelected) =>
@@ -83,29 +100,36 @@ const InformasiPage = () => {
             />
           </div>
         </div>
-        <div className="flex flex-wrap gap-10">
-          {filteredData.map((item, index) =>
-            isLoading ? (
-              <LoadingCard key={index} />
-            ) : (
-              <CardInfor
-                key={item.id}
-                id={item.id}
-                img={[
-                  `${import.meta.env.VITE_API_URL}/storage/uploads/${
-                    item.image[0].fileName
-                  }`,
-                ]}
-                title={item.judul}
-                detail={item.deskripsi}
-                date={formatDate(item.tanggal)}
-                tagSekolah={item.sekolah.map(
-                  (sekolah) => sekolah.namaSekolah.split(" ")[0]
-                )}
-              />
-            )
-          )}
-        </div>
+        {noData ? (
+          <p className="text-center text-main mt-20">
+            Tidak ada data informasi. Anda akan diarahkan ke beranda dalam 5
+            detik...
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-10">
+            {filteredData.map((item, index) =>
+              isLoading ? (
+                <LoadingCard key={index} />
+              ) : (
+                <CardInfor
+                  key={item.id}
+                  id={item.id}
+                  img={[
+                    `${import.meta.env.VITE_API_URL}/storage/uploads/${
+                      item.image[0].fileName
+                    }`,
+                  ]}
+                  title={item.judul}
+                  detail={item.deskripsi}
+                  date={formatDate(item.tanggal)}
+                  tagSekolah={item.sekolah.map(
+                    (sekolah) => sekolah.namaSekolah.split(" ")[0]
+                  )}
+                />
+              )
+            )}
+          </div>
+        )}
       </section>
     </>
   );

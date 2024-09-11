@@ -190,7 +190,7 @@ const DashboardPage = () => {
             placeholder="Nama Sekolah"
           />
           <InputField
-            label="Nomor Telepon Sekolah"
+            label="Nomor Telepon Sekolah *(format 62)"
             type="number"
             name="noHandphone"
             value={formData.noHandphone}

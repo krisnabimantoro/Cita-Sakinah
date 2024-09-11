@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import HeaderMenu from "../../../../components/ui/header";
 import HeaderImg from "../../../../assets/svg/profil.svg";
 import CardFasilitas from "../../../../components/ui/cardfasilitas";
@@ -13,6 +14,7 @@ import LoadingCardFasilitas from "../../../../components/loading/loadingcardfasi
 const FasilitasPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [dataFasilitas, setDataFasilitas] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Cita Sakinah | Profil - Fasilitas";
@@ -74,6 +76,23 @@ const FasilitasPage = () => {
     ));
   };
 
+  const noFacilitiesAvailable = sections.every((section) => {
+    const filteredFacilities = dataFasilitas.filter((facility) =>
+      facility.namaSekolah.toLowerCase().startsWith(section.alias.toLowerCase())
+    );
+    return filteredFacilities.length === 0;
+  });
+
+  useEffect(() => {
+    if (noFacilitiesAvailable) {
+      const timer = setTimeout(() => {
+        navigate("/");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [noFacilitiesAvailable, navigate]);
+
   return (
     <>
       <HeaderMenu
@@ -82,51 +101,65 @@ const FasilitasPage = () => {
         desc="Temukan berbagai fasilitas unggulan yang kami sediakan untuk mendukung proses belajar dan mengajar yang efektif dan nyaman."
       />
       <section className="mx-[50px] md:mx-[120px] mb-[150px]">
-        {sections.map((section, index) => {
-          const filteredFacilities = dataFasilitas.filter((facility) =>
-            facility.namaSekolah
-              .toLowerCase()
-              .startsWith(section.alias.toLowerCase())
-          );
-          return (
-            <div
-              key={index}
-              className={`${section.bg} px-7 sm:px-[60px] py-[30px] rounded-[18px] flex flex-col gap-[30px] mt-[50px]`}
-            >
-              <h1
-                className={`text-center font-bold text-2xl sm:text-4xl text-white`}
+        {noFacilitiesAvailable ? (
+          <>
+            <p className="text-center text-main">
+              Tidak ada data informasi. Anda akan diarahkan ke beranda dalam 5
+              detik...
+            </p>
+          </>
+        ) : (
+          sections.map((section, index) => {
+            const filteredFacilities = dataFasilitas.filter((facility) =>
+              facility.namaSekolah
+                .toLowerCase()
+                .startsWith(section.alias.toLowerCase())
+            );
+
+            if (filteredFacilities.length === 0) {
+              return null;
+            }
+
+            return (
+              <div
+                key={index}
+                className={`${section.bg} px-7 sm:px-[60px] py-[30px] rounded-[18px] flex flex-col gap-[30px] mt-[50px]`}
               >
-                {section.school}
-              </h1>
-              <div>
-                <Swiper
-                  modules={[Pagination]}
-                  pagination={{ clickable: true }}
-                  spaceBetween={60}
-                  slidesPerView={1}
-                  className="pb-10"
-                  breakpoints={{
-                    640: {
-                      slidesPerView: 1,
-                    },
-                    768: {
-                      slidesPerView: 2,
-                    },
-                    1024: {
-                      slidesPerView: 4,
-                    },
-                  }}
+                <h1
+                  className={`text-center font-bold text-2xl sm:text-4xl text-white`}
                 >
-                  {renderSwiperSlides(
-                    filteredFacilities,
-                    section.text,
-                    section.garis
-                  )}
-                </Swiper>
+                  {section.school}
+                </h1>
+                <div>
+                  <Swiper
+                    modules={[Pagination]}
+                    pagination={{ clickable: true }}
+                    spaceBetween={60}
+                    slidesPerView={1}
+                    className="pb-10"
+                    breakpoints={{
+                      640: {
+                        slidesPerView: 1,
+                      },
+                      768: {
+                        slidesPerView: 2,
+                      },
+                      1024: {
+                        slidesPerView: 4,
+                      },
+                    }}
+                  >
+                    {renderSwiperSlides(
+                      filteredFacilities,
+                      section.text,
+                      section.garis
+                    )}
+                  </Swiper>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </section>
     </>
   );

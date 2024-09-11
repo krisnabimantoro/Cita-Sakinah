@@ -176,6 +176,17 @@ const KegiatanPage = () => {
   };
 
   const handleSaveKegiatan = async () => {
+    if (
+      !formData.title ||
+      !formData.desc ||
+      !formData.tanggal ||
+      !formData.jenisKegiatan ||
+      !formData.sekolahId
+    ) {
+      toast.error("Semua kolom harus diisi!");
+      return;
+    }
+
     if (formData.gambar.length === 0) {
       toast.error("Minimal 1 gambar yang diupload");
       return;
@@ -370,7 +381,7 @@ const KegiatanPage = () => {
               </div>
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Cari Judul..."
                 name="search"
                 id="search"
                 value={searchQuery}

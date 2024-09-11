@@ -32,6 +32,7 @@ import StrukturAdminPage from "./pages/admin/struktur/struktur";
 import { AuthProvider } from "./hooks/useAuth";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import ProtectedRoute from "./layouts/privateroute";
+import GuestRoute from "./layouts/guestroute";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
@@ -152,7 +153,7 @@ function App() {
           }
         />
 
-        <Route path="/auth">
+        <Route path="/auth" element={<GuestRoute />}>
           <Route path="login" element={<LoginPage />} />
         </Route>
 
