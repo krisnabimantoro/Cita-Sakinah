@@ -33,12 +33,11 @@ const InputField = ({
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
-      // [{ font: [] }],
       [{ size: ["small", false, "large", "huge"] }],
       ["bold", "italic", "underline"],
       [{ list: "ordered" }, { list: "bullet" }],
       [{ align: [] }],
-      // ["clean"],
+      ["link"],
     ],
   };
 
