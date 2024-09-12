@@ -1,5 +1,5 @@
 import React from "react";
-import ContactImg from "../../../../assets/svg/about.svg";
+import ContactImg from "../../../../assets/img/apresiasi.jpg";
 import Button from "../../../../components/ui/button";
 import { FiMessageSquare } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ const ContactSection = () => {
           src={ContactImg}
           alt="contact-img"
           draggable="false"
-          className="rounded-xl w-full"
+          className="rounded-xl w-full h-[406px] object-cover"
         />
       </div>
     </section>

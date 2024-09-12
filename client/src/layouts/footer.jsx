@@ -25,8 +25,7 @@ const Footer = () => {
               <h2 className="text-main font-semibold text-2xl">Cita Sakinah</h2>
             </div>
             <span className="font-medium text-lg text-hitamcustom">
-              Membina Generasi Cerdas, Ceria, Mandiri, Kreatif, dan Islami
-              dengan Pola Asuh Sejalan Perkembangan Psikologi Anak.
+              Raih Mimpimu, Ciptakan Potensimu
             </span>
           </div>
           <div className="flex gap-7 sm:gap-20 mt-10 md:mt-0">

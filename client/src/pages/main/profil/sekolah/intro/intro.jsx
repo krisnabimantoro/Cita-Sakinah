@@ -1,7 +1,6 @@
 import React from "react";
 import Button from "../../../../../components/ui/button";
 import { PiMapPinBold } from "react-icons/pi";
-import Img from "../../../../../assets/svg/profil.svg";
 
 const IntroSection = ({ data, apiData }) => {
   const handleClick = () => {
@@ -40,10 +39,10 @@ const IntroSection = ({ data, apiData }) => {
         </div>
         <div>
           <img
-            src={Img}
+            src={data.img}
             alt="img-profil"
             draggable="false"
-            className="rounded-2xl"
+            className="rounded-2xl w-full h-[424px] object-cover"
           />
         </div>
       </div>

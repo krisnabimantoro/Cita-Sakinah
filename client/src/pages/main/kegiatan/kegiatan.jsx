@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import HeaderMenu from "../../../components/ui/header";
-import HeaderImg from "../../../assets/svg/profil.svg";
+import HeaderImg from "../../../assets/img/kegiatan.jpg";
 import CardKeg from "../../../components/ui/cardkeg";
 import LoadingCard from "../../../components/loading/loadingcard";
 import FilterButtons from "../../../components/ui/filterbutton";
