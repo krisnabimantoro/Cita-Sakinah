@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import HeaderMenu from "../../../components/ui/header";
-import HeaderImg from "../../../assets/svg/profil.svg";
+import HeaderImg from "../../../assets/img/general.jpg";
 import WaSection from "./wa/wa";
 import FaqSection from "./faq/faq";
 import MapSection from "./maps/maps";
