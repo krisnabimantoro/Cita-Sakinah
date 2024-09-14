@@ -15,7 +15,7 @@ const connect = async () => {
       port: process.env.PORT_DB ? Number(process.env.PORT_DB) : 3306,
       connectionLimit: 120,
     });
-    console.log(process.env.PORT_DB);
+    // console.log(process.env.PORT_DB);
 
     console.log("Connected to the MySQL database.");
 
