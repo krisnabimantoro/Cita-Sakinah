@@ -46,11 +46,11 @@ export default {
 
       for (const sekolahId of tagsArray) {
         // console.log(tagSekolah);
-        await conn.query(`insert into tagInformasi(informasiId,sekolahId) values (?,?) `, [informasiId, sekolahId]);
+        await conn.query(`insert into taginformasi(informasiId,sekolahId) values (?,?) `, [informasiId, sekolahId]);
       }
       // console.log(imagePaths);
       for (const imagePath of imagePaths) {
-        await conn.query("INSERT INTO imageInformasi (informasiId, fileName) VALUES (?, ?)", [informasiId, imagePath]);
+        await conn.query("INSERT INTO imageinformasi (informasiId, fileName) VALUES (?, ?)", [informasiId, imagePath]);
       }
       return res.status(201).json({
         message: "Informasi Berhasil Dibuat!",
@@ -73,7 +73,7 @@ export default {
 
       if (idImage) {
         const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
-        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [
+        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imageinformasi WHERE idImage IN (?) AND informasiId = ?`, [
           idImageArray,
           informasiId,
         ]);
@@ -81,26 +81,26 @@ export default {
         for (const img of oldImages) {
           removeFile(img.fileName);
         }
-        await conn.query(`DELETE FROM imageInformasi WHERE idImage IN (?) AND informasiId = ?`, [idImageArray, informasiId]);
+        await conn.query(`DELETE FROM imageinformasi WHERE idImage IN (?) AND informasiId = ?`, [idImageArray, informasiId]);
       }
 
       const files = req.files as Express.Multer.File[] | undefined;
       const imagePaths = files ? files.map((file: { filename: string }) => file.filename) : [];
 
       for (const imagePath of imagePaths) {
-        await conn.query(`INSERT INTO imageInformasi (informasiId, fileName) VALUES (?, ?)`, [informasiId, imagePath]);
+        await conn.query(`INSERT INTO imageinformasi (informasiId, fileName) VALUES (?, ?)`, [informasiId, imagePath]);
       }
 
       const tagsArray = data.sekolahId.split(",");
 
       if (tagsArray) {
-        const [oldInformasiTag] = await conn.query(`select sekolahId from tagInformasi`);
+        const [oldInformasiTag] = await conn.query(`select sekolahId from taginformasi`);
         if (oldInformasiTag) {
-          await conn.query(`delete from tagInformasi where informasiId=?  `, [informasiId]);
+          await conn.query(`delete from taginformasi where informasiId=?  `, [informasiId]);
         }
         for (const sekolahId of tagsArray) {
           // console.log(sekolahId);
-          await conn.query(`insert into tagInformasi(informasiId,sekolahId) values (?,?) `, [informasiId, sekolahId]);
+          await conn.query(`insert into taginformasi(informasiId,sekolahId) values (?,?) `, [informasiId, sekolahId]);
         }
       }
 
@@ -130,7 +130,7 @@ export default {
       const conn = await db;
       const id = req.params.id;
 
-      const [imagePath] = await conn.query<any>(`select fileName from imageInformasi where informasiId = ?`, [id]);
+      const [imagePath] = await conn.query<any>(`select fileName from imageinformasi where informasiId = ?`, [id]);
       if (imagePath.length <= 0) {
         return res.status(404).json({ message: "File not found" });
       }
@@ -138,8 +138,8 @@ export default {
         removeFile(imageDelete.fileName);
       }
 
-      await conn.query(`delete from tagInformasi where informasiId = ?`, [id]);
-      await conn.query(`DELETE FROM imageInformasi  WHERE informasiId = ?`, [id]);
+      await conn.query(`delete from taginformasi where informasiId = ?`, [id]);
+      await conn.query(`DELETE FROM imageinformasi  WHERE informasiId = ?`, [id]);
       await conn.query(`DELETE FROM informasi  WHERE id = ?`, [id]);
       return res.status(200).json({
         message: "Kegiatan berhasil dihapus!",
@@ -164,18 +164,18 @@ export default {
           (
             SELECT GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.id ASC)
             FROM sekolah s
-            JOIN tagInformasi ti ON ti.sekolahId = s.id
+            JOIN taginformasi ti ON ti.sekolahId = s.id
             WHERE ti.informasiId = i.id
           ) AS namaSekolah,
           (
             SELECT GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC)
-            FROM tagInformasi ti
+            FROM taginformasi ti
             WHERE ti.informasiId = i.id
           ) AS sekolahId
         FROM 
           informasi i 
         LEFT JOIN 
-          imageInformasi ii ON i.id = ii.informasiId 
+          imageinformasi ii ON i.id = ii.informasiId 
         GROUP BY 
           i.id
         order by
@@ -233,7 +233,7 @@ export default {
       console.log("cek");
       if (sekolahId) {
         const [rows] = await conn.query(
-          `select i.*, group_concat(ii.fileName) as fileName, s.namaSekolah from informasi i left join imageInformasi ii on i.id = ii.informasiId left join sekolah s on i.sekolahId = s.id where i.sekolahId = ? group by i.id `,
+          `select i.*, group_concat(ii.fileName) as fileName, s.namaSekolah from informasi i left join imageinformasi ii on i.id = ii.informasiId left join sekolah s on i.sekolahId = s.id where i.sekolahId = ? group by i.id `,
           [sekolahId]
         );
         const result = (rows as any[]).map((row) => ({
@@ -266,19 +266,19 @@ export default {
           (
             SELECT GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.id ASC)
             FROM sekolah s
-            JOIN tagInformasi ti ON ti.sekolahId = s.id
+            JOIN taginformasi ti ON ti.sekolahId = s.id
             WHERE ti.informasiId = i.id
           ) AS namaSekolah,
           (
             SELECT GROUP_CONCAT(DISTINCT ti.sekolahId ORDER BY ti.sekolahId ASC)
-            FROM tagInformasi ti
+            FROM taginformasi ti
             WHERE ti.informasiId = i.id
           ) AS sekolahId, 
           GROUP_CONCAT(DISTINCT ii.idImage ORDER BY ii.idImage ASC) AS idImage 
         FROM 
           informasi i 
         LEFT JOIN 
-          imageInformasi ii ON i.id = ii.informasiId 
+          imageinformasi ii ON i.id = ii.informasiId 
         where 
           i.id=?
         GROUP BY 
