@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  frontend:
+    build: ./client
+    container_name: frontend_cita_sakinah
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    ports:
+      - '5170:5170'
+    networks:
+      - app_network
+
+  backend:
+    build: ./server
+    container_name: backend_cita_sakinah
+    ports:
+      - '4000:4000'
+    environment:
+      - HOST_DB=${HOST_DB}
+      - USER_DB=${USER_DB}
+      - DATABASE_NAME=cita_sakinah
+      - PASSWORD_DB=${PASSWORD_DB}
+      - PORT_DB=${PORT_DB}
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+  db:
+    image: mysql:5.7
+    container_name: db_cita_sakinah
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: cita_sakinah
+    ports:
+      - '3906:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:
