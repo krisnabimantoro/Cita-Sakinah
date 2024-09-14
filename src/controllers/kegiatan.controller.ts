@@ -42,7 +42,7 @@ export default {
       LEFT JOIN
         kategorikegiatan kk ON k.jenisKegiatan = kk.id
       LEFT JOIN 
-        imageKegiatan ik ON k.id = ik.kegiatanId 
+        imagekegiatan ik ON k.id = ik.kegiatanId 
       LEFT JOIN
         sekolah s ON k.sekolahId = s.id 
       GROUP BY 
@@ -116,7 +116,7 @@ export default {
       const kegiatanId = insertData.insertId;
 
       for (const imagePath of imagePaths) {
-        await conn.query("INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)", [kegiatanId, imagePath]);
+        await conn.query("INSERT INTO imagekegiatan (kegiatanId, fileName) VALUES (?, ?)", [kegiatanId, imagePath]);
       }
       return res.status(201).json({
         message: "Kegiatan berhasil dibuat!",
@@ -141,7 +141,7 @@ export default {
 
       if (idImage) {
         const idImageArray = (idImage as string).split(","); // Split comma-separated IDs
-        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imageKegiatan WHERE idImage IN (?) AND kegiatanId = ?`, [
+        const [oldImages] = await conn.query<any>(`SELECT fileName FROM imagekegiatan WHERE idImage IN (?) AND kegiatanId = ?`, [
           idImageArray,
           kegiatanId,
         ]);
@@ -149,7 +149,7 @@ export default {
           // console.log(img.fileName)
           removeFile(img.fileName);
         }
-        await conn.query(`DELETE FROM imageKegiatan WHERE idImage IN (?) AND kegiatanId = ?`, [idImageArray, kegiatanId]);
+        await conn.query(`DELETE FROM imagekegiatan WHERE idImage IN (?) AND kegiatanId = ?`, [idImageArray, kegiatanId]);
       }
 
       const files = req.files as Express.Multer.File[] | undefined;
@@ -157,7 +157,7 @@ export default {
       // console.log(imagePaths)
 
       for (const imagePath of imagePaths) {
-        await conn.query(`INSERT INTO imageKegiatan (kegiatanId, fileName) VALUES (?, ?)`, [kegiatanId, imagePath]);
+        await conn.query(`INSERT INTO imagekegiatan (kegiatanId, fileName) VALUES (?, ?)`, [kegiatanId, imagePath]);
       }
       if (data.deskripsi) {
         await conn.query(`UPDATE kegiatan set deskripsi=? WHERE id = ?`, [data.deskripsi, kegiatanId]);
@@ -183,7 +183,7 @@ export default {
 
       const conn = await db;
 
-      const [imagePath] = await conn.query<any>(`select fileName from imageKegiatan where kegiatanId = ?`, [id]);
+      const [imagePath] = await conn.query<any>(`select fileName from imagekegiatan where kegiatanId = ?`, [id]);
       // console.log(imagePath.length)
       if (imagePath.length <= 0) {
         return res.status(404).json({ message: "File not found" });
@@ -192,7 +192,7 @@ export default {
         removeFile(imageDelete.fileName);
       }
 
-      const deleteImage = await conn.query(`DELETE FROM imageKegiatan  WHERE kegiatanId = ?`, [id]);
+      const deleteImage = await conn.query(`DELETE FROM imagekegiatan  WHERE kegiatanId = ?`, [id]);
       const result = await conn.query(`DELETE FROM kegiatan  WHERE id = ?`, [id]);
       return res.json({
         message: "Kegiatan berhasil dihapus!",
@@ -231,7 +231,7 @@ export default {
         LEFT JOIN
           kategorikegiatan kk ON k.jenisKegiatan = kk.id
         LEFT JOIN 
-          imageKegiatan ik ON k.id = ik.kegiatanId 
+          imagekegiatan ik ON k.id = ik.kegiatanId 
         left JOIN
           sekolah s ON k.sekolahId = s.id 
         where 
@@ -248,7 +248,7 @@ export default {
         LEFT JOIN
           kategorikegiatan kk ON k.jenisKegiatan = kk.id
         LEFT JOIN 
-          imageKegiatan ik ON k.id = ik.kegiatanId 
+          imagekegiatan ik ON k.id = ik.kegiatanId 
         left JOIN
           sekolah s ON k.sekolahId = s.id 
         where 
@@ -265,7 +265,7 @@ export default {
         LEFT JOIN
           kategorikegiatan kk ON k.jenisKegiatan = kk.id
         LEFT JOIN 
-          imageKegiatan ik ON k.id = ik.kegiatanId 
+          imagekegiatan ik ON k.id = ik.kegiatanId 
         left JOIN
           sekolah s ON k.sekolahId = s.id 
         where 
@@ -294,7 +294,7 @@ export default {
     LEFT JOIN 
         kategorikegiatan kk ON k.jenisKegiatan = kk.id 
     LEFT JOIN 
-        imageKegiatan ik ON k.id = ik.kegiatanId 
+        imagekegiatan ik ON k.id = ik.kegiatanId 
     LEFT JOIN 
         sekolah s ON k.sekolahId = s.id 
     WHERE 
@@ -329,7 +329,7 @@ export default {
   async displayJenisKegiatan(req: Request, res: Response) {
     try {
       const conn = await db;
-      const [rows] = await conn.query(`select * from kategoriKegiatan`);
+      const [rows] = await conn.query(`select * from kategorikegiatan`);
       return res.status(200).json({ rows });
     } catch (error) {
       const err = error as Error;
