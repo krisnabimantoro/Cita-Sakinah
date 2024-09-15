@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import HeaderMenu from "../../../../components/ui/header";
-import HeaderImg from "../../../../assets/svg/profil.svg";
+import HeaderImg from "../../../../assets/img/general.jpg";
 import CardFasilitas from "../../../../components/ui/cardfasilitas";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";

@@ -32,9 +32,11 @@ const LatarSection = ({ data }) => {
       </div>
       <div className="my-[60px] flex flex-col gap-2">
         <h1 className="text-3xl font-bold">Tujuan</h1>
-        <span className="text-lg text-justify whitespace-pre-line">
-          {data.tujuan}
-        </span>
+        <ol className="list-decimal list-inside text-lg text-justify">
+          {data.tujuan.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ol>
       </div>
     </section>
   );

@@ -17,7 +17,7 @@ const CardProfil = ({ img, sekolah, titlesekolah, child, age }) => {
         src={img}
         alt="img-profil"
         draggable="false"
-        className="rounded-t-xl object-cover"
+        className="rounded-t-xl object-cover h-[250px] w-full"
       />
 
       <div className="mx-[30px] mt-4 mb-8 flex flex-col gap-4">

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-scroll";
 import Button from "../../../../components/ui/button";
-import BackgroundImage from "../../../../assets/svg/profil.svg";
+import BackgroundImage from "../../../../assets/img/general.jpg";
 
 const HeroSection = () => {
   return (

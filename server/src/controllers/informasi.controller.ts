@@ -262,7 +262,8 @@ export default {
         `SELECT 
           i.*, 
           DATE_FORMAT(i.tanggal, '%Y-%m-%d') AS tanggal,
-          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.fileName ASC) AS fileName,  
+          GROUP_CONCAT(DISTINCT ii.idImage ORDER BY ii.idImage ASC) AS idImage, 
+          GROUP_CONCAT(DISTINCT ii.fileName ORDER BY ii.idImage ASC) AS fileName,  
           (
             SELECT GROUP_CONCAT(DISTINCT s.namaSekolah ORDER BY s.id ASC)
             FROM sekolah s
