@@ -28,7 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/storage/uploads", express.static("./storage/uploads/"));
+app.use("/api/storage/uploads", express.static("./storage/uploads"));
 app.use("/api", routes);
 // async await connect();
 

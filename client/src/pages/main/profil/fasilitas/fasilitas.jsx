@@ -64,9 +64,8 @@ const FasilitasPage = () => {
           <LoadingCardFasilitas />
         ) : (
           <CardFasilitas
-            img={`${import.meta.env.VITE_API_URL}/storage/uploads/${
-              facility.imageName
-            }`}
+            img={`https://paudterpaducisa.sch.id/api/storage/uploads/${facility.imageName
+              }`}
             title={facility.namaFasilitas}
             textColor={textColor}
             borderColor={borderColor}

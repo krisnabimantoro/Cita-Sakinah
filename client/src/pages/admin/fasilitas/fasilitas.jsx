@@ -76,8 +76,8 @@ const FasilitasPage = () => {
   useEffect(() => {
     const filtered = searchQuery
       ? originalData.filter((fasilitas) =>
-          fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
       : originalData;
 
     setFilteredData(filtered);
@@ -108,7 +108,7 @@ const FasilitasPage = () => {
       gambar: fasilitas.gambar,
     });
     setPreviewImage(
-      `${import.meta.env.VITE_API_URL}/storage/uploads/${fasilitas.gambar}`
+      `https://paudterpaducisa.sch.id/api/storage/uploads/${fasilitas.gambar}`
     );
     setSelectedFasilitas(fasilitas);
     setIsEdit(true);

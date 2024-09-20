@@ -65,7 +65,7 @@ export default {
           { id: result[0].id, sekolahId: result[0].sekolahId, role: result[0].role, namaSekolah: result[0].namaSekolah },
           process.env.SECRET || "",
           {
-            expiresIn: "6h",
+            expiresIn: "2h",
           }
         );
 

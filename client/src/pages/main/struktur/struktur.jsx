@@ -42,9 +42,7 @@ const StrukturPage = () => {
           <LoadingStruktur />
         ) : (
           <img
-            src={`${
-              import.meta.env.VITE_API_URL
-            }/storage/uploads/${strukturImg}`}
+            src={`https://paudterpaducisa.sch.id/api/storage/uploads/${strukturImg}`}
             alt="struktur-citasakinah"
             draggable="false"
             className="object-cover cursor-pointer"
@@ -57,9 +55,7 @@ const StrukturPage = () => {
             close={() => setIsOpen(false)}
             slides={[
               {
-                src: `${
-                  import.meta.env.VITE_API_URL
-                }/storage/uploads/${strukturImg}`,
+                src: `https://paudterpaducisa.sch.id/api/storage/uploads/${strukturImg}`,
                 downloadFilename: "Struktur Organisasi",
               },
             ]}

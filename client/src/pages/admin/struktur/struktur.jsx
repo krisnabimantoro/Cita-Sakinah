@@ -23,7 +23,7 @@ const StrukturPage = () => {
         const imageName = response.data.result[0].imageName;
         setStrukturImg(imageName);
         setPreviewImage(
-          `${import.meta.env.VITE_API_URL}/storage/uploads/${imageName}`
+          `https://paudterpaducisa.sch.id/api/storage/uploads/${imageName}`
         );
       } catch (error) {
         console.error("Failed to fetch structure image:", error);
@@ -37,7 +37,7 @@ const StrukturPage = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setPreviewImage(
-      `${import.meta.env.VITE_API_URL}/storage/uploads/${strukturImg}`
+      `https://paudterpaducisa.sch.id/api/storage/uploads/${strukturImg}`
     );
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -92,9 +92,7 @@ const StrukturPage = () => {
         </div>
         <div className="border border-main rounded-lg h-full flex justify-center items-center p-10">
           <img
-            src={`${
-              import.meta.env.VITE_API_URL
-            }/storage/uploads/${strukturImg}`}
+            src={strukturImg ? `https://paudterpaducisa.sch.id/api/storage/uploads/${strukturImg}` : "/path/to/default-image.jpg"}
             alt="img-struktur"
             draggable="false"
           />

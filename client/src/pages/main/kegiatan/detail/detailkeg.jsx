@@ -57,7 +57,7 @@ const DetailKegPage = () => {
     setIsOpen(true);
   };
 
-  const imageUrlBase = `${import.meta.env.VITE_API_URL}/storage/uploads`;
+  const imageUrlBase = `https://paudterpaducisa.sch.id/api/storage/uploads`;
 
   return (
     <>

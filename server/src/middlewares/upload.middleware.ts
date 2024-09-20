@@ -30,7 +30,7 @@ const handleMulterError = (err: any, req: any, res: any, next: Function) => {
   next(err); // Pass other errors to the default error handler
 };
 const compress: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.file && req.file.size > 5000) {
+  if (req.file && req.file.size > 1000) {
     await compressImage(req.file.filename);
   }
   next();
@@ -50,7 +50,7 @@ const compressImages: RequestHandler = async (req: Request, res: Response, next:
 const upload = multer({
   storage,
   limits: {
-    fileSize: 1024 * 1024 * 100,
+    fileSize: 1024 * 1024 * 20000,
   },
 
   fileFilter(_, file, callback) {

@@ -116,8 +116,7 @@ const KegiatanPage = () => {
                   key={item.id}
                   id={item.id}
                   img={[
-                    `${import.meta.env.VITE_API_URL}/storage/uploads/${
-                      item.image[0].fileName
+                    `https://paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName
                     }`,
                   ]}
                   title={item.judul}

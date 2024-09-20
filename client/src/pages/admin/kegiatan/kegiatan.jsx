@@ -90,8 +90,8 @@ const KegiatanPage = () => {
   useEffect(() => {
     const filtered = searchQuery
       ? dataKegiatan.filter((kegiatan) =>
-          kegiatan.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+        kegiatan.title.toLowerCase().includes(searchQuery.toLowerCase())
+      )
       : dataKegiatan;
 
     setFilteredData(filtered);
@@ -139,7 +139,7 @@ const KegiatanPage = () => {
     setPreviewImage(
       kegiatan.gambar.map((img) => ({
         idImage: img.idImage,
-        url: `${import.meta.env.VITE_API_URL}/storage/uploads/${img.fileName}`,
+        url: `https://paudterpaducisa.sch.id/api/storage/uploads/${img.fileName}`,
       }))
     );
 

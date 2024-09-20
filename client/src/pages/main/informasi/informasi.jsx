@@ -65,12 +65,12 @@ const InformasiPage = () => {
     selectedOptions.length === 0
       ? informasi
       : informasi.filter((item) =>
-          selectedOptions.some((selected) =>
-            item.sekolah?.some((school) =>
-              school?.namaSekolah?.startsWith(selected.split(" ")[0])
-            )
+        selectedOptions.some((selected) =>
+          item.sekolah?.some((school) =>
+            school?.namaSekolah?.startsWith(selected.split(" ")[0])
           )
-        );
+        )
+      );
 
   return (
     <>
@@ -115,8 +115,7 @@ const InformasiPage = () => {
                   key={item.id}
                   id={item.id}
                   img={[
-                    `${import.meta.env.VITE_API_URL}/storage/uploads/${
-                      item.image[0].fileName
+                    `https://paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName
                     }`,
                   ]}
                   title={item.judul}

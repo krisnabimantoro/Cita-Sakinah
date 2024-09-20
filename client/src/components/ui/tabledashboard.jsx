@@ -17,9 +17,8 @@ const TableDashboard = ({ columns, data }) => {
               {columns.map((col, index) => (
                 <th
                   key={index}
-                  className={`py-2 px-4 text-left text-main border-b border-main border-opacity-35 ${
-                    col.width || "w-auto"
-                  }`}
+                  className={`py-2 px-4 text-left text-main border-b border-main border-opacity-35 ${col.width || "w-auto"
+                    }`}
                 >
                   {col.header}
                 </th>
@@ -35,17 +34,15 @@ const TableDashboard = ({ columns, data }) => {
                 {columns.map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className={`py-4 px-4 text-main whitespace-nowrap border-b border-main border-opacity-35 ${
-                      col.width || "w-auto"
-                    }`}
+                    className={`py-4 px-4 text-main whitespace-nowrap border-b border-main border-opacity-35 ${col.width || "w-auto"
+                      }`}
                   >
                     {col.field === "action" ? (
                       <div className="cursor-pointer">{item[col.field]}</div>
                     ) : col.field === "gambar" ? (
                       <img
-                        src={`${import.meta.env.VITE_API_URL}/storage/uploads/${
-                          item[col.field]
-                        }`}
+                        src={`https://paudterpaducisa.sch.id/api/storage/uploads/${item[col.field]
+                          }`}
                         alt={item.title}
                         className="w-20 h-20 object-cover rounded-lg"
                       />
