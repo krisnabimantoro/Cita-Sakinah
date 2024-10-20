@@ -76,8 +76,8 @@ const FasilitasPage = () => {
   useEffect(() => {
     const filtered = searchQuery
       ? originalData.filter((fasilitas) =>
-        fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+          fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase())
+        )
       : originalData;
 
     setFilteredData(filtered);
@@ -143,9 +143,14 @@ const FasilitasPage = () => {
   };
 
   const handleSaveFasilitas = async () => {
-    if (!formData.title || !formData.sekolahId || !formData.gambar) {
-      toast.error("Semua field harus diisi!");
-      return;
+    if (!formData.title && !formData.sekolahId && !formData.gambar) {
+      return toast.error("Semua kolom harus diisi");
+    } else if (!formData.title) {
+      return toast.error("Judul fasilitas harus diisi");
+    } else if (!formData.sekolahId) {
+      return toast.error("Harus memilih sekolah");
+    } else if (!formData.gambar) {
+      return toast.error("Minimal upload gambar");
     }
 
     const formDataToSend = new FormData();
@@ -251,11 +256,13 @@ const FasilitasPage = () => {
     action: (
       <div className="flex gap-3 items-center">
         <LuPen
+          id="update-button"
           className="text-second"
           onClick={() => handleEditClick(fasilitas)}
           size={20}
         />
         <FaRegTrashAlt
+          id="delete-button"
           className="text-button"
           onClick={() => handleDeleteClick(fasilitas)}
           size={20}
@@ -296,6 +303,7 @@ const FasilitasPage = () => {
             </div>
 
             <Button
+              id="add-button"
               color="bg-main"
               name="Tambah"
               icon={<FaPlus size={24} />}
@@ -321,7 +329,10 @@ const FasilitasPage = () => {
         width="w-[377px]"
         justify="justify-center"
       >
-        <h2 className="text-2xl font-semibold text-main text-center">
+        <h2
+          className="text-2xl font-semibold text-main text-center"
+          id="konfirm-delete"
+        >
           Apakah Anda Yakin Ingin Menghapus?
         </h2>
       </Modal>
