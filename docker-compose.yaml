@@ -21,6 +21,7 @@ services:
       - DATABASE_NAME=cita_sakinah
       - PASSWORD_DB=${PASSWORD_DB}
       - PORT_DB=${PORT_DB}
+      - SECRET=${SECRET}
     depends_on:
       - db
     networks:
