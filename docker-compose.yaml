@@ -22,6 +22,7 @@ services:
       - PASSWORD_DB=${PASSWORD_DB}
       - PORT_DB=${PORT_DB}
       - SECRET=${SECRET}
+      - PORT=${PORT}
     depends_on:
       - db
     networks:
