@@ -75,9 +75,7 @@ const FasilitasPage = () => {
 
   useEffect(() => {
     const filtered = searchQuery
-      ? originalData.filter((fasilitas) =>
-          fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      ? originalData.filter((fasilitas) => fasilitas.title.toLowerCase().includes(searchQuery.toLowerCase()))
       : originalData;
 
     setFilteredData(filtered);
@@ -98,18 +96,14 @@ const FasilitasPage = () => {
   };
 
   const handleEditClick = (fasilitas) => {
-    const selectedSchool = schoolOptions.find(
-      (option) => option.label === fasilitas.sekolah
-    );
+    const selectedSchool = schoolOptions.find((option) => option.label === fasilitas.sekolah);
     setFormData({
       title: fasilitas.title,
       sekolah: fasilitas.sekolah,
       sekolahId: selectedSchool?.id || "",
       gambar: fasilitas.gambar,
     });
-    setPreviewImage(
-      `https://paudterpaducisa.sch.id/api/storage/uploads/${fasilitas.gambar}`
-    );
+    setPreviewImage(`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${fasilitas.gambar}`);
     setSelectedFasilitas(fasilitas);
     setIsEdit(true);
     setIsModalOpen(true);
@@ -122,12 +116,8 @@ const FasilitasPage = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(
-        `/api/fasilitas/${selectedFasilitas.id}`
-      );
-      setFilteredData(
-        filteredData.filter((item) => item.id !== selectedFasilitas.id)
-      );
+      const response = await axios.delete(`/api/fasilitas/${selectedFasilitas.id}`);
+      setFilteredData(filteredData.filter((item) => item.id !== selectedFasilitas.id));
       toast.success(response.data.message);
       setSelectedFasilitas(null);
       setIsDeleteModalOpen(false);
@@ -166,27 +156,19 @@ const FasilitasPage = () => {
       let response;
 
       if (isEdit) {
-        response = await axios.patch(
-          `/api/fasilitas/${selectedFasilitas.id}`,
-          formDataToSend,
-          {
-            headers: {
-              Authorization: `Bearer ${user}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        response = await axios.patch(`/api/fasilitas/${selectedFasilitas.id}`, formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${user}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
       } else {
-        response = await axios.post(
-          `/api/fasilitas?sekolahId=${formData.sekolahId}`,
-          formDataToSend,
-          {
-            headers: {
-              Authorization: `Bearer ${user}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        response = await axios.post(`/api/fasilitas?sekolahId=${formData.sekolahId}`, formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${user}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
 
       if (response.status === 200 || response.status === 201) {
@@ -199,9 +181,7 @@ const FasilitasPage = () => {
       if (error.response && error.response.status === 500) {
         toast.error(error.response.data.message);
       } else {
-        toast.error(
-          isEdit ? error.response.data.message : error.response.data.message
-        );
+        toast.error(isEdit ? error.response.data.message : error.response.data.message);
       }
       console.error("Error saving facility: ", error);
     } finally {
@@ -213,9 +193,7 @@ const FasilitasPage = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "sekolah") {
-      const selectedSchool = schoolOptions.find(
-        (option) => option.value === value
-      );
+      const selectedSchool = schoolOptions.find((option) => option.value === value);
       setFormData({
         ...formData,
         sekolah: value,
@@ -255,27 +233,14 @@ const FasilitasPage = () => {
     ...fasilitas,
     action: (
       <div className="flex gap-3 items-center">
-        <LuPen
-          id="update-button"
-          className="text-second"
-          onClick={() => handleEditClick(fasilitas)}
-          size={20}
-        />
-        <FaRegTrashAlt
-          id="delete-button"
-          className="text-button"
-          onClick={() => handleDeleteClick(fasilitas)}
-          size={20}
-        />
+        <LuPen id="update-button" className="text-second" onClick={() => handleEditClick(fasilitas)} size={20} />
+        <FaRegTrashAlt id="delete-button" className="text-button" onClick={() => handleDeleteClick(fasilitas)} size={20} />
       </div>
     ),
   }));
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = dataReal.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = dataReal.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -314,11 +279,7 @@ const FasilitasPage = () => {
           </div>
         </div>
         <TableDashboard columns={columnsFasilitas} data={paginatedData} />
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
 
       <Modal
@@ -329,10 +290,7 @@ const FasilitasPage = () => {
         width="w-[377px]"
         justify="justify-center"
       >
-        <h2
-          className="text-2xl font-semibold text-main text-center"
-          id="konfirm-delete"
-        >
+        <h2 className="text-2xl font-semibold text-main text-center" id="konfirm-delete">
           Apakah Anda Yakin Ingin Menghapus?
         </h2>
       </Modal>

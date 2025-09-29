@@ -55,9 +55,7 @@ const InformasiPage = () => {
 
   const handleSelect = (option) => {
     setSelectedOptions((prevSelected) =>
-      prevSelected.includes(option)
-        ? prevSelected.filter((item) => item !== option)
-        : [...prevSelected, option]
+      prevSelected.includes(option) ? prevSelected.filter((item) => item !== option) : [...prevSelected, option]
     );
   };
 
@@ -65,12 +63,8 @@ const InformasiPage = () => {
     selectedOptions.length === 0
       ? informasi
       : informasi.filter((item) =>
-        selectedOptions.some((selected) =>
-          item.sekolah?.some((school) =>
-            school?.namaSekolah?.startsWith(selected.split(" ")[0])
-          )
-        )
-      );
+          selectedOptions.some((selected) => item.sekolah?.some((school) => school?.namaSekolah?.startsWith(selected.split(" ")[0])))
+        );
 
   return (
     <>
@@ -92,19 +86,11 @@ const InformasiPage = () => {
               icon2={<LuFilter size={24} />}
               onClick={() => setIsOpen(!isOpen)}
             />
-            <DropdownFilter
-              isOpen={isOpen}
-              options={schools}
-              selectedOptions={selectedOptions}
-              onSelect={handleSelect}
-            />
+            <DropdownFilter isOpen={isOpen} options={schools} selectedOptions={selectedOptions} onSelect={handleSelect} />
           </div>
         </div>
         {noData ? (
-          <p className="text-center text-main mt-20">
-            Tidak ada data informasi. Anda akan diarahkan ke beranda dalam 5
-            detik...
-          </p>
+          <p className="text-center text-main mt-20">Tidak ada data informasi. Anda akan diarahkan ke beranda dalam 5 detik...</p>
         ) : (
           <div className="flex flex-wrap gap-10">
             {filteredData.map((item, index) =>
@@ -114,16 +100,11 @@ const InformasiPage = () => {
                 <CardInfor
                   key={item.id}
                   id={item.id}
-                  img={[
-                    `https://paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName
-                    }`,
-                  ]}
+                  img={[`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${item.image[0].fileName}`]}
                   title={item.judul}
                   detail={item.deskripsi}
                   date={formatDate(item.tanggal)}
-                  tagSekolah={item.sekolah.map(
-                    (sekolah) => sekolah.namaSekolah.split(" ")[0]
-                  )}
+                  tagSekolah={item.sekolah.map((sekolah) => sekolah.namaSekolah.split(" ")[0])}
                 />
               )
             )}

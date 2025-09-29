@@ -37,19 +37,13 @@ const DetailKegPage = () => {
       }
     }, 5000);
 
-    document.title = kegiatan
-      ? `Cita Sakinah | Detail Kegiatan #${kegiatan.id}`
-      : `Cita Sakinah | No Data`;
+    document.title = kegiatan ? `Cita Sakinah | Detail Kegiatan #${kegiatan.id}` : `Cita Sakinah | No Data`;
 
     return () => clearTimeout(timeoutId);
   }, [kegiatan, navigate]);
 
   if (!kegiatan) {
-    return (
-      <div className="flex justify-center h-screen items-center text-main font-semibold">
-        LOADING .......
-      </div>
-    );
+    return <div className="flex justify-center h-screen items-center text-main font-semibold">LOADING .......</div>;
   }
 
   const handleOpenLightbox = (index) => {
@@ -57,7 +51,7 @@ const DetailKegPage = () => {
     setIsOpen(true);
   };
 
-  const imageUrlBase = `https://paudterpaducisa.sch.id/api/storage/uploads`;
+  const imageUrlBase = `https://apicisa.krisnabmntr.my.id/api/storage/uploads`;
 
   return (
     <>
@@ -89,17 +83,10 @@ const DetailKegPage = () => {
                   </span>
                 </div>
                 <div>
-                  <h1 className="font-bold text-main text-2xl sm:text-4xl">
-                    {kegiatan.judul}
-                  </h1>
-                  <h3 className="text-abugelap font-medium text-lg">
-                    {formatDate(kegiatan.tanggal)}
-                  </h3>
+                  <h1 className="font-bold text-main text-2xl sm:text-4xl">{kegiatan.judul}</h1>
+                  <h3 className="text-abugelap font-medium text-lg">{formatDate(kegiatan.tanggal)}</h3>
                 </div>
-                <div
-                  className="text-abugelap ql-editor"
-                  dangerouslySetInnerHTML={{ __html: kegiatan.deskripsi }}
-                />
+                <div className="text-abugelap ql-editor" dangerouslySetInnerHTML={{ __html: kegiatan.deskripsi }} />
               </div>
             </div>
 

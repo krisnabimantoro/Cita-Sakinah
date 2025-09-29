@@ -89,9 +89,7 @@ const KegiatanPage = () => {
 
   useEffect(() => {
     const filtered = searchQuery
-      ? dataKegiatan.filter((kegiatan) =>
-          kegiatan.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      ? dataKegiatan.filter((kegiatan) => kegiatan.title.toLowerCase().includes(searchQuery.toLowerCase()))
       : dataKegiatan;
 
     setFilteredData(filtered);
@@ -115,12 +113,8 @@ const KegiatanPage = () => {
   };
 
   const handleEditClick = (kegiatan) => {
-    const selectedSchool = schoolOptions.find(
-      (option) => option.label === kegiatan.sekolah
-    );
-    const selectedJenis = kegiatanOptions.find(
-      (option) => option.label === kegiatan.tipe
-    );
+    const selectedSchool = schoolOptions.find((option) => option.label === kegiatan.sekolah);
+    const selectedJenis = kegiatanOptions.find((option) => option.label === kegiatan.tipe);
 
     setFormData({
       title: kegiatan.title,
@@ -139,7 +133,7 @@ const KegiatanPage = () => {
     setPreviewImage(
       kegiatan.gambar.map((img) => ({
         idImage: img.idImage,
-        url: `https://paudterpaducisa.sch.id/api/storage/uploads/${img.fileName}`,
+        url: `https://apicisa.krisnabmntr.my.id/api/storage/uploads/${img.fileName}`,
       }))
     );
 
@@ -155,12 +149,8 @@ const KegiatanPage = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(
-        `/api/kegiatan/${selectedKegiatan.id}`
-      );
-      setFilteredData(
-        filteredData.filter((item) => item.id !== selectedKegiatan.id)
-      );
+      const response = await axios.delete(`/api/kegiatan/${selectedKegiatan.id}`);
+      setFilteredData(filteredData.filter((item) => item.id !== selectedKegiatan.id));
       toast.success(response.data.message);
       setIsDeleteModalOpen(false);
       setSelectedKegiatan(null);
@@ -221,20 +211,15 @@ const KegiatanPage = () => {
 
     try {
       let response;
-      const deleteParams =
-        imagesToDelete.length > 0 ? `idImage=${imagesToDelete.join(",")}` : "";
+      const deleteParams = imagesToDelete.length > 0 ? `idImage=${imagesToDelete.join(",")}` : "";
 
       if (isEdit) {
-        response = await axios.patch(
-          `/api/kegiatan/${selectedKegiatan.id}?${deleteParams}`,
-          formDataToSend,
-          {
-            headers: {
-              Authorization: `Bearer ${user}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        response = await axios.patch(`/api/kegiatan/${selectedKegiatan.id}?${deleteParams}`, formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${user}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
       } else {
         response = await axios.post("/api/kegiatan", formDataToSend, {
           headers: {
@@ -254,9 +239,7 @@ const KegiatanPage = () => {
       if (error.response && error.response.status === 500) {
         toast.error(error.response.data.message);
       } else {
-        toast.error(
-          isEdit ? error.response.data.message : error.response.data.message
-        );
+        toast.error(isEdit ? error.response.data.message : error.response.data.message);
       }
       console.error("Error saving kegiatan: ", error);
     } finally {
@@ -268,18 +251,14 @@ const KegiatanPage = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "sekolah") {
-      const selectedSchool = schoolOptions.find(
-        (option) => option.value === value
-      );
+      const selectedSchool = schoolOptions.find((option) => option.value === value);
       setFormData({
         ...formData,
         sekolah: value,
         sekolahId: selectedSchool?.id || "",
       });
     } else if (name === "tipe") {
-      const selectedJenis = kegiatanOptions.find(
-        (option) => option.value === value
-      );
+      const selectedJenis = kegiatanOptions.find((option) => option.value === value);
       setFormData({
         ...formData,
         tipe: value,
@@ -306,10 +285,7 @@ const KegiatanPage = () => {
     setPreviewImage((prev) => [...prev, ...newPreviewImages]);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      gambar: [
-        ...prevFormData.gambar,
-        ...files.map((file) => ({ idImage: null, file })),
-      ],
+      gambar: [...prevFormData.gambar, ...files.map((file) => ({ idImage: null, file }))],
     }));
   };
 
@@ -354,31 +330,17 @@ const KegiatanPage = () => {
   const dataReal = filteredData.map((kegiatan) => ({
     ...kegiatan,
     desc: extractTextFromPTags(kegiatan.desc),
-    gambar:
-      kegiatan.gambar.length > 0 ? kegiatan.gambar[0].fileName : "No Image",
+    gambar: kegiatan.gambar.length > 0 ? kegiatan.gambar[0].fileName : "No Image",
     action: (
       <div className="flex gap-3 items-center">
-        <LuPen
-          id="update-button"
-          className="text-second cursor-pointer"
-          onClick={() => handleEditClick(kegiatan)}
-          size={20}
-        />
-        <FaRegTrashAlt
-          id="delete-button"
-          className="text-button cursor-pointer"
-          onClick={() => handleDeleteClick(kegiatan)}
-          size={20}
-        />
+        <LuPen id="update-button" className="text-second cursor-pointer" onClick={() => handleEditClick(kegiatan)} size={20} />
+        <FaRegTrashAlt id="delete-button" className="text-button cursor-pointer" onClick={() => handleDeleteClick(kegiatan)} size={20} />
       </div>
     ),
   }));
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = dataReal.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = dataReal.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -417,11 +379,7 @@ const KegiatanPage = () => {
           </div>
         </div>
         <TableDashboard columns={columnsKegiatan} data={paginatedData} />
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
       <Modal
         isOpen={isDeleteModalOpen}
@@ -431,10 +389,7 @@ const KegiatanPage = () => {
         width="w-[377px]"
         justify="justify-center"
       >
-        <h2
-          className="text-2xl font-semibold text-main text-center"
-          id="konfirm-delete"
-        >
+        <h2 className="text-2xl font-semibold text-main text-center" id="konfirm-delete">
           Apakah Anda Yakin Ingin Menghapus?
         </h2>
       </Modal>
@@ -490,9 +445,7 @@ const KegiatanPage = () => {
             name="tanggal"
             type="date"
             value={formData.tanggal}
-            onChange={(e) =>
-              setFormData({ ...formData, tanggal: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, tanggal: e.target.value })}
             placeholder="Masukkan Tanggal Kegiatan"
           />
           <ImageUploadForm

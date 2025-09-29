@@ -56,20 +56,13 @@ const KegiatanPage = () => {
   }, [noData, navigate]);
 
   const handleSchoolFilterChange = (school) => {
-    setSchoolFilter((prev) =>
-      prev.includes(school)
-        ? prev.filter((s) => s !== school)
-        : [...prev, school]
-    );
+    setSchoolFilter((prev) => (prev.includes(school) ? prev.filter((s) => s !== school) : [...prev, school]));
   };
 
   const filteredData = activities.filter(
     (item) =>
       (filter === "Semua Aktivitas" || item.namaKegiatan === filter) &&
-      (schoolFilter.length === 0 ||
-        schoolFilter.some((selected) =>
-          item.namaSekolah.startsWith(selected.split(" ")[0])
-        ))
+      (schoolFilter.length === 0 || schoolFilter.some((selected) => item.namaSekolah.startsWith(selected.split(" ")[0])))
   );
 
   return (
@@ -93,19 +86,11 @@ const KegiatanPage = () => {
               icon2={<LuFilter size={24} />}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             />
-            <DropdownFilter
-              isOpen={isDropdownOpen}
-              options={schools}
-              selectedOptions={schoolFilter}
-              onSelect={handleSchoolFilterChange}
-            />
+            <DropdownFilter isOpen={isDropdownOpen} options={schools} selectedOptions={schoolFilter} onSelect={handleSchoolFilterChange} />
           </div>
         </div>
         {noData ? (
-          <p className="text-center text-main mt-20">
-            Tidak ada data kegiatan. Anda akan diarahkan ke beranda dalam 5
-            detik...
-          </p>
+          <p className="text-center text-main mt-20">Tidak ada data kegiatan. Anda akan diarahkan ke beranda dalam 5 detik...</p>
         ) : (
           <div className="flex flex-wrap gap-10">
             {filteredData.map((item, index) =>
@@ -115,10 +100,7 @@ const KegiatanPage = () => {
                 <CardKeg
                   key={item.id}
                   id={item.id}
-                  img={[
-                    `https://paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName
-                    }`,
-                  ]}
+                  img={[`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${item.image[0].fileName}`]}
                   title={item.judul}
                   detail={item.deskripsi}
                   date={formatDate(item.tanggal)}

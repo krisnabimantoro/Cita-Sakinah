@@ -36,19 +36,13 @@ const DetailInforPage = () => {
       }
     }, 5000);
 
-    document.title = informasi
-      ? `Cita Sakinah | Detail Informasi #${informasi.id}`
-      : `Cita Sakinah | No Data`;
+    document.title = informasi ? `Cita Sakinah | Detail Informasi #${informasi.id}` : `Cita Sakinah | No Data`;
 
     return () => clearTimeout(timeoutId);
   }, [informasi, navigate]);
 
   if (!informasi) {
-    return (
-      <div className="flex justify-center h-screen items-center text-main font-semibold">
-        LOADING .......
-      </div>
-    );
+    return <div className="flex justify-center h-screen items-center text-main font-semibold">LOADING .......</div>;
   }
 
   const handleOpenLightbox = (index) => {
@@ -56,7 +50,7 @@ const DetailInforPage = () => {
     setIsOpen(true);
   };
 
-  const imageUrlBase = `https://paudterpaducisa.sch.id/api/storage/uploads`;
+  const imageUrlBase = `https://apicisa.krisnabmntr.my.id/api/storage/uploads`;
 
   return (
     <>
@@ -80,26 +74,16 @@ const DetailInforPage = () => {
               <div className="flex gap-5 flex-col">
                 <div className="flex mb-2 text-white font-semibold sm:text-lg gap-4">
                   {informasi.namaSekolah.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="bg-button px-2 py-1 rounded-md flex items-center gap-2 capitalize"
-                    >
+                    <span key={index} className="bg-button px-2 py-1 rounded-md flex items-center gap-2 capitalize">
                       <FaRegBuilding /> {tag}
                     </span>
                   ))}
                 </div>
                 <div>
-                  <h1 className="font-bold text-main text-2xl sm:text-4xl">
-                    {informasi.judul}
-                  </h1>
-                  <h3 className="text-abugelap font-medium text-lg">
-                    {formatDate(informasi.tanggal)}
-                  </h3>
+                  <h1 className="font-bold text-main text-2xl sm:text-4xl">{informasi.judul}</h1>
+                  <h3 className="text-abugelap font-medium text-lg">{formatDate(informasi.tanggal)}</h3>
                 </div>
-                <div
-                  className="text-abugelap ql-editor"
-                  dangerouslySetInnerHTML={{ __html: informasi.deskripsi }}
-                />
+                <div className="text-abugelap ql-editor" dangerouslySetInnerHTML={{ __html: informasi.deskripsi }} />
               </div>
             </div>
 

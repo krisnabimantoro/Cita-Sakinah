@@ -39,10 +39,7 @@ const InformasiPage = () => {
 
     const fetchData = async () => {
       try {
-        const [informasiRes, sekolahRes] = await Promise.all([
-          axios.get("/api/informasi"),
-          axios.get("/api/sekolah"),
-        ]);
+        const [informasiRes, sekolahRes] = await Promise.all([axios.get("/api/informasi"), axios.get("/api/sekolah")]);
 
         const formattedData = informasiRes.data.map((item) => ({
           id: item.id,
@@ -78,9 +75,7 @@ const InformasiPage = () => {
 
   useEffect(() => {
     const filtered = searchQuery
-      ? dataInformasi.filter((informasi) =>
-          informasi.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+      ? dataInformasi.filter((informasi) => informasi.title.toLowerCase().includes(searchQuery.toLowerCase()))
       : dataInformasi;
 
     setFilteredData(filtered);
@@ -101,9 +96,7 @@ const InformasiPage = () => {
   };
 
   const handleEditClick = (informasi) => {
-    const sekolahIds = informasi.sekolah.map((sekolah) =>
-      parseInt(sekolah.sekolahId, 10)
-    );
+    const sekolahIds = informasi.sekolah.map((sekolah) => parseInt(sekolah.sekolahId, 10));
 
     setFormData({
       title: informasi.title,
@@ -119,7 +112,7 @@ const InformasiPage = () => {
     setPreviewImage(
       informasi.gambar.map((img) => ({
         idImage: img.idImage,
-        url: `https://paudterpaducisa.sch.id/api/storage/uploads/${img.fileName}`,
+        url: `https://apicisa.krisnabmntr.my.id/api/storage/uploads/${img.fileName}`,
       }))
     );
 
@@ -135,12 +128,8 @@ const InformasiPage = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(
-        `/api/informasi/${selectedInformasi.id}`
-      );
-      setFilteredData(
-        filteredData.filter((item) => item.id !== selectedInformasi.id)
-      );
+      const response = await axios.delete(`/api/informasi/${selectedInformasi.id}`);
+      setFilteredData(filteredData.filter((item) => item.id !== selectedInformasi.id));
       toast.success(response.data.message);
       setIsDeleteModalOpen(false);
       setSelectedInformasi(null);
@@ -162,13 +151,7 @@ const InformasiPage = () => {
   const handleSaveInformasi = async () => {
     const cleanedDesc = stripTags(formData.desc);
 
-    if (
-      !formData.title &&
-      !cleanedDesc &&
-      !formData.tanggal &&
-      formData.sekolahId.length === 0 &&
-      formData.gambar.length === 0
-    ) {
+    if (!formData.title && !cleanedDesc && !formData.tanggal && formData.sekolahId.length === 0 && formData.gambar.length === 0) {
       return toast.error("Semua kolom harus diisi");
     } else if (!formData.title) {
       return toast.error("Judul informasi harus diisi");
@@ -198,20 +181,15 @@ const InformasiPage = () => {
     console.log([...formDataToSend.entries()]);
     try {
       let response;
-      const deleteParams =
-        imagesToDelete.length > 0 ? `idImage=${imagesToDelete.join(",")}` : "";
+      const deleteParams = imagesToDelete.length > 0 ? `idImage=${imagesToDelete.join(",")}` : "";
 
       if (isEdit) {
-        response = await axios.patch(
-          `/api/informasi/${selectedInformasi.id}?${deleteParams}`,
-          formDataToSend,
-          {
-            headers: {
-              Authorization: `Bearer ${user}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        response = await axios.patch(`/api/informasi/${selectedInformasi.id}?${deleteParams}`, formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${user}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
       } else {
         response = await axios.post("/api/informasi", formDataToSend, {
           headers: {
@@ -230,9 +208,7 @@ const InformasiPage = () => {
       if (error.response && error.response.status === 500) {
         toast.error(error.response.data.message);
       } else {
-        toast.error(
-          isEdit ? error.response.data.message : error.response.data.message
-        );
+        toast.error(isEdit ? error.response.data.message : error.response.data.message);
       }
       console.error("Error saving informasi: ", error);
     } finally {
@@ -262,10 +238,7 @@ const InformasiPage = () => {
     setPreviewImage((prev) => [...prev, ...newPreviewImages]);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      gambar: [
-        ...prevFormData.gambar,
-        ...files.map((file) => ({ idImage: null, file })),
-      ],
+      gambar: [...prevFormData.gambar, ...files.map((file) => ({ idImage: null, file }))],
     }));
   };
 
@@ -288,9 +261,7 @@ const InformasiPage = () => {
     const selectedSchoolId = parseInt(value, 10);
 
     setFormData((prev) => {
-      const newSelectedSchools = checked
-        ? [...prev.sekolahId, selectedSchoolId]
-        : prev.sekolahId.filter((id) => id !== selectedSchoolId);
+      const newSelectedSchools = checked ? [...prev.sekolahId, selectedSchoolId] : prev.sekolahId.filter((id) => id !== selectedSchoolId);
       return { ...prev, sekolahId: newSelectedSchools };
     });
   };
@@ -310,9 +281,7 @@ const InformasiPage = () => {
   ];
 
   const formatSchools = (schoolIds) => {
-    const selectedSchools = schoolOptions
-      .filter((option) => schoolIds.includes(option.id))
-      .map((option) => option.label);
+    const selectedSchools = schoolOptions.filter((option) => schoolIds.includes(option.id)).map((option) => option.label);
 
     if (selectedSchools.length === schoolOptions.length) {
       return "Semua Sekolah";
@@ -332,35 +301,19 @@ const InformasiPage = () => {
   const dataReal = filteredData.map((informasi) => ({
     ...informasi,
     desc: extractTextFromPTags(informasi.desc),
-    sekolah: formatSchools(
-      informasi.sekolah.map((sch) => parseInt(sch.sekolahId))
-    ),
-    gambar:
-      informasi.gambar.length > 0 ? informasi.gambar[0].fileName : "No Image",
+    sekolah: formatSchools(informasi.sekolah.map((sch) => parseInt(sch.sekolahId))),
+    gambar: informasi.gambar.length > 0 ? informasi.gambar[0].fileName : "No Image",
 
     action: (
       <div className="flex gap-3 items-center">
-        <LuPen
-          id="update-button"
-          className="text-second"
-          onClick={() => handleEditClick(informasi)}
-          size={20}
-        />
-        <FaRegTrashAlt
-          id="delete-button"
-          className="text-button"
-          onClick={() => handleDeleteClick(informasi)}
-          size={20}
-        />
+        <LuPen id="update-button" className="text-second" onClick={() => handleEditClick(informasi)} size={20} />
+        <FaRegTrashAlt id="delete-button" className="text-button" onClick={() => handleDeleteClick(informasi)} size={20} />
       </div>
     ),
   }));
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = dataReal.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = dataReal.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -399,11 +352,7 @@ const InformasiPage = () => {
           </div>
         </div>
         <TableDashboard columns={columnsInformasi} data={paginatedData} />
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
       <Modal
         isOpen={isDeleteModalOpen}
@@ -413,10 +362,7 @@ const InformasiPage = () => {
         width="w-[377px]"
         justify="justify-center"
       >
-        <h2
-          className="text-2xl font-semibold text-main text-center"
-          id="konfirm-delete"
-        >
+        <h2 className="text-2xl font-semibold text-main text-center" id="konfirm-delete">
           Apakah Anda Yakin Ingin Menghapus?
         </h2>
       </Modal>
@@ -452,21 +398,14 @@ const InformasiPage = () => {
             name="tanggal"
             type="date"
             value={formData.tanggal}
-            onChange={(e) =>
-              setFormData({ ...formData, tanggal: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, tanggal: e.target.value })}
             placeholder="Masukkan Tanggal Informasi"
           />
           <div className="flex flex-col">
-            <label className="text-main font-semibold text-sm mb-2">
-              Nama Sekolah
-            </label>
+            <label className="text-main font-semibold text-sm mb-2">Nama Sekolah</label>
             <div className="flex gap-6">
               {schoolOptions.map((option) => (
-                <div
-                  key={option.id}
-                  className="form-check flex gap-1 items-center"
-                >
+                <div key={option.id} className="form-check flex gap-1 items-center">
                   <input
                     type="checkbox"
                     className="form-check-input"
@@ -475,10 +414,7 @@ const InformasiPage = () => {
                     checked={formData.sekolahId.includes(option.id)}
                     onChange={handleSchoolChange}
                   />
-                  <label
-                    className="form-check-label text-main"
-                    htmlFor={`school-${option.id}`}
-                  >
+                  <label className="form-check-label text-main" htmlFor={`school-${option.id}`}>
                     {option.label}
                   </label>
                 </div>

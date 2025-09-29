@@ -64,8 +64,7 @@ const FasilitasPage = () => {
           <LoadingCardFasilitas />
         ) : (
           <CardFasilitas
-            img={`https://paudterpaducisa.sch.id/api/storage/uploads/${facility.imageName
-              }`}
+            img={`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${facility.imageName}`}
             title={facility.namaFasilitas}
             textColor={textColor}
             borderColor={borderColor}
@@ -102,17 +101,12 @@ const FasilitasPage = () => {
       <section className="mx-[50px] md:mx-[120px] mb-[150px]">
         {noFacilitiesAvailable ? (
           <>
-            <p className="text-center text-main">
-              Tidak ada data informasi. Anda akan diarahkan ke beranda dalam 5
-              detik...
-            </p>
+            <p className="text-center text-main">Tidak ada data informasi. Anda akan diarahkan ke beranda dalam 5 detik...</p>
           </>
         ) : (
           sections.map((section, index) => {
             const filteredFacilities = dataFasilitas.filter((facility) =>
-              facility.namaSekolah
-                .toLowerCase()
-                .startsWith(section.alias.toLowerCase())
+              facility.namaSekolah.toLowerCase().startsWith(section.alias.toLowerCase())
             );
 
             if (filteredFacilities.length === 0) {
@@ -120,15 +114,8 @@ const FasilitasPage = () => {
             }
 
             return (
-              <div
-                key={index}
-                className={`${section.bg} px-7 sm:px-[60px] py-[30px] rounded-[18px] flex flex-col gap-[30px] mt-[50px]`}
-              >
-                <h1
-                  className={`text-center font-bold text-2xl sm:text-4xl text-white`}
-                >
-                  {section.school}
-                </h1>
+              <div key={index} className={`${section.bg} px-7 sm:px-[60px] py-[30px] rounded-[18px] flex flex-col gap-[30px] mt-[50px]`}>
+                <h1 className={`text-center font-bold text-2xl sm:text-4xl text-white`}>{section.school}</h1>
                 <div>
                   <Swiper
                     modules={[Pagination]}
@@ -148,11 +135,7 @@ const FasilitasPage = () => {
                       },
                     }}
                   >
-                    {renderSwiperSlides(
-                      filteredFacilities,
-                      section.text,
-                      section.garis
-                    )}
+                    {renderSwiperSlides(filteredFacilities, section.text, section.garis)}
                   </Swiper>
                 </div>
               </div>
