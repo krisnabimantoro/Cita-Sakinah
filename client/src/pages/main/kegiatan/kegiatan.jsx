@@ -100,7 +100,7 @@ const KegiatanPage = () => {
                 <CardKeg
                   key={item.id}
                   id={item.id}
-                  img={[`https://paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName}`]}
+                  img={[`https://api.paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName}`]}
                   title={item.judul}
                   detail={item.deskripsi}
                   date={formatDate(item.tanggal)}

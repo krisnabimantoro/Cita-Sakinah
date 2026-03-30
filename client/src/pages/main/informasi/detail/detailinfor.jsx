@@ -50,7 +50,7 @@ const DetailInforPage = () => {
     setIsOpen(true);
   };
 
-  const imageUrlBase = `https://paudterpaducisa.sch.id/api/storage/uploads`;
+  const imageUrlBase = `https://api.paudterpaducisa.sch.id/api/storage/uploads`;
 
   return (
     <>

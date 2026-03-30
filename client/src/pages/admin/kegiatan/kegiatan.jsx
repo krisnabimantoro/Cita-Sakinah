@@ -133,7 +133,7 @@ const KegiatanPage = () => {
     setPreviewImage(
       kegiatan.gambar.map((img) => ({
         idImage: img.idImage,
-        url: `https://paudterpaducisa.sch.id/api/storage/uploads/${img.fileName}`,
+        url: `https://api.paudterpaducisa.sch.id/api/storage/uploads/${img.fileName}`,
       })),
     );
 

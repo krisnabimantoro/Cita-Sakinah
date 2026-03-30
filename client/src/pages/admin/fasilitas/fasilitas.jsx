@@ -103,7 +103,7 @@ const FasilitasPage = () => {
       sekolahId: selectedSchool?.id || "",
       gambar: fasilitas.gambar,
     });
-    setPreviewImage(`https://paudterpaducisa.sch.id/api/storage/uploads/${fasilitas.gambar}`);
+    setPreviewImage(`https://api.paudterpaducisa.sch.id/api/storage/uploads/${fasilitas.gambar}`);
     setSelectedFasilitas(fasilitas);
     setIsEdit(true);
     setIsModalOpen(true);

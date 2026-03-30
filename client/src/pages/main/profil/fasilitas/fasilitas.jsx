@@ -64,7 +64,7 @@ const FasilitasPage = () => {
           <LoadingCardFasilitas />
         ) : (
           <CardFasilitas
-            img={`https://paudterpaducisa.sch.id/api/storage/uploads/${facility.imageName}`}
+            img={`https://api.paudterpaducisa.sch.id/api/storage/uploads/${facility.imageName}`}
             title={facility.namaFasilitas}
             textColor={textColor}
             borderColor={borderColor}
