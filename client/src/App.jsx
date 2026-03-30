@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Route,
-  Routes,
-  Navigate,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import axios from "axios";
 
@@ -40,10 +34,7 @@ axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [currentAdminRoute, setCurrentAdminRoute] = useLocalStorage(
-    "adminRoute",
-    null
-  );
+  const [currentAdminRoute, setCurrentAdminRoute] = useLocalStorage("adminRoute", null);
 
   useEffect(() => {
     if (location.pathname.startsWith("/admin") && currentAdminRoute === null) {
@@ -67,7 +58,6 @@ function App() {
         }}
       />
       <Routes location={location} key={location.pathname}>
-        <Route path="*" element={<Navigate to="/404" replace />} />
         <Route path="/404" element={<NotFoundPage />} />
         <Route
           path="/"
@@ -199,6 +189,7 @@ function App() {
             }
           />
         </Route>
+        <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
     </AuthProvider>
   );
