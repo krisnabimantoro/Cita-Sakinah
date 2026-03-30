@@ -70,7 +70,7 @@ const KegiatanPage = () => {
             label: jenis.namaKegiatan,
             value: jenis.namaKegiatan,
             id: jenis.id,
-          }))
+          })),
         );
 
         setSchoolOptions(
@@ -78,7 +78,7 @@ const KegiatanPage = () => {
             label: school.namaSekolah,
             value: school.namaSekolah,
             id: school.id,
-          }))
+          })),
         );
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -133,8 +133,8 @@ const KegiatanPage = () => {
     setPreviewImage(
       kegiatan.gambar.map((img) => ({
         idImage: img.idImage,
-        url: `https://apicisa.krisnabmntr.my.id/api/storage/uploads/${img.fileName}`,
-      }))
+        url: `https://paudterpaducisa.sch.id/api/storage/uploads/${img.fileName}`,
+      })),
     );
 
     setSelectedKegiatan(kegiatan);

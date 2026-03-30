@@ -64,7 +64,7 @@ const InformasiPage = () => {
             label: school.namaSekolah,
             value: school.namaSekolah,
             id: school.id,
-          }))
+          })),
         );
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -112,8 +112,8 @@ const InformasiPage = () => {
     setPreviewImage(
       informasi.gambar.map((img) => ({
         idImage: img.idImage,
-        url: `https://apicisa.krisnabmntr.my.id/api/storage/uploads/${img.fileName}`,
-      }))
+        url: `https://paudterpaducisa.sch.id/api/storage/uploads/${img.fileName}`,
+      })),
     );
 
     setSelectedInformasi(informasi);

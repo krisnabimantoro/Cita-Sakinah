@@ -62,7 +62,7 @@ const KegiatanPage = () => {
   const filteredData = activities.filter(
     (item) =>
       (filter === "Semua Aktivitas" || item.namaKegiatan === filter) &&
-      (schoolFilter.length === 0 || schoolFilter.some((selected) => item.namaSekolah.startsWith(selected.split(" ")[0])))
+      (schoolFilter.length === 0 || schoolFilter.some((selected) => item.namaSekolah.startsWith(selected.split(" ")[0]))),
   );
 
   return (
@@ -100,14 +100,14 @@ const KegiatanPage = () => {
                 <CardKeg
                   key={item.id}
                   id={item.id}
-                  img={[`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${item.image[0].fileName}`]}
+                  img={[`https://paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName}`]}
                   title={item.judul}
                   detail={item.deskripsi}
                   date={formatDate(item.tanggal)}
                   tagUtama={item.namaKegiatan}
                   tagSekolah={item.namaSekolah}
                 />
-              )
+              ),
             )}
           </div>
         )}

@@ -55,7 +55,7 @@ const InformasiPage = () => {
 
   const handleSelect = (option) => {
     setSelectedOptions((prevSelected) =>
-      prevSelected.includes(option) ? prevSelected.filter((item) => item !== option) : [...prevSelected, option]
+      prevSelected.includes(option) ? prevSelected.filter((item) => item !== option) : [...prevSelected, option],
     );
   };
 
@@ -63,7 +63,7 @@ const InformasiPage = () => {
     selectedOptions.length === 0
       ? informasi
       : informasi.filter((item) =>
-          selectedOptions.some((selected) => item.sekolah?.some((school) => school?.namaSekolah?.startsWith(selected.split(" ")[0])))
+          selectedOptions.some((selected) => item.sekolah?.some((school) => school?.namaSekolah?.startsWith(selected.split(" ")[0]))),
         );
 
   return (
@@ -100,13 +100,13 @@ const InformasiPage = () => {
                 <CardInfor
                   key={item.id}
                   id={item.id}
-                  img={[`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${item.image[0].fileName}`]}
+                  img={[`https://paudterpaducisa.sch.id/api/storage/uploads/${item.image[0].fileName}`]}
                   title={item.judul}
                   detail={item.deskripsi}
                   date={formatDate(item.tanggal)}
                   tagSekolah={item.sekolah.map((sekolah) => sekolah.namaSekolah.split(" ")[0])}
                 />
-              )
+              ),
             )}
           </div>
         )}

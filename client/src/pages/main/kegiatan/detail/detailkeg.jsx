@@ -51,7 +51,7 @@ const DetailKegPage = () => {
     setIsOpen(true);
   };
 
-  const imageUrlBase = `https://apicisa.krisnabmntr.my.id/api/storage/uploads`;
+  const imageUrlBase = `https://paudterpaducisa.sch.id/api/storage/uploads`;
 
   return (
     <>

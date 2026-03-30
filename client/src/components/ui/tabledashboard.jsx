@@ -33,7 +33,7 @@ const TableDashboard = ({ columns, data }) => {
                       <div className="cursor-pointer">{item[col.field]}</div>
                     ) : col.field === "gambar" ? (
                       <img
-                        src={`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${item[col.field]}`}
+                        src={`https://paudterpaducisa.sch.id/api/storage/uploads/${item[col.field]}`}
                         alt={item.title}
                         className="w-20 h-20 object-cover rounded-lg"
                       />

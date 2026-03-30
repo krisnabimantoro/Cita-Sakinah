@@ -64,7 +64,7 @@ const FasilitasPage = () => {
           <LoadingCardFasilitas />
         ) : (
           <CardFasilitas
-            img={`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${facility.imageName}`}
+            img={`https://paudterpaducisa.sch.id/api/storage/uploads/${facility.imageName}`}
             title={facility.namaFasilitas}
             textColor={textColor}
             borderColor={borderColor}
@@ -76,7 +76,7 @@ const FasilitasPage = () => {
 
   const noFacilitiesAvailable = sections.every((section) => {
     const filteredFacilities = dataFasilitas.filter((facility) =>
-      facility.namaSekolah.toLowerCase().startsWith(section.alias.toLowerCase())
+      facility.namaSekolah.toLowerCase().startsWith(section.alias.toLowerCase()),
     );
     return filteredFacilities.length === 0;
   });
@@ -106,7 +106,7 @@ const FasilitasPage = () => {
         ) : (
           sections.map((section, index) => {
             const filteredFacilities = dataFasilitas.filter((facility) =>
-              facility.namaSekolah.toLowerCase().startsWith(section.alias.toLowerCase())
+              facility.namaSekolah.toLowerCase().startsWith(section.alias.toLowerCase()),
             );
 
             if (filteredFacilities.length === 0) {

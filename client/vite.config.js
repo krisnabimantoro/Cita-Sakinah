@@ -10,7 +10,7 @@ export default defineConfig({
   preview: {
     port: 5170,
     strictPort: true,
-    allowedHosts: ["cisa.krisnabmntr.my.id"],
+    allowedHosts: ["paudterpaducisa.sch.id"],
   },
   server: {
     port: 5170,

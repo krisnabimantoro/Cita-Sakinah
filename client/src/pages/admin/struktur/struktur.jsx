@@ -22,7 +22,7 @@ const StrukturPage = () => {
         const response = await axios.get("/api/struktur");
         const imageName = response.data.result[0].imageName;
         setStrukturImg(imageName);
-        setPreviewImage(`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${imageName}`);
+        setPreviewImage(`https://paudterpaducisa.sch.id/api/storage/uploads/${imageName}`);
       } catch (error) {
         console.error("Failed to fetch structure image:", error);
       }
@@ -34,7 +34,7 @@ const StrukturPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
-    setPreviewImage(`https://apicisa.krisnabmntr.my.id/api/storage/uploads/${strukturImg}`);
+    setPreviewImage(`https://paudterpaducisa.sch.id/api/storage/uploads/${strukturImg}`);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -81,7 +81,7 @@ const StrukturPage = () => {
         </div>
         <div className="border border-main rounded-lg h-full flex justify-center items-center p-10">
           <img
-            src={strukturImg ? `https://apicisa.krisnabmntr.my.id/api/storage/uploads/${strukturImg}` : "/path/to/default-image.jpg"}
+            src={strukturImg ? `https://paudterpaducisa.sch.id/api/storage/uploads/${strukturImg}` : "/path/to/default-image.jpg"}
             alt="img-struktur"
             draggable="false"
           />
